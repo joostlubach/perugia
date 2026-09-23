@@ -35,6 +35,8 @@ export interface DragCountInput {
   text: string;
   dragLabel: string;
   correctCount: number;
+  // Within `maxOff` of the right count earns `share` (0-1) of the points.
+  nearMisses?: { maxOff: number; share: number }[];
   timeLimitSec: number;
   points: number;
 }

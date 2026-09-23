@@ -1,5 +1,5 @@
 import { customAlphabet } from 'nanoid';
-import { MenuCourse, Point } from './types';
+import { MenuCourse, NearMiss, Point } from './types';
 
 const TOKEN_ALPHABET = '23456789abcdefghjkmnpqrstuvwxyz';
 const generateToken = customAlphabet(TOKEN_ALPHABET, 24);
@@ -87,6 +87,14 @@ export function countCorrectMenuPicks(selected: number[], menu: MenuCourse[], co
     start = end;
   }
   return count;
+}
+
+// Share (0-1) of the points a counted guess earns: all of it when exact,
+// otherwise the share of the first near-miss band it falls in.
+export function scoreCount(guess: number, correct: number, nearMisses: NearMiss[] = []): number {
+  if (guess === correct) return 1;
+  const off = Math.abs(guess - correct);
+  return nearMisses.find((band) => off <= band.maxOff)?.share ?? 0;
 }
 
 // Scores an estimate by how close it is: 100 when exact, falling linearly to

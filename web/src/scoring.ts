@@ -68,6 +68,13 @@ export function countCorrectMenuPicks(selected: number[], menu: MenuCourse[], co
   return count;
 }
 
+// Mirrors scoreCount in server/src/game/room.util.ts.
+export function scoreCount(guess: number, correct: number, nearMisses: { maxOff: number; share: number }[] = []): number {
+  if (guess === correct) return 1;
+  const off = Math.abs(guess - correct);
+  return nearMisses.find((band) => off <= band.maxOff)?.share ?? 0;
+}
+
 // Mirrors scoreEstimate in server/src/game/room.util.ts.
 export function scoreEstimate(guess: number, correct: number): number {
   if (correct <= 0) return guess === correct ? 100 : 0;

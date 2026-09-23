@@ -39,6 +39,11 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
     ...texts('pedro'),
     dragLabel: 'Pedro',
     correctCount: 48,
+    // 40-56 earns half, 32-64 a quarter.
+    nearMisses: [
+      { maxOff: 8, share: 0.5 },
+      { maxOff: 16, share: 0.25 },
+    ],
     timeLimitSec: 45,
     points: 1500,
   },

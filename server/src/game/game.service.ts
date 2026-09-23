@@ -10,6 +10,7 @@ import {
   newJoinCode,
   newToken,
   PlateAnswer,
+  scoreCount,
   scoreForAnswer,
   scoreEstimate,
   scoreHamCut,
@@ -253,13 +254,21 @@ export class GameService {
       correct = value === total;
       pointsAwarded =
         value > 0 ? scoreForAnswer(Math.round((question.points * value) / total), question.timeLimitSec, elapsedMs) : 0;
+    } else if (question.type === 'drag_count') {
+      if (typeof answer !== 'number') throw new ForbiddenException('Wrong answer shape for this question');
+      // Full points when exact; close guesses can earn a share (see nearMisses).
+      value = answer;
+      const share = scoreCount(value, question.correctCount, question.nearMisses);
+      correct = share === 1;
+      pointsAwarded =
+        share > 0 ? scoreForAnswer(Math.round(question.points * share), question.timeLimitSec, elapsedMs) : 0;
     } else {
       if (typeof answer !== 'number') throw new ForbiddenException('Wrong answer shape for this question');
       value = answer;
-      if (question.type === 'multiple_choice' && (value < 0 || value >= question.options.length)) {
+      if (value < 0 || value >= question.options.length) {
         throw new ForbiddenException('Invalid option');
       }
-      correct = question.type === 'multiple_choice' ? value === question.correctIndex : value === question.correctCount;
+      correct = value === question.correctIndex;
       pointsAwarded = correct ? scoreForAnswer(question.points, question.timeLimitSec, elapsedMs) : 0;
     }
 

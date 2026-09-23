@@ -45,6 +45,14 @@ export interface DragCountQuestion extends QuestionBase {
   type: 'drag_count';
   dragLabel: string;
   correctCount: number;
+  // Partial credit for guesses that are close: within `maxOff` of the right
+  // count earns `share` (0-1) of the points. Tightest band first.
+  nearMisses?: NearMiss[];
+}
+
+export interface NearMiss {
+  maxOff: number;
+  share: number;
 }
 
 // Player sorts the avatars of each group onto a podium in finishing order.

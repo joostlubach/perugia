@@ -7,6 +7,7 @@ import {
   countCorrectPlacements,
   countCorrectPlateMarks,
   countCorrectSelections,
+  scoreCount,
   scoreForAnswer,
   scoreEstimate,
   scoreHamCut,
@@ -110,9 +111,16 @@ export function TestQuestion({
       value = answer as number | null;
     }
     // money_vase keeps the guessed cents as `value` but scores by closeness.
-    const closeness = question.type === 'money_vase' ? scoreEstimate(value ?? 0, question.correctCents) : null;
+    const closeness =
+      question.type === 'money_vase'
+        ? scoreEstimate(value ?? 0, question.correctCents)
+        : question.type === 'drag_count' && value !== null
+        ? scoreCount(value, question.correctCount, question.nearMisses) * 100
+        : null;
     const correct =
-      closeness !== null
+      question.type === 'drag_count'
+        ? value === correctValue
+        : closeness !== null
         ? value !== null && closeness >= 98
         : question.type === 'ham_cut'
         ? (value ?? 0) >= 95
@@ -130,7 +138,7 @@ export function TestQuestion({
       value,
       elapsedMs,
       correct,
-      pointsAwarded: (correct || partialCredit) && points > 0 ? scoreForAnswer(points, question.timeLimitSec, elapsedMs) : 0,
+      pointsAwarded: (correct || partialCredit || closeness !== null) && points > 0 ? scoreForAnswer(points, question.timeLimitSec, elapsedMs) : 0,
     };
     resultRef.current = next;
     setResult(next);
@@ -327,6 +335,8 @@ function ResultBanner({
           ? `${result.value} / ${correctValue} placed right · +${result.pointsAwarded} points`
           : result.correct
           ? `+${result.pointsAwarded} points`
+          : result.pointsAwarded > 0
+          ? `+${result.pointsAwarded} points · correct was ${correctValue}`
           : `No points · correct was ${correctValue}`}{' '}
         · answered in {seconds}s
       </p>

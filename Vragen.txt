@@ -1,9 +1,24 @@
+SCORING
+=======
+
+Speed: every question starts at full points and drops linearly to half by the
+time the countdown ends. So answering instantly gets 100%, at the buzzer 50%.
+That speed factor is applied on top of whatever share you earned (see Scoring
+in each question).
+
+Answering closes when time is up or 2 seconds after everyone has answered.
+
+Rankings are shown after every 5th question; the last question goes straight
+to the final results.
+
 (
   Which story is based on the area around the ice cold swimming lake?
   - Pinocchio
   - Narnia [correct]
   - Alice in Wonderland
   - The Wizard of Oz
+
+  Scoring: 1000 pts, 20s. Multiple choice: all or nothing.
 )
 
 (
@@ -15,12 +30,16 @@
   - St. Catherine
   - St. Nicholas
   - St. Peter
+
+  Scoring: 1500 pts, 30s. A share per option ticked/left unticked correctly.
 )
 
 (
   Pedro
 
   Correct answer: 48 pedro's
+
+  Scoring: 1500 pts, 45s. Exact count: full points. 40-56: 50%. 32-64: 25%.
 )
 
 (
@@ -29,6 +48,8 @@
   - 300 liters
   - 3000 liters [correct]
   - 30.000 liters
+
+  Scoring: 1000 pts, 20s. Multiple choice: all or nothing.
 )
 
 (
@@ -52,6 +73,8 @@
   5. Riemer
   6. Joost
   7. Gökhan
+
+  Scoring: 2000 pts, 90s. A share per driver in the right spot.
 )
 
 (
@@ -60,15 +83,25 @@
   - Buonaccorsi di Montefalco
   - Di Serego Alighieri [correct]
   - Della Rovere Portinari
+
+  Scoring: 1000 pts, 20s. Multiple choice: all or nothing.
 )
 
 (
   Bowie's scratch marks
 
   Draw the scratch marks on bowie-nomarks with a red pen; scored against bowie-marks.
+
+  Scoring: 1500 pts, 60s. % match with the real marks (covering them, without scribbling
+  too much extra); 80%+ counts as "correct".
 )
 
-(Ham cutting)
+(
+  Ham cutting
+
+  Scoring: 1500 pts, 45s. % for how close the cut is to a 50/50 split; 95%+ counts as
+  "correct".
+)
 
 (
   Primo / secondo final dinner
@@ -97,6 +130,9 @@
   Milan: ?
   Dex: both
   Roland: ?
+
+  Scoring: 2000 pts, 90s. Per seat, a share for "had primo?" and one for "had secondo?"
+  being right.
 )
 
 (
@@ -124,6 +160,8 @@
   - Tiramisù
   - Torta caprese [correct]
   - Cantucci e Vin Santo
+
+  Scoring: 1000 pts, 60s. A quarter per course where the gluten-free dish was ordered.
 )
 
 (
@@ -133,6 +171,8 @@
   - 256
   - 360 [correct]
   - 472
+
+  Scoring: 1000 pts, 20s. Multiple choice: all or nothing.
 )
 
 (
@@ -141,6 +181,8 @@
   - Out of the way for Pietro's wife, so it wouldn't get too noisy
   - It was a septic tank [correct]
   - Who knowah? Is Italia, we puttah the swimming pool where we wantah!
+
+  Scoring: 1000 pts, 20s. Multiple choice: all or nothing.
 )
 
 (
@@ -153,6 +195,8 @@
   Bas' car (Brennerpass): Bas, Jasper, Sanne
   Izzie's car (Luxembourg): Ismail
   Airplane (Firenze): Bowie, Roland, Milan, Gökhan, Sally, Riemer
+
+  Scoring: 2000 pts, 120s. A share per person at the right stop.
 )
 
 (
@@ -161,6 +205,8 @@
   - Umbrians
   - Etruscans [correct]
   - Sabines
+
+  Scoring: 1000 pts, 20s. Multiple choice: all or nothing.
 )
 
 (
@@ -169,6 +215,8 @@
   - Dante [correct]
   - Michelangelo
   - Giotto
+
+  Scoring: 1000 pts, 20s. Multiple choice: all or nothing.
 )
 
 (
@@ -177,6 +225,8 @@
   - He hacked his way into the electricity company so they wouldn't charge for his usage
   - He stole batteries from city share scooters [correct]
   - He ran an extension cord through the wall into his neighbour's apartment
+
+  Scoring: 1000 pts, 20s. Multiple choice: all or nothing.
 )
 
 (
@@ -185,4 +235,7 @@
   How much money did we spend in total, according to Splitser?
 
   Correct answer: €8.819,03
+
+  Scoring: 1500 pts, 60s. 100% when exact, down to 0% at 50% off (either way); within 2%
+  counts as "correct".
 )

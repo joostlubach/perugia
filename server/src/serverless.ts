@@ -3,11 +3,11 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import express from 'express';
-import serverlessHttp from 'serverless-http';
 import { AppModule } from './app.module';
 
-// Reused across warm invocations of the same Vercel lambda instance.
-let cachedHandler: ReturnType<typeof serverlessHttp> | null = null;
+// Reused across warm invocations of the same Vercel function instance. The
+// Express app itself is the handler: Vercel's Node runtime calls it with (req, res).
+let cachedHandler: express.Express | null = null;
 
 export async function getHandler() {
   if (!cachedHandler) {
@@ -17,7 +17,7 @@ export async function getHandler() {
     app.setGlobalPrefix('api');
     app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
     await app.init();
-    cachedHandler = serverlessHttp(expressApp);
+    cachedHandler = expressApp;
   }
   return cachedHandler;
 }
