@@ -22,9 +22,9 @@ export const TRAVEL_STOPS: MapPin[] = [
 
 // Same order as TRAVEL_STOPS.
 export const TRAVEL_CORRECT_GROUPS: string[][] = [
-  ['kyle', 'joost', 'riemer'],
+  ['kyle', 'joost'],
   ['ruben', 'jaro', 'mark', 'dex'],
-  ['bas', 'jasper', 'sanne'],
+  ['bas', 'jasper', 'sanne', 'riemer'],
   ['ismail'],
   ['bowie', 'roland', 'milan', 'gokhan', 'sally'],
 ];
