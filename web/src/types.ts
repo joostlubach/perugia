@@ -115,8 +115,21 @@ export interface TravelMapInput {
   points: number;
 }
 
+// Estimation: drag bills and coins into a vase. Amounts in euro cents.
+export interface MoneyVaseInput {
+  type: 'money_vase';
+  title: string;
+  text: string;
+  playerText?: string;
+  denominations: number[];
+  correctCents: number;
+  timeLimitSec: number;
+  points: number;
+}
+
 export type QuestionInput =
   | MultipleChoiceInput
+  | MoneyVaseInput
   | TravelMapInput
   | DragCountInput
   | PodiumOrderInput
@@ -233,6 +246,16 @@ export type HostQuestionView =
       timeLimitSec: number;
       points: number;
       correctGroups?: string[][];
+    }
+  | {
+      id: string;
+      type: 'money_vase';
+      title: string;
+      text: string;
+      denominations: number[];
+      timeLimitSec: number;
+      points: number;
+      correctCents?: number;
     };
 
 export interface HostGuess {
@@ -344,6 +367,15 @@ export type PlayerQuestionView =
       landmarks: MapPin[];
       stops: MapPin[];
       people: string[];
+      timeLimitSec: number;
+      points: number;
+    }
+  | {
+      id: string;
+      type: 'money_vase';
+      title: string;
+      text: string;
+      denominations: number[];
       timeLimitSec: number;
       points: number;
     };

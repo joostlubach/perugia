@@ -4,6 +4,7 @@ import { AnswerOption } from '../../components/AnswerOption';
 import { Countdown } from '../../components/Countdown';
 import { MenuCard } from '../../components/MenuCard';
 import { TravelMap } from '../../components/TravelMap';
+import { Vase } from '../../components/MoneyVase';
 import { QuestionText } from '../../components/QuestionText';
 
 export function HostQuestion({ view, onExpire }: { view: HostRoomView; onExpire: () => void }) {
@@ -45,6 +46,11 @@ export function HostQuestion({ view, onExpire }: { view: HostRoomView; onExpire:
           stops={question.stops}
           large
         />
+      ) : question.type === 'money_vase' ? (
+        <>
+          <Vase total={null} large />
+          <p className="subtitle">Drag the money into the vase. No refunds: bet money is bet!</p>
+        </>
       ) : question.type === 'podium_order' ? (
         <p className="subtitle">Put everyone on the podium in finishing order!</p>
       ) : question.type === 'plate_assignment' ? (

@@ -9,6 +9,7 @@ import { HamCutBoard } from '../../components/HamCutBoard';
 import { MultiSelectBoard } from '../../components/MultiSelectBoard';
 import { TraceMarksBoard } from '../../components/TraceMarksBoard';
 import { TravelMapBoard } from '../../components/TravelMapBoard';
+import { MoneyVaseBoard } from '../../components/MoneyVase';
 import { QuestionText } from '../../components/QuestionText';
 
 export function PlayerQuestion({
@@ -74,6 +75,15 @@ export function PlayerQuestion({
         <PodiumOrder
           groups={question.groups}
           groupLabels={question.groupLabels}
+          startedAt={startedAt}
+          timeLimitSec={question.timeLimitSec}
+          onSubmit={onAnswer}
+        />
+      )}
+
+      {question.type === 'money_vase' && (
+        <MoneyVaseBoard
+          denominations={question.denominations}
           startedAt={startedAt}
           timeLimitSec={question.timeLimitSec}
           onSubmit={onAnswer}

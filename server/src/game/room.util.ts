@@ -69,6 +69,14 @@ export function countCorrectSelections(selected: number[], correctIndexes: numbe
   return count;
 }
 
+// Scores an estimate by how close it is: 100 when exact, falling linearly to
+// 0 at half the correct amount off (or more), either way.
+export function scoreEstimate(guess: number, correct: number): number {
+  if (correct <= 0) return guess === correct ? 100 : 0;
+  const error = Math.abs(guess - correct) / correct;
+  return Math.round(Math.max(0, 1 - error * 2) * 100);
+}
+
 export interface HamLine {
   p1: Point;
   p2: Point;

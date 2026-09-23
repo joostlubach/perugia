@@ -10,6 +10,7 @@ import {
   newToken,
   PlateAnswer,
   scoreForAnswer,
+  scoreEstimate,
   scoreHamCut,
   scoreTraceMarks,
   totalPlacements,
@@ -161,6 +162,14 @@ export class GameService {
       value = scoreHamCut(answer, question.rows);
       correct = value >= 95;
       pointsAwarded = value > 0 ? scoreForAnswer(Math.round((question.points * value) / 100), question.timeLimitSec, elapsedMs) : 0;
+    } else if (question.type === 'money_vase') {
+      if (typeof answer !== 'number') throw new ForbiddenException('Wrong answer shape for this question');
+      // Partial credit for how close the estimate is; within 1% counts as correct.
+      value = answer;
+      const closeness = scoreEstimate(value, question.correctCents);
+      correct = closeness >= MONEY_VASE_CORRECT;
+      pointsAwarded =
+        closeness > 0 ? scoreForAnswer(Math.round((question.points * closeness) / 100), question.timeLimitSec, elapsedMs) : 0;
     } else if (question.type === 'trace_marks') {
       if (!isStrokes(answer)) throw new ForbiddenException('Wrong answer shape for this question');
       // Partial credit for how closely the drawing matches the real marks.
@@ -313,6 +322,17 @@ export class GameService {
           points: question.points,
           ...(revealed ? { correctGroups: question.correctGroups } : {}),
         };
+      } else if (question.type === 'money_vase') {
+        hostQuestion = {
+          id: question.id,
+          type: 'money_vase',
+          title: question.title,
+          text: question.text,
+          denominations: question.denominations,
+          timeLimitSec: question.timeLimitSec,
+          points: question.points,
+          ...(revealed ? { correctCents: question.correctCents } : {}),
+        };
       } else if (question.type === 'multi_select') {
         hostQuestion = {
           id: question.id,
@@ -431,6 +451,16 @@ export class GameService {
           timeLimitSec: question.timeLimitSec,
           points: question.points,
         };
+      } else if (question.type === 'money_vase') {
+        playerQuestion = {
+          id: question.id,
+          type: 'money_vase',
+          title: question.title,
+          text: question.playerText ?? question.text,
+          denominations: question.denominations,
+          timeLimitSec: question.timeLimitSec,
+          points: question.points,
+        };
       } else if (question.type === 'multi_select') {
         playerQuestion = {
           id: question.id,
@@ -460,6 +490,7 @@ export class GameService {
       else if (question.type === 'drag_count') correctValue = question.correctCount;
       else if (question.type === 'podium_order') correctValue = totalPlacements(question.correctOrder);
       else if (question.type === 'travel_map') correctValue = totalPlacements(question.correctGroups);
+      else if (question.type === 'money_vase') correctValue = question.correctCents;
       else if (question.type === 'ham_cut' || question.type === 'trace_marks') correctValue = 100;
       else if (question.type === 'multi_select') correctValue = question.options.length;
       else correctValue = [question.head, ...question.left, ...question.right].length * 2;
@@ -512,6 +543,7 @@ function sortedGroups(groups: string[][]): string[][] {
 }
 
 const TRACE_MARKS_CORRECT = 80;
+const MONEY_VASE_CORRECT = 98;
 const TRACE_MARKS_MAX_POINTS = 5000;
 
 function isStrokes(answer: unknown): answer is Point[][] {

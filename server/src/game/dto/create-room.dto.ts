@@ -15,7 +15,7 @@ import {
 } from 'class-validator';
 
 export class QuestionInputDto {
-  @IsIn(['multiple_choice', 'drag_count', 'podium_order', 'plate_assignment', 'ham_cut', 'multi_select', 'trace_marks', 'travel_map'])
+  @IsIn(['multiple_choice', 'drag_count', 'podium_order', 'plate_assignment', 'ham_cut', 'multi_select', 'trace_marks', 'travel_map', 'money_vase'])
   type!:
     | 'multiple_choice'
     | 'drag_count'
@@ -24,7 +24,8 @@ export class QuestionInputDto {
     | 'ham_cut'
     | 'multi_select'
     | 'trace_marks'
-    | 'travel_map';
+    | 'travel_map'
+    | 'money_vase';
 
   @IsString()
   title!: string;
@@ -155,6 +156,18 @@ export class QuestionInputDto {
   @IsArray()
   @ArrayMinSize(1)
   correctGroups?: string[][];
+
+  // money_vase only
+  @ValidateIf((q) => q.type === 'money_vase')
+  @IsArray()
+  @ArrayMinSize(1)
+  @IsInt({ each: true })
+  denominations?: number[];
+
+  @ValidateIf((q) => q.type === 'money_vase')
+  @IsInt()
+  @Min(0)
+  correctCents?: number;
 }
 
 export function questionInputToQuestion(input: QuestionInputDto, id: string): Question {
@@ -228,6 +241,19 @@ export function questionInputToQuestion(input: QuestionInputDto, id: string): Qu
       revealImageUrl: input.revealImageUrl!,
       aspectRatio: input.aspectRatio!,
       marks: input.marks!,
+    };
+  }
+  if (input.type === 'money_vase') {
+    return {
+      id,
+      type: 'money_vase',
+      title: input.title,
+      text: input.text,
+      playerText: input.playerText,
+      timeLimitSec: input.timeLimitSec,
+      points: input.points,
+      denominations: input.denominations!,
+      correctCents: input.correctCents!,
     };
   }
   if (input.type === 'travel_map') {
