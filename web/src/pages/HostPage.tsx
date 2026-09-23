@@ -41,7 +41,7 @@ export function HostPage() {
     if (!view || view.status === lastStatus.current) return;
     lastStatus.current = view.status;
     if (view.status === 'lobby') audio.loopBackground();
-    if (view.status === 'question') audio.stopBackground();
+    else audio.stopBackground();
     if (view.status === 'reveal') audio.play('reveal');
     if (view.status === 'ended') audio.play('victory');
   }, [view]);

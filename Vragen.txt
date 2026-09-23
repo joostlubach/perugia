@@ -54,7 +54,19 @@
   7. Gökhan
 )
 
-(Bowie's marks)
+(
+  What was the surname of the family that owned the house?
+  - Degli Oddi Baglioni
+  - Buonaccorsi di Montefalco
+  - Di Serego Alighieri [correct]
+  - Della Rovere Portinari
+)
+
+(
+  Bowie's scratch marks
+
+  Draw the scratch marks on bowie-nomarks with a red pen; scored against bowie-marks.
+)
 
 (Ham cutting)
 
@@ -85,9 +97,4 @@
   Milan: ?
   Dex: both
   Roland: ?
-)
-(
-  Bowie's scratch marks
-
-  Draw the scratch marks on bowie-nomarks with a red pen; scored against bowie-marks.
 )

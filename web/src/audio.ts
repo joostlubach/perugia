@@ -1,5 +1,5 @@
 const SOUND_FILES = {
-  background: '/audio/background-tarantella.mp3',
+  background: '/audio/tarantella-alt.mp3',
   correct: '/audio/correct.mp3',
   reveal: '/audio/reveal.mp3',
   victory: '/audio/victory.mp3',

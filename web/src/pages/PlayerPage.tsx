@@ -44,7 +44,7 @@ export function PlayerPage() {
     const prev = lastStatus.current;
     lastStatus.current = view.status;
     if (view.status === 'lobby') audio.loopBackground();
-    if (view.status === 'question') audio.stopBackground();
+    else audio.stopBackground();
     if (prev === 'question' && view.status === 'reveal' && view.lastResult?.correct) {
       audio.play('correct');
     }
