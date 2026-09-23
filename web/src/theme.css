@@ -71,6 +71,11 @@ h3,
   margin: 0;
 }
 
+.subtitle.narrow {
+  max-width: 560px;
+  text-wrap: balance;
+}
+
 .btn {
   font-family: 'Fredoka', sans-serif;
   font-size: 1.1rem;
@@ -445,6 +450,26 @@ input[type='text'] {
 }
 
 .leaderboard-list li:nth-child(1) {
+  background: var(--gold);
+}
+
+.leaderboard-list.animated {
+  position: relative;
+}
+
+.leaderboard-list.animated li {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 46px;
+  margin: 0;
+  align-items: center;
+  background: white;
+  transition: transform 1.6s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.6s ease, background 0.4s ease;
+}
+
+.leaderboard-list.animated li.leader {
   background: var(--gold);
 }
 

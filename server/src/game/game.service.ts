@@ -495,6 +495,7 @@ export class GameService {
       playerCount: Object.keys(room.players).length,
       players: Object.values(room.players).map((p) => ({ id: p.id, name: p.name, avatar: p.avatar, score: p.score })),
       leaderboard: this.leaderboard(room),
+      previousLeaderboard: this.previousLeaderboard(room),
       reactions: [],
     };
   }
@@ -648,9 +649,26 @@ export class GameService {
   }
 
   private leaderboard(room: Room): LeaderboardEntry[] {
-    return Object.values(room.players)
-      .map((p) => ({ id: p.id, name: p.name, avatar: p.avatar, score: p.score }))
-      .sort((a, b) => b.score - a.score || a.name.localeCompare(b.name));
+    return sortLeaderboard(
+      Object.values(room.players).map((p) => ({ id: p.id, name: p.name, avatar: p.avatar, score: p.score })),
+    );
+  }
+
+  // The standings as they were at the previous ranking screen, so the host
+  // can animate from there. Only on a ranking screen that isn't the first.
+  private previousLeaderboard(room: Room): LeaderboardEntry[] | null {
+    if (room.status !== 'leaderboard') return null;
+    const lastIndex = room.currentQuestionIndex - LEADERBOARD_EVERY;
+    if (lastIndex < 0) return null;
+    const questionIds = room.questions.slice(0, lastIndex + 1).map((q) => q.id);
+    return sortLeaderboard(
+      Object.values(room.players).map((p) => ({
+        id: p.id,
+        name: p.name,
+        avatar: p.avatar,
+        score: questionIds.reduce((sum, id) => sum + (p.answers[id]?.pointsAwarded ?? 0), 0),
+      })),
+    );
   }
 
   private async requireRoom(): Promise<Room> {
@@ -668,6 +686,10 @@ export class GameService {
     }
     return room;
   }
+}
+
+function sortLeaderboard(entries: LeaderboardEntry[]): LeaderboardEntry[] {
+  return entries.sort((a, b) => b.score - a.score || a.name.localeCompare(b.name));
 }
 
 function afterReveal(room: Room): 'leaderboard' | 'intro' | 'finale' {

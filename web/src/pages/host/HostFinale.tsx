@@ -5,7 +5,7 @@ export function HostFinale({ onNext }: { onNext: () => void }) {
   return (
     <div className="page">
       <h1 className="title">{t('host.finale.title')}</h1>
-      <p className="subtitle">{t('host.finale.subtitle')}</p>
+      <p className="subtitle narrow">{t('host.finale.subtitle')}</p>
       <button className="btn btn-gold btn-lg" onClick={onNext}>
         {t('host.finale.showResults')}
       </button>

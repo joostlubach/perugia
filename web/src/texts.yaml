@@ -42,7 +42,7 @@ host:
     drag_count: "Drag as many \"{label}\" as you count, then lock it in!"
 
   reveal:
-    title: "La risposta giusta è..."
+    title: "Of course it was"
     hamGoal: "The goal was a perfect 50/50 split by area."
     toLeaderboard: "📊 Show Leaderboard"
     toFinale: "🏁 Finish"
@@ -55,12 +55,12 @@ host:
 
   finale:
     title: "Finito! 🏁"
-    subtitle: "That was the last question. Who takes home the gold?"
+    subtitle: "That was the last question. Ready for the results? And, remember, playing is more important than winning!"
     showResults: "🏆 Show the results"
 
   final:
-    title: "Tanti Auguri! 🎉"
-    subtitle: "Grazie mille for playing, bellissimo people!"
+    title: "🎉 Tanti Auguri! 🎉"
+    subtitle: "Grazie mille for playing, all y'all people!"
 
   jump:
     label: "Go to question (1–{total})"
@@ -73,7 +73,7 @@ player:
 
   join:
     title: "Who are you? 🎊"
-    join: "🇮🇹 Andiamo!"
+    join: "🚀 Andiamo!"
     pickAvatarFirst: "Pick an avatar first"
 
   lobby:
@@ -89,16 +89,16 @@ player:
 
   question:
     header: "Question {number} / {total} · {title} · {points} pts"
-    answeredTitle: "Risposta inviata! ✅"
+    answeredTitle: "Answer sent! ✅"
     answeredSubtitle: "Waiting for everyone else..."
 
   reveal:
     correct: "Perfetto! 🎉"
-    partlyCorrect: "Quasi! 👌"
-    wrong: "Peccato! 😅"
-    timeUp: "Tempo scaduto! ⏰"
+    partlyCorrect: "Cosi cosa! 👌"
+    wrong: "Helacchio! 😅"
+    timeUp: "Out of time! ⏰"
     points: "+{points} points"
-    noPoints: "Better luck next time"
+    noPoints: "Mehp"
     totalScore: "Total score: {score}"
 
   leaderboard:

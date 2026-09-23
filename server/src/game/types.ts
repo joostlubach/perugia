@@ -254,6 +254,8 @@ export interface HostRoomView {
   playerCount: number;
   players: LeaderboardEntry[];
   leaderboard: LeaderboardEntry[];
+  // Standings at the previous ranking screen, on every ranking screen but the first.
+  previousLeaderboard: LeaderboardEntry[] | null;
   // Reactions from the last few seconds, oldest first.
   reactions: Reaction[];
 }
