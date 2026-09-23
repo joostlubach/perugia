@@ -1,7 +1,7 @@
 # Every question's wording, in quiz order.
 #   title:  short label
-#   host:   long text on the big screen, read out loud
-#   player: short text on phones
+#   host:   long text, shown on the big screen while you read it out
+#   player: short text, on phones and on the big screen while answering and at the reveal
 
 lake:
   title: The Lake

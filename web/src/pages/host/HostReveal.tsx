@@ -15,8 +15,7 @@ export function HostReveal({ view, onNext }: { view: HostRoomView; onNext: () =>
   return (
     <div className="page">
       <h1 className="title">{t('host.reveal.title')}</h1>
-      <div className="hint">{question.title}</div>
-      <h2 className="question-text"><QuestionText text={question.text} /></h2>
+      <h2 className="question-text"><QuestionText text={question.playerText ?? question.text} /></h2>
       {question.type === 'multiple_choice' && question.imageUrl && (
         <img className="question-image" src={question.imageUrl} alt="" />
       )}

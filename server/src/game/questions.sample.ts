@@ -173,8 +173,8 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
   {
     type: 'money_vase',
     ...texts('splitser'),
-    // €500 and €200 bills, and every euro coin.
-    denominations: [50000, 20000, 200, 100, 50, 20, 10, 5, 2, 1],
+    // €1000 (not a real bill, but it speeds things up), €500 and €200 bills, and every euro coin.
+    denominations: [100000, 50000, 20000, 200, 100, 50, 20, 10, 5, 2, 1],
     correctCents: 881903,
     timeLimitSec: 60,
     points: 1500,

@@ -230,7 +230,7 @@ to the final results.
 )
 
 (
-  Splitser -- estimation: drag €500 and €200 bills and coins into a terracotta vase (no taking it out)
+  Splitser -- estimation: drag €1000, €500 and €200 bills and coins into a terracotta vase (no taking it out)
 
   How much money did we spend in total, according to Splitser?
 

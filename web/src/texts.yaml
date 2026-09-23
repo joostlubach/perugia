@@ -20,24 +20,24 @@ host:
     createRoom: "🎉 Create Room"
 
   lobby:
-    title: "Benvenuti! 🇮🇹"
+    title: "🇮🇹 Ciao tutti 🇮🇹"
     scanToJoin: "Scan to join on your phone"
     orGoToUrl: "or go to this URL on your phone"
     playersJoined: "{count} players joined"
     playersJoined_one: "{count} player joined"
-    start: "🚀 Andiamo! Start Game"
+    start: "🚀 Andiamo!"
 
   intro:
-    start: "▶️ Andiamo!"
+    start: "Vai!"
 
   question:
     answered: "answered"
     # Shown under the question while players answer, per question type.
     money_vase: "Drag the money into the vase. No refunds: bet money is bet!"
-    podium_order: "Put everyone on the podium in finishing order!"
-    plate_assignment: "Who had a primo, who had a secondo, who had both?"
+    podium_order: "Drag everyone on the podium in finishing order."
+    plate_assignment: "Drag the primo and secondo to the correct plates."
     ham_cut: "Find the line that cuts the ham exactly in half!"
-    trace_marks: "Grab the red pen and draw the scratch marks!"
+    trace_marks: "Draw the scratch marks!"
     multi_select: "Select all that apply -- more than one answer may be correct!"
     drag_count: "Drag as many \"{label}\" as you count, then lock it in!"
 

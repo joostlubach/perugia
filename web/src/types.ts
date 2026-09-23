@@ -169,7 +169,7 @@ export interface TraceAnswer {
   strokes: Point[][];
 }
 
-export type HostQuestionView =
+export type HostQuestionView = (
   | {
       id: string;
       type: 'multiple_choice';
@@ -278,7 +278,11 @@ export type HostQuestionView =
       timeLimitSec: number;
       points: number;
       correctCents?: number;
-    };
+    }
+) & {
+  // The short text players see; the host shows it everywhere but the intro.
+  playerText?: string;
+};
 
 export interface HostGuess {
   playerId: string;

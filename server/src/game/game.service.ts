@@ -477,6 +477,8 @@ export class GameService {
           ...(revealed ? { correctCount: question.correctCount } : {}),
         };
       }
+      // The short version: the long `text` is only for the intro, read out loud.
+      hostQuestion.playerText = question.playerText;
     }
 
     return {

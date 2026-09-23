@@ -22,7 +22,7 @@ export function HostQuestion({ view }: { view: HostRoomView }) {
           title: question.title,
         })}
       </div>
-      <h1 className="question-text"><QuestionText text={question.text} /></h1>
+      <h1 className="question-text"><QuestionText text={question.playerText ?? question.text} /></h1>
       {question.type === 'multiple_choice' && question.imageUrl && (
         <img className="question-image" src={question.imageUrl} alt="" />
       )}
