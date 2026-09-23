@@ -125,7 +125,7 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
       'It was a septic tank',
       'Who knowah? Is Italia, we puttah the swimming pool where we wantah!',
     ],
-    correctIndex: 3,
+    correctIndex: 2,
     timeLimitSec: 20,
     points: 1000,
   },
