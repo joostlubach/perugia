@@ -14,12 +14,17 @@ export interface MultipleChoiceQuestion extends QuestionBase {
   type: 'multiple_choice';
   options: string[];
   correctIndex: number;
-  // When set, the options are shown as a restaurant menu card instead of the
-  // usual colored answer tiles. Dishes are numbered across all courses in
-  // order and must line up one-to-one with `options`.
-  menu?: MenuCourse[];
   // Optional photo shown above the options.
   imageUrl?: string;
+}
+
+// Player orders one dish per course from a restaurant menu card. Dishes are
+// indexed across all courses in order; `correctIndexes` holds the right dish
+// of each course. Scored per course.
+export interface MenuOrderQuestion extends QuestionBase {
+  type: 'menu_order';
+  menu: MenuCourse[];
+  correctIndexes: number[];
 }
 
 export interface MenuCourse {
@@ -135,6 +140,7 @@ export type Question =
   | PlateAssignmentQuestion
   | HamCutQuestion
   | MultiSelectQuestion
+  | MenuOrderQuestion
   | TraceMarksQuestion;
 
 // Plain `Omit<Question, K>` doesn't distribute over the union and collapses
@@ -149,6 +155,8 @@ export interface PlayerAnswer {
   // dragged-token count for drag_count, correct placements for podium_order,
   // guessed amount in cents for money_vase.
   value: number;
+  // The dish indexes ordered -- menu_order only.
+  selection?: number[];
 }
 
 export interface Player {
@@ -202,6 +210,7 @@ export type HostQuestionView =
     })
   | Omit<HamCutQuestion, 'rows'>
   | (Omit<MultiSelectQuestion, 'correctIndexes'> & { correctIndexes?: number[] })
+  | (Omit<MenuOrderQuestion, 'correctIndexes'> & { correctIndexes?: number[] })
   | (Omit<TraceMarksQuestion, 'marks' | 'revealImageUrl'> & { revealImageUrl?: string })
   | (Omit<TravelMapQuestion, 'correctGroups'> & { people: string[]; correctGroups?: string[][] })
   | (Omit<MoneyVaseQuestion, 'correctCents'> & { correctCents?: number });
@@ -221,7 +230,7 @@ export interface HostRoomView {
   questionStartedAt: number | null;
   question: HostQuestionView | null;
   answeredCount: number;
-  // Only populated for multiple_choice questions.
+  // Only populated for multiple_choice and menu_order questions.
   optionCounts: number[];
   // Only populated for drag_count and podium_order questions once revealed.
   guesses: HostGuess[];
@@ -240,6 +249,7 @@ export type PlayerQuestionView =
   | Omit<PlateAssignmentQuestion, 'correctPrimo' | 'correctSecondo'>
   | Omit<HamCutQuestion, 'rows'>
   | Omit<MultiSelectQuestion, 'correctIndexes'>
+  | Omit<MenuOrderQuestion, 'correctIndexes'>
   | Omit<TraceMarksQuestion, 'marks' | 'revealImageUrl'>
   // People are sorted alphabetically so they don't leak the answer.
   | (Omit<TravelMapQuestion, 'correctGroups'> & { people: string[] })

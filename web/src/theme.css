@@ -211,8 +211,8 @@ input[type='text'] {
 
 .option-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
+  grid-template-columns: 1fr;
+  gap: 12px;
   width: 100%;
   max-width: 900px;
 }
@@ -228,7 +228,7 @@ input[type='text'] {
   font-size: clamp(1rem, 2.4vw, 1.5rem);
   color: white;
   cursor: pointer;
-  min-height: 88px;
+  min-height: 64px;
   box-shadow: 0 5px 0 rgba(0, 0, 0, 0.25);
   transition: transform 0.1s ease, box-shadow 0.1s ease, opacity 0.2s ease;
 }
@@ -987,8 +987,7 @@ textarea.json-editor {
 }
 
 .menu-dish.pickable:active {
-  background: rgba(0, 140, 69, 0.14);
-  border-color: var(--italy-green);
+  background: rgba(58, 36, 20, 0.06);
 }
 
 .menu-dish-name {
@@ -1023,6 +1022,32 @@ textarea.json-editor {
   font-family: 'Poppins', sans-serif;
   font-style: normal;
   font-size: 0.75rem;
+}
+
+.menu-dish-circle {
+  position: absolute;
+  inset: -4px 4px;
+  width: calc(100% - 8px);
+  height: calc(100% + 8px);
+  overflow: visible;
+  pointer-events: none;
+  transform: rotate(-1.5deg);
+}
+
+.menu-dish-circle path {
+  fill: none;
+  stroke: var(--italy-red);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: pen-circle 0.35s ease-out forwards;
+}
+
+@keyframes pen-circle {
+  to {
+    stroke-dashoffset: 0;
+  }
 }
 
 .menu-dish.gluten {

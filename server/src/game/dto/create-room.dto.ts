@@ -15,7 +15,7 @@ import {
 } from 'class-validator';
 
 export class QuestionInputDto {
-  @IsIn(['multiple_choice', 'drag_count', 'podium_order', 'plate_assignment', 'ham_cut', 'multi_select', 'trace_marks', 'travel_map', 'money_vase'])
+  @IsIn(['multiple_choice', 'drag_count', 'podium_order', 'plate_assignment', 'ham_cut', 'multi_select', 'trace_marks', 'travel_map', 'money_vase', 'menu_order'])
   type!:
     | 'multiple_choice'
     | 'drag_count'
@@ -25,7 +25,8 @@ export class QuestionInputDto {
     | 'multi_select'
     | 'trace_marks'
     | 'travel_map'
-    | 'money_vase';
+    | 'money_vase'
+    | 'menu_order';
 
   @IsString()
   title!: string;
@@ -59,13 +60,14 @@ export class QuestionInputDto {
   @Min(0)
   correctIndex?: number;
 
-  // multiple_choice only, optional -- see MultipleChoiceQuestion.menu.
-  @IsOptional()
+  // menu_order only
+  @ValidateIf((q) => q.type === 'menu_order')
   @IsArray()
+  @ArrayMinSize(1)
   menu?: MenuCourse[];
 
-  // multi_select only
-  @ValidateIf((q) => q.type === 'multi_select')
+  // multi_select / menu_order
+  @ValidateIf((q) => q.type === 'multi_select' || q.type === 'menu_order')
   @IsArray()
   @ArrayMinSize(1)
   correctIndexes?: number[];
@@ -182,7 +184,6 @@ export function questionInputToQuestion(input: QuestionInputDto, id: string): Qu
       points: input.points,
       options: input.options!,
       correctIndex: input.correctIndex!,
-      menu: input.menu,
       imageUrl: input.imageUrl,
     };
   }
@@ -270,6 +271,19 @@ export function questionInputToQuestion(input: QuestionInputDto, id: string): Qu
       landmarks: input.landmarks!,
       stops: input.stops!,
       correctGroups: input.correctGroups!,
+    };
+  }
+  if (input.type === 'menu_order') {
+    return {
+      id,
+      type: 'menu_order',
+      title: input.title,
+      text: input.text,
+      playerText: input.playerText,
+      timeLimitSec: input.timeLimitSec,
+      points: input.points,
+      menu: input.menu!,
+      correctIndexes: input.correctIndexes!,
     };
   }
   if (input.type === 'multi_select') {

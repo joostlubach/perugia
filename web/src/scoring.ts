@@ -1,4 +1,4 @@
-import { Point } from './types';
+import { MenuCourse, Point } from './types';
 
 // Mirrors scoreForAnswer in server/src/game/room.util.ts.
 export function scoreForAnswer(points: number, timeLimitSec: number, elapsedMs: number): number {
@@ -51,6 +51,19 @@ export function countCorrectSelections(selected: number[], correctIndexes: numbe
   let count = 0;
   for (let i = 0; i < optionCount; i++) {
     if (selected.includes(i) === correctIndexes.includes(i)) count++;
+  }
+  return count;
+}
+
+// Mirrors countCorrectMenuPicks in server/src/game/room.util.ts.
+export function countCorrectMenuPicks(selected: number[], menu: MenuCourse[], correctIndexes: number[]): number {
+  let start = 0;
+  let count = 0;
+  for (const course of menu) {
+    const end = start + course.dishes.length;
+    const picks = selected.filter((i) => i >= start && i < end);
+    if (picks.length === 1 && correctIndexes.includes(picks[0])) count++;
+    start = end;
   }
   return count;
 }

@@ -1,7 +1,7 @@
 import { HamLine, MultiSelectAnswer, PlateAnswer, PlayerRoomView, TraceAnswer } from '../../types';
 import { Countdown } from '../../components/Countdown';
 import { Shape } from '../../components/Shape';
-import { MenuCard } from '../../components/MenuCard';
+import { MenuOrderBoard } from '../../components/MenuOrderBoard';
 import { DragCanvas, dragSoundPropsFor } from '../../components/DragCanvas';
 import { PodiumOrder } from '../../components/PodiumOrder';
 import { PlateBoard } from '../../components/PlateBoard';
@@ -46,19 +46,24 @@ export function PlayerQuestion({
       {question.type === 'multiple_choice' && (
         <>
           <Countdown startedAt={startedAt} timeLimitSec={question.timeLimitSec} />
-          {question.menu ? (
-            <MenuCard menu={question.menu} onPick={onAnswer} />
-          ) : (
-            <div className="option-grid">
-              {question.options.map((text, i) => (
-                <button key={i} className={`shape-btn shape-${i}`} onClick={() => onAnswer(i)}>
-                  <Shape index={i} />
-                  <span style={{ flex: 1, textAlign: 'left' }}>{text}</span>
-                </button>
-              ))}
-            </div>
-          )}
+          <div className="option-grid">
+            {question.options.map((text, i) => (
+              <button key={i} className={`shape-btn shape-${i}`} onClick={() => onAnswer(i)}>
+                <Shape index={i} />
+                <span style={{ flex: 1, textAlign: 'left' }}>{text}</span>
+              </button>
+            ))}
+          </div>
         </>
+      )}
+
+      {question.type === 'menu_order' && (
+        <MenuOrderBoard
+          menu={question.menu}
+          startedAt={startedAt}
+          timeLimitSec={question.timeLimitSec}
+          onSubmit={(selected) => onAnswer({ selected })}
+        />
       )}
 
       {question.type === 'drag_count' && (

@@ -20,8 +20,23 @@ export function HostReveal({ view, onNext }: { view: HostRoomView; onNext: () =>
         <img className="question-image" src={question.imageUrl} alt="" />
       )}
 
-      {question.type === 'multiple_choice' && question.menu ? (
-        <MenuCard menu={question.menu} counts={view.optionCounts} correctIndex={question.correctIndex} wide />
+      {question.type === 'menu_order' ? (
+        <>
+          <MenuCard menu={question.menu} counts={view.optionCounts} correctIndexes={question.correctIndexes} wide />
+          <ol className="leaderboard-list">
+            {view.guesses
+              .slice()
+              .sort((a, b) => b.value - a.value)
+              .map((g) => (
+                <li key={g.playerId} style={{ background: g.correct ? 'var(--gold)' : 'white' }}>
+                  <span>{g.correct ? '✅' : '🌾'} {g.name}</span>
+                  <span>
+                    {g.value} / {question.menu.length}
+                  </span>
+                </li>
+              ))}
+          </ol>
+        </>
       ) : question.type === 'multiple_choice' ? (
         <div className="option-grid">
           {question.options.map((text, i) => (

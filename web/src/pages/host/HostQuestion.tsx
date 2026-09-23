@@ -30,7 +30,7 @@ export function HostQuestion({ view, onExpire }: { view: HostRoomView; onExpire:
       )}
       <Countdown startedAt={view.questionStartedAt} timeLimitSec={question.timeLimitSec} onExpire={handleExpire} />
       <div className="hint">{view.answeredCount} / {view.playerCount} answered</div>
-      {question.type === 'multiple_choice' && question.menu ? (
+      {question.type === 'menu_order' ? (
         <MenuCard menu={question.menu} counts={view.optionCounts} wide />
       ) : question.type === 'multiple_choice' ? (
         <div className="option-grid">

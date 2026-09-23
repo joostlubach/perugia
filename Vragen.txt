@@ -102,20 +102,26 @@
 (
   Ruben's dinner -- shown as a menu card
 
-  You're at an Italian restaurant and you want to have a nice meal. The problem: you are Ruben, and therefore gluten intolerant. What do you pick?
+  You're at an Italian restaurant and you want to have a nice meal. The problem: you are Ruben, and therefore gluten intolerant. Order an antipasto, a primo, a secondo and a dolce!
 
-  Aperitivo
+  Antipasti
   - Sciatt
+  - Vitello tonnato [correct]
+  - Fiori di zucca fritti
   - Crostini neri
   Primi
-  - Strangozzi al tartufo
+  - Gnocchi al sugo di castrato
   - Pizzoccheri della Valtellina
   - Passatelli in brodo
+  - Risotto al Sagrantino [correct]
   Secondi
   - Saltimbocca alla romana
   - Cacciucco alla livornese
+  - Porchetta di Costano [correct]
+  - Polpette al sugo
   Dolci
   - Torcolo di San Costanzo
+  - Tiramisù
   - Torta caprese [correct]
   - Cantucci e Vin Santo
 )
@@ -163,6 +169,14 @@
   - Dante [correct]
   - Michelangelo
   - Giotto
+)
+
+(
+  What did Leonardo do to power his server room at home?
+  - He tapped off a street lantern near his house
+  - He hacked his way into the electricity company so they wouldn't charge for his usage
+  - He stole batteries from city share scooters [correct]
+  - He ran an extension cord through the wall into his neighbour's apartment
 )
 
 (

@@ -3,7 +3,7 @@ import { KARTING_WINNER_GROUP, KARTING_LOSER_GROUP } from './karting';
 import { DINNER_HEAD, DINNER_LEFT, DINNER_RIGHT, DINNER_CORRECT_PRIMO, DINNER_CORRECT_SECONDO } from './dinner';
 import { HAM_ROWS } from './ham';
 import { BOWIE_MARKS, BOWIE_ASPECT_RATIO } from './bowie';
-import { RUBEN_MENU, RUBEN_OPTIONS, RUBEN_CORRECT_INDEX } from './ruben';
+import { RUBEN_MENU, RUBEN_CORRECT_INDEXES } from './ruben';
 import { TRAVEL_MAP_URL, TRAVEL_MAP_ASPECT_RATIO, TRAVEL_LANDMARKS, TRAVEL_STOPS, TRAVEL_CORRECT_GROUPS } from './travel';
 
 // Kept in the same order as Vragen.txt so the running order matches what's
@@ -105,14 +105,13 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
     points: 2000,
   },
   {
-    type: 'multiple_choice',
+    type: 'menu_order',
     title: 'Cena da Ruben',
-    text: "You're at an Italian restaurant and you want to have a nice meal. The problem: you are Ruben, and therefore gluten intolerant. What do you pick?",
-    playerText: "You are Ruben, and you're gluten intolerant. What do you order?",
-    options: RUBEN_OPTIONS,
-    correctIndex: RUBEN_CORRECT_INDEX,
+    text: "You're at an Italian restaurant and you want to have a nice meal. The problem: you are Ruben, and therefore gluten intolerant. Order an antipasto, a primo, a secondo and a dolce!",
+    playerText: "You are Ruben, and you're gluten intolerant. Order an antipasto, a primo, a secondo and a dolce!",
     menu: RUBEN_MENU,
-    timeLimitSec: 45,
+    correctIndexes: RUBEN_CORRECT_INDEXES,
+    timeLimitSec: 60,
     points: 1000,
   },
   {
@@ -166,6 +165,20 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
     text: 'What famous artist does the Di Serego family descend from?',
     options: ['Leonardo da Vinci', 'Dante', 'Michelangelo', 'Giotto'],
     correctIndex: 1,
+    timeLimitSec: 20,
+    points: 1000,
+  },
+  {
+    type: 'multiple_choice',
+    title: 'Server room',
+    text: 'What did Leonardo do to power his server room at home?',
+    options: [
+      'He tapped off a street lantern near his house',
+      "He hacked his way into the electricity company so they wouldn't charge for his usage",
+      'He stole batteries from city share scooters',
+      "He ran an extension cord through the wall into his neighbour's apartment",
+    ],
+    correctIndex: 2,
     timeLimitSec: 20,
     points: 1000,
   },

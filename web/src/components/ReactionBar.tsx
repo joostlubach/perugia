@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { api } from '../api';
-import { playReaction, REACTIONS } from '../reactions';
+import { REACTIONS } from '../reactions';
 import { ReactionKind } from '../types';
 
 const COOLDOWN_MS = 1200;
@@ -13,7 +13,6 @@ export function ReactionBar({ playerId, playerToken }: { playerId: string; playe
     if (coolingDown) return;
     setCoolingDown(true);
     setTimeout(() => setCoolingDown(false), COOLDOWN_MS);
-    playReaction(kind);
     api.react(playerId, playerToken, kind).catch(() => {});
   };
 

@@ -30,7 +30,7 @@ export class AnswerDto {
   @IsObject()
   line?: { p1: { x: number; y: number }; p2: { x: number; y: number } };
 
-  // Selected option indexes -- multi_select only.
+  // Selected option indexes -- multi_select; ordered dish indexes -- menu_order.
   @IsOptional()
   @IsArray()
   multiSelect?: number[];

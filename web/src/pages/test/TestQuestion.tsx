@@ -3,6 +3,7 @@ import { HamLine, MultiSelectAnswer, PlateAnswer, QuestionInput, TraceAnswer } f
 import { audio } from '../../audio';
 import {
   countCorrectGroupings,
+  countCorrectMenuPicks,
   countCorrectPlacements,
   countCorrectPlateMarks,
   countCorrectSelections,
@@ -14,7 +15,7 @@ import {
 } from '../../scoring';
 import { Countdown } from '../../components/Countdown';
 import { Shape } from '../../components/Shape';
-import { MenuCard } from '../../components/MenuCard';
+import { MenuOrderBoard } from '../../components/MenuOrderBoard';
 import { DragCanvas, dragSoundPropsFor } from '../../components/DragCanvas';
 import { PodiumOrder } from '../../components/PodiumOrder';
 import { PlateBoard } from '../../components/PlateBoard';
@@ -50,6 +51,7 @@ export function TestQuestion({
     question.type === 'plate_assignment' ||
     question.type === 'ham_cut' ||
     question.type === 'multi_select' ||
+    question.type === 'menu_order' ||
     question.type === 'trace_marks';
   const isPercent = question.type === 'ham_cut' || question.type === 'trace_marks';
 
@@ -67,6 +69,8 @@ export function TestQuestion({
       ? 100
       : question.type === 'multi_select'
       ? question.options.length
+      : question.type === 'menu_order'
+      ? question.menu.length
       : question.type === 'travel_map'
       ? totalPlacements(question.correctGroups)
       : question.type === 'money_vase'
@@ -94,6 +98,8 @@ export function TestQuestion({
       value = scoreTraceMarks(answer.strokes, question.marks, question.aspectRatio);
     } else if (answer && !Array.isArray(answer) && typeof answer === 'object' && 'selected' in answer && question.type === 'multi_select') {
       value = countCorrectSelections(answer.selected, question.correctIndexes, question.options.length);
+    } else if (answer && !Array.isArray(answer) && typeof answer === 'object' && 'selected' in answer && question.type === 'menu_order') {
+      value = countCorrectMenuPicks(answer.selected, question.menu, question.correctIndexes);
     } else if (answer && !Array.isArray(answer) && typeof answer === 'object' && question.type === 'plate_assignment') {
       value = countCorrectPlateMarks(
         answer as PlateAnswer,
@@ -167,11 +173,16 @@ export function TestQuestion({
         <Countdown startedAt={startedAt} timeLimitSec={question.timeLimitSec} onExpire={() => finish(null)} />
       ) : null}
 
-      {!result && question.type === 'multiple_choice' && question.menu && (
-        <MenuCard menu={question.menu} onPick={finish} />
+      {!result && question.type === 'menu_order' && (
+        <MenuOrderBoard
+          menu={question.menu}
+          startedAt={startedAt}
+          timeLimitSec={question.timeLimitSec}
+          onSubmit={(selected) => finish({ selected })}
+        />
       )}
 
-      {!result && question.type === 'multiple_choice' && !question.menu && (
+      {!result && question.type === 'multiple_choice' && (
         <div className="option-grid">
           {question.options.map((text, i) => (
             <button

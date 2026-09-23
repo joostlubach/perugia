@@ -3,6 +3,7 @@ import { ROOM_STORE, RoomStore } from '../storage/store.interface';
 import { CreateRoomDto, questionInputToQuestion } from './dto/create-room.dto';
 import {
   countCorrectGroupings,
+  countCorrectMenuPicks,
   countCorrectPlacements,
   countCorrectPlateMarks,
   countCorrectSelections,
@@ -123,6 +124,7 @@ export class GameService {
     let value: number;
     let correct: boolean;
     let pointsAwarded: number;
+    let selection: number[] | undefined;
 
     if (question.type === 'podium_order') {
       if (!Array.isArray(answer) || answer.some((group) => !Array.isArray(group))) {
@@ -177,6 +179,17 @@ export class GameService {
       value = scoreTraceMarks(answer, question.marks, question.aspectRatio);
       correct = value >= TRACE_MARKS_CORRECT;
       pointsAwarded = value > 0 ? scoreForAnswer(Math.round((question.points * value) / 100), question.timeLimitSec, elapsedMs) : 0;
+    } else if (question.type === 'menu_order') {
+      if (!Array.isArray(answer) || answer.some((v) => typeof v !== 'number')) {
+        throw new ForbiddenException('Wrong answer shape for this question');
+      }
+      // Partial credit per course ordered right.
+      selection = answer as number[];
+      const total = question.menu.length;
+      value = countCorrectMenuPicks(selection, question.menu, question.correctIndexes);
+      correct = value === total;
+      pointsAwarded =
+        value > 0 ? scoreForAnswer(Math.round((question.points * value) / total), question.timeLimitSec, elapsedMs) : 0;
     } else if (question.type === 'multi_select') {
       if (!Array.isArray(answer) || answer.some((v) => typeof v !== 'number')) {
         throw new ForbiddenException('Wrong answer shape for this question');
@@ -202,6 +215,7 @@ export class GameService {
       answeredAtMs: elapsedMs,
       correct,
       pointsAwarded,
+      ...(selection ? { selection } : {}),
     };
     player.score += pointsAwarded;
     await this.store.set(room);
@@ -252,6 +266,13 @@ export class GameService {
         ? question.options.map(
             (_, i) => Object.values(room.players).filter((p) => p.answers[question.id]?.value === i).length,
           )
+        : question && question.type === 'menu_order'
+        ? question.menu
+            .flatMap((course) => course.dishes)
+            .map(
+              (_, i) =>
+                Object.values(room.players).filter((p) => p.answers[question.id]?.selection?.includes(i)).length,
+            )
         : [];
     const guesses: HostGuess[] =
       question && question.type !== 'multiple_choice' && revealed
@@ -275,11 +296,21 @@ export class GameService {
           title: question.title,
           text: question.text,
           options: question.options,
-          menu: question.menu,
           imageUrl: question.imageUrl,
           timeLimitSec: question.timeLimitSec,
           points: question.points,
           ...(revealed ? { correctIndex: question.correctIndex } : {}),
+        };
+      } else if (question.type === 'menu_order') {
+        hostQuestion = {
+          id: question.id,
+          type: 'menu_order',
+          title: question.title,
+          text: question.text,
+          menu: question.menu,
+          timeLimitSec: question.timeLimitSec,
+          points: question.points,
+          ...(revealed ? { correctIndexes: question.correctIndexes } : {}),
         };
       } else if (question.type === 'podium_order') {
         hostQuestion = {
@@ -421,8 +452,17 @@ export class GameService {
           title: question.title,
           text: question.playerText ?? question.text,
           options: question.options,
-          menu: question.menu,
           imageUrl: question.imageUrl,
+          timeLimitSec: question.timeLimitSec,
+          points: question.points,
+        };
+      } else if (question.type === 'menu_order') {
+        playerQuestion = {
+          id: question.id,
+          type: 'menu_order',
+          title: question.title,
+          text: question.playerText ?? question.text,
+          menu: question.menu,
           timeLimitSec: question.timeLimitSec,
           points: question.points,
         };
@@ -515,6 +555,7 @@ export class GameService {
       else if (question.type === 'money_vase') correctValue = question.correctCents;
       else if (question.type === 'ham_cut' || question.type === 'trace_marks') correctValue = 100;
       else if (question.type === 'multi_select') correctValue = question.options.length;
+      else if (question.type === 'menu_order') correctValue = question.menu.length;
       else correctValue = [question.head, ...question.left, ...question.right].length * 2;
     }
 

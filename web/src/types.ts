@@ -6,14 +6,24 @@ export interface MultipleChoiceInput {
   text: string;
   options: string[];
   correctIndex: number;
-  menu?: MenuCourse[];
   imageUrl?: string;
   timeLimitSec: number;
   points: number;
 }
 
-// Shows a multiple_choice question as a restaurant menu card. Dishes are
-// numbered across all courses in order and line up one-to-one with `options`.
+// Order one dish per course. Dishes are indexed across all courses in order;
+// `correctIndexes` holds the right dish of each course.
+export interface MenuOrderInput {
+  type: 'menu_order';
+  title: string;
+  text: string;
+  playerText?: string;
+  menu: MenuCourse[];
+  correctIndexes: number[];
+  timeLimitSec: number;
+  points: number;
+}
+
 export interface MenuCourse {
   course: string;
   dishes: { name: string; description?: string }[];
@@ -136,6 +146,7 @@ export type QuestionInput =
   | PlateAssignmentInput
   | HamCutInput
   | MultiSelectInput
+  | MenuOrderInput
   | TraceMarksInput;
 
 export interface PlateAnswer {
@@ -163,11 +174,20 @@ export type HostQuestionView =
       title: string;
       text: string;
       options: string[];
-      menu?: MenuCourse[];
       imageUrl?: string;
       timeLimitSec: number;
       points: number;
       correctIndex?: number;
+    }
+  | {
+      id: string;
+      type: 'menu_order';
+      title: string;
+      text: string;
+      menu: MenuCourse[];
+      timeLimitSec: number;
+      points: number;
+      correctIndexes?: number[];
     }
   | {
       id: string;
@@ -306,8 +326,16 @@ export type PlayerQuestionView =
       title: string;
       text: string;
       options: string[];
-      menu?: MenuCourse[];
       imageUrl?: string;
+      timeLimitSec: number;
+      points: number;
+    }
+  | {
+      id: string;
+      type: 'menu_order';
+      title: string;
+      text: string;
+      menu: MenuCourse[];
       timeLimitSec: number;
       points: number;
     }

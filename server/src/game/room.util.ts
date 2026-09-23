@@ -1,5 +1,5 @@
 import { customAlphabet } from 'nanoid';
-import { Point } from './types';
+import { MenuCourse, Point } from './types';
 
 const generateToken = customAlphabet('23456789abcdefghjkmnpqrstuvwxyz', 24);
 
@@ -65,6 +65,19 @@ export function countCorrectSelections(selected: number[], correctIndexes: numbe
   let count = 0;
   for (let i = 0; i < optionCount; i++) {
     if (selected.includes(i) === correctIndexes.includes(i)) count++;
+  }
+  return count;
+}
+
+// Counts the courses where exactly one dish was ordered and it's the right one.
+export function countCorrectMenuPicks(selected: number[], menu: MenuCourse[], correctIndexes: number[]): number {
+  let start = 0;
+  let count = 0;
+  for (const course of menu) {
+    const end = start + course.dishes.length;
+    const picks = selected.filter((i) => i >= start && i < end);
+    if (picks.length === 1 && correctIndexes.includes(picks[0])) count++;
+    start = end;
   }
   return count;
 }
