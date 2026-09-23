@@ -1,5 +1,4 @@
 import { HostRoomView } from '../../types';
-import { MenuCard } from '../../components/MenuCard';
 import { TravelMap } from '../../components/TravelMap';
 import { QuestionText } from '../../components/QuestionText';
 import { t } from '../../texts';
@@ -29,7 +28,6 @@ export function HostIntro({ view, onStart }: { view: HostRoomView; onStart: () =
           large
         />
       )}
-      {question.type === 'menu_order' && <MenuCard menu={question.menu} wide />}
       <button className="btn btn-primary btn-lg" onClick={onStart}>
         {t('host.intro.start')}
       </button>

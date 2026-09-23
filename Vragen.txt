@@ -53,6 +53,16 @@ to the final results.
 )
 
 (
+  Who had to bring who's car to the garage?
+  - Ismail Ruben
+  - Ruben Ismail [correct]
+  - Ismail Ismail
+  - Ruben Ruben
+
+  Scoring: 1000 pts, 20s. Multiple choice: all or nothing.
+)
+
+(
   Karting
 
   Winner group rankings:
@@ -94,6 +104,26 @@ to the final results.
 
   Scoring: 1500 pts, 60s. % match with the real marks (covering them, without scribbling
   too much extra); 80%+ counts as "correct".
+)
+
+(
+  What is the price of 5 sloffen sigaretten in Perugia?
+  - €420
+  - €535
+  - Tientje
+  - €315 [correct]
+
+  Scoring: 1000 pts, 20s. Multiple choice: all or nothing.
+)
+
+(
+  How many jumprope jumps did Sanne do in total?
+  - 300
+  - 400 [correct]
+  - 800
+  - 1200
+
+  Scoring: 1000 pts, 20s. Multiple choice: all or nothing.
 )
 
 (

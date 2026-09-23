@@ -3,6 +3,7 @@
 # {name} placeholders are filled in by the app -- keep them as they are.
 # A key ending in _one is used instead of the plain key when {count} is 1.
 # Keep the double quotes around each text.
+# For a line break, use \n inside the quotes: "First line\nSecond line".
 
 common:
   loading: "Loading..."
@@ -141,7 +142,7 @@ boards:
     done: "🔪 Lock in the cut"
   menu:
     kicker: "~ Perugia ~"
-    name: "Osteria del Grifo"
+    name: "Osteria L'Attaccabrighe"
     subtitle: "Menù del giorno"
     glutenFree: "senza glutine ✓"
     order: "🍽️ Place order"

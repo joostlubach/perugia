@@ -2,6 +2,9 @@
 #   title:  short label
 #   host:   long text, shown on the big screen while you read it out
 #   player: short text, on phones and on the big screen while answering and at the reveal
+#
+# Line breaks show up on screen. For several lines, start the text with |- and
+# indent the lines below it (see ruben); a blank line gives a blank line.
 
 lake:
   title: The Lake
@@ -29,6 +32,11 @@ poolParty:
   player: |-
     How many liters of water did the pool lose after the first pool party?
 
+garage:
+  title: The garage
+  host: Who had to bring who's car to the garage?
+  player: Who had to bring who's car to the garage?
+
 karting:
   title: Karting
   host: |-
@@ -46,10 +54,22 @@ bowie:
   host: Everyone fell into the pool at the pool party. Everyone? No, one friend was able to resist any attempt. But he paid dearly. Draw as best as you can the marks on Bowie's side from the pool party
   player: Draw the scratches as best as you can
 
+cigarettes:
+  title: Sigaretten
+  host: What is the price of 5 sloffen sigaretten in Perugia?
+  player: What is the price of 5 sloffen sigaretten in Perugia?
+
+jumprope:
+  title: Jumprope
+  host: How many jumprope jumps did Sanne do in total?
+  player: How many jumprope jumps did Sanne do in total?
+
 ham:
   title: Ham cutting
-  host: Drag the two points to find the line that cuts the ham exactly in half.
-  player: Drag the two points to find the line that cuts the ham exactly in half.
+  host: |-
+    It was a good ham, but difficult to cut. Why don't you try it yourself?
+  player: |-
+    Why don't you cut the ham exactly in half? The closer you equally bisect the ham the better.
 
 dinner:
   title: Primo / Secondo
@@ -57,14 +77,20 @@ dinner:
   player: At the final dinner, who had a primo, who had a secondo, and who had both?
 
 ruben:
-  title: Cena da Ruben
-  host: "You're at an Italian restaurant and you want to have a nice meal. The problem: you are Ruben, and therefore gluten intolerant. Order an antipasto, a primo, a secondo and a dolce!"
-  player: You are Ruben, and you're gluten intolerant. Order an antipasto, a primo, a secondo and a dolce!
+  title: Senze glutine
+  host: |-
+    Ciao tutti! Welcome to Osteria L'Attaccabrighe!
+
+    You went with your friends to Osteria L'Attaccabrighe. The only problem: you're Ruben, so you don't eat gluten! Order an antipasto, a primo, a secondo and a dolce without shitting your pants the entire night!
+  player: |-
+    Order an antipasto, a primo, a secondo and a dolce, but stay off the gluten!
 
 festival:
   title: Village festival
-  host: At the village festival, we arrived when the number was at 182. Which number did we have?
-  player: At the village festival, we arrived when the number was at 182. Which number did we have?
+  host: |-
+    At the village festival, we arrived when the number was at 182. We had to wait a shitload of time for our number. But what was our number?
+  player: |-
+    Which number did we have at the village festival?
 
 kyle:
   title: Kyle's secret ingredient
@@ -81,8 +107,8 @@ travel:
   host: Drag each person to how they _arrived_ to Perugia
   player: Drag each person to how they _arrived_ to Perugia
 
-perusia:
-  title: Perusia
+perugia:
+  title: Perugia
   host: What people used to live in Perugia before Octavian burnt their terracotta asses?
   player: What people used to live in Perugia before Octavian burnt their terracotta asses?
 

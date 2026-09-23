@@ -56,6 +56,19 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
     points: 1000,
   },
   {
+    type: 'multiple_choice',
+    ...texts('garage'),
+    options: [
+      'Ismail Ruben',
+      'Ruben Ismail',
+      'Ismail Ismail',
+      'Ruben Ruben',
+    ],
+    correctIndex: 1,
+    timeLimitSec: 20,
+    points: 1000,
+  },
+  {
     type: 'podium_order',
     ...texts('karting'),
     correctOrder: [KARTING_WINNER_GROUP, KARTING_LOSER_GROUP],
@@ -80,6 +93,32 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
     marks: BOWIE_MARKS,
     timeLimitSec: 60,
     points: 1500,
+  },
+  {
+    type: 'multiple_choice',
+    ...texts('cigarettes'),
+    options: [
+      '€420',
+      '€535',
+      'Tientje',
+      '€315',
+    ],
+    correctIndex: 3,
+    timeLimitSec: 20,
+    points: 1000,
+  },
+  {
+    type: 'multiple_choice',
+    ...texts('jumprope'),
+    options: [
+      '300',
+      '400',
+      '800',
+      '1200',
+    ],
+    correctIndex: 1,
+    timeLimitSec: 20,
+    points: 1000,
   },
   {
     type: 'ham_cut',
@@ -152,7 +191,7 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
   },
   {
     type: 'multiple_choice',
-    ...texts('perusia'),
+    ...texts('perugia'),
     options: ['Peruvians', 'Umbrians', 'Etruscans', 'Sabines'],
     correctIndex: 2,
     timeLimitSec: 20,
