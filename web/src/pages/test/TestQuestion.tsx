@@ -21,6 +21,7 @@ import { HamCutBoard } from '../../components/HamCutBoard';
 import { MultiSelectBoard } from '../../components/MultiSelectBoard';
 import { TraceMarksBoard } from '../../components/TraceMarksBoard';
 import { TravelMapBoard } from '../../components/TravelMapBoard';
+import { QuestionText } from '../../components/QuestionText';
 
 type Answer = number | string[][] | PlateAnswer | HamLine | MultiSelectAnswer | TraceAnswer | null;
 
@@ -132,7 +133,7 @@ export function TestQuestion({
       <div className="hint">
         Question {index + 1} / {total} · {question.title} · {question.points} pts · {question.timeLimitSec}s
       </div>
-      <h1 className="question-text">{('playerText' in question && question.playerText) || question.text}</h1>
+      <h1 className="question-text"><QuestionText text={('playerText' in question && question.playerText) || question.text} /></h1>
       {!result && question.type === 'multiple_choice' && question.imageUrl && (
         <img className="question-image" src={question.imageUrl} alt="" />
       )}

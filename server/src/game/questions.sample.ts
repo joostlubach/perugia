@@ -133,8 +133,7 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
   {
     type: 'travel_map',
     title: 'On the way',
-    text: 'Everyone made their way from Amsterdam to Perugia. Where was everyone along the way? Drag each person to the right spot on the map.',
-    playerText: 'Drag everyone to where they were on the way to Perugia',
+    text: 'Drag each person to how they _arrived_ to Perugia',
     mapUrl: TRAVEL_MAP_URL,
     aspectRatio: TRAVEL_MAP_ASPECT_RATIO,
     landmarks: TRAVEL_LANDMARKS,

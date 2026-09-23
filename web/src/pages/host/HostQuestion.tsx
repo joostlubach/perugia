@@ -4,6 +4,7 @@ import { AnswerOption } from '../../components/AnswerOption';
 import { Countdown } from '../../components/Countdown';
 import { MenuCard } from '../../components/MenuCard';
 import { TravelMap } from '../../components/TravelMap';
+import { QuestionText } from '../../components/QuestionText';
 
 export function HostQuestion({ view, onExpire }: { view: HostRoomView; onExpire: () => void }) {
   const question = view.question!;
@@ -22,7 +23,7 @@ export function HostQuestion({ view, onExpire }: { view: HostRoomView; onExpire:
       <div className="hint">
         Question {view.currentQuestionIndex + 1} / {view.totalQuestions} · {question.title}
       </div>
-      <h1 className="question-text">{question.text}</h1>
+      <h1 className="question-text"><QuestionText text={question.text} /></h1>
       {question.type === 'multiple_choice' && question.imageUrl && (
         <img className="question-image" src={question.imageUrl} alt="" />
       )}

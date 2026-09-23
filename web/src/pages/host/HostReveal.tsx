@@ -4,6 +4,7 @@ import { MenuCard } from '../../components/MenuCard';
 import { TravelMap } from '../../components/TravelMap';
 import { PodiumStand } from '../../components/PodiumStand';
 import { Seat } from '../../components/PlateBoard';
+import { QuestionText } from '../../components/QuestionText';
 
 export function HostReveal({ view, onNext }: { view: HostRoomView; onNext: () => void }) {
   const question = view.question!;
@@ -13,7 +14,7 @@ export function HostReveal({ view, onNext }: { view: HostRoomView; onNext: () =>
     <div className="page">
       <h1 className="title">La risposta giusta è...</h1>
       <div className="hint">{question.title}</div>
-      <h2 className="question-text">{question.text}</h2>
+      <h2 className="question-text"><QuestionText text={question.text} /></h2>
       {question.type === 'multiple_choice' && question.imageUrl && (
         <img className="question-image" src={question.imageUrl} alt="" />
       )}

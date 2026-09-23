@@ -9,6 +9,7 @@ import { HamCutBoard } from '../../components/HamCutBoard';
 import { MultiSelectBoard } from '../../components/MultiSelectBoard';
 import { TraceMarksBoard } from '../../components/TraceMarksBoard';
 import { TravelMapBoard } from '../../components/TravelMapBoard';
+import { QuestionText } from '../../components/QuestionText';
 
 export function PlayerQuestion({
   view,
@@ -36,7 +37,7 @@ export function PlayerQuestion({
       <div className="hint">
         Question {view.currentQuestionIndex + 1} / {view.totalQuestions} · {question.title} · {question.points} pts
       </div>
-      <h1 className="question-text">{question.text}</h1>
+      <h1 className="question-text"><QuestionText text={question.text} /></h1>
       {question.type === 'multiple_choice' && question.imageUrl && (
         <img className="question-image" src={question.imageUrl} alt="" />
       )}
