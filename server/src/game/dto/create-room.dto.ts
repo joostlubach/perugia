@@ -114,8 +114,8 @@ export class QuestionInputDto {
   @IsString({ each: true })
   correctSecondo?: string[];
 
-  // ham_cut / trace_marks
-  @ValidateIf((q) => q.type === 'ham_cut' || q.type === 'trace_marks')
+  // ham_cut / trace_marks, optional for multiple_choice
+  @ValidateIf((q) => q.type === 'ham_cut' || q.type === 'trace_marks' || q.imageUrl !== undefined)
   @IsString()
   imageUrl?: string;
 
@@ -150,6 +150,7 @@ export function questionInputToQuestion(input: QuestionInputDto, id: string): Qu
       options: input.options!,
       correctIndex: input.correctIndex!,
       menu: input.menu,
+      imageUrl: input.imageUrl,
     };
   }
   if (input.type === 'podium_order') {

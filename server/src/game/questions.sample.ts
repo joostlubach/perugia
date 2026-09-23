@@ -105,4 +105,14 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
     timeLimitSec: 45,
     points: 1000,
   },
+  {
+    type: 'multiple_choice',
+    title: 'Village festival',
+    text: 'At the village festival, we arrived when the number was at 182. Which number did we have?',
+    imageUrl: '/images/festival.jpg',
+    options: ['190', '256', '360', '472'],
+    correctIndex: 2,
+    timeLimitSec: 20,
+    points: 1000,
+  },
 ];

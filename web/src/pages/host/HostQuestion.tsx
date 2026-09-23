@@ -22,6 +22,9 @@ export function HostQuestion({ view, onExpire }: { view: HostRoomView; onExpire:
         Question {view.currentQuestionIndex + 1} / {view.totalQuestions} · {question.title}
       </div>
       <h1 className="question-text">{question.text}</h1>
+      {question.type === 'multiple_choice' && question.imageUrl && (
+        <img className="question-image" src={question.imageUrl} alt="" />
+      )}
       <Countdown startedAt={view.questionStartedAt} timeLimitSec={question.timeLimitSec} onExpire={handleExpire} />
       <div className="hint">{view.answeredCount} / {view.playerCount} answered</div>
       {question.type === 'multiple_choice' && question.menu ? (

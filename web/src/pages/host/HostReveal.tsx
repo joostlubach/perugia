@@ -13,6 +13,9 @@ export function HostReveal({ view, onNext }: { view: HostRoomView; onNext: () =>
       <h1 className="title">La risposta giusta è...</h1>
       <div className="hint">{question.title}</div>
       <h2 className="question-text">{question.text}</h2>
+      {question.type === 'multiple_choice' && question.imageUrl && (
+        <img className="question-image" src={question.imageUrl} alt="" />
+      )}
 
       {question.type === 'multiple_choice' && question.menu ? (
         <MenuCard menu={question.menu} counts={view.optionCounts} correctIndex={question.correctIndex} wide />
