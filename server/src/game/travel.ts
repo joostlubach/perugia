@@ -17,16 +17,14 @@ export const TRAVEL_STOPS: MapPin[] = [
   { label: "Ruben's car", icon: '🚗', x: 0.409, y: 0.448, side: 'right' },
   { label: "Bas' car", icon: '🚗', x: 0.734, y: 0.595, side: 'right' },
   { label: "Izzie's car", icon: '🚗', x: 0.27, y: 0.35, side: 'left' },
-  { label: "Sanne's car", icon: '🚗', x: 0.534, y: 0.734, side: 'left' },
   { label: 'Airplane', icon: '✈️', x: 0.712, y: 0.883, side: 'left' },
 ];
 
-// Same order as TRAVEL_STOPS: train, car 1, car 2, car 3, car 4, airplane.
+// Same order as TRAVEL_STOPS.
 export const TRAVEL_CORRECT_GROUPS: string[][] = [
-  ['kyle', 'joost'],
+  ['kyle', 'joost', 'riemer'],
   ['ruben', 'jaro', 'mark', 'dex'],
-  ['bas', 'jasper', 'riemer'],
+  ['bas', 'jasper', 'sanne'],
   ['ismail'],
-  ['sally', 'sanne'],
-  ['bowie', 'roland', 'milan', 'gokhan'],
+  ['bowie', 'roland', 'milan', 'gokhan', 'sally'],
 ];
