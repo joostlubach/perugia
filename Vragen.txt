@@ -98,3 +98,24 @@
   Dex: both
   Roland: ?
 )
+
+(
+  Ruben's dinner -- shown as a menu card
+
+  You're at an Italian restaurant and you want to have a nice meal. The problem: you are Ruben, and therefore gluten intolerant. What do you pick?
+
+  Aperitivo
+  - Sciatt
+  - Crostini neri
+  Primi
+  - Strangozzi al tartufo
+  - Pizzoccheri della Valtellina
+  - Passatelli in brodo
+  Secondi
+  - Saltimbocca alla romana
+  - Cacciucco alla livornese
+  Dolci
+  - Torcolo di San Costanzo
+  - Torta caprese [correct]
+  - Cantucci e Vin Santo
+)

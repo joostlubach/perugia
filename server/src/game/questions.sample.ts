@@ -3,6 +3,7 @@ import { KARTING_WINNER_GROUP, KARTING_LOSER_GROUP } from './karting';
 import { DINNER_HEAD, DINNER_LEFT, DINNER_RIGHT, DINNER_CORRECT_PRIMO, DINNER_CORRECT_SECONDO } from './dinner';
 import { HAM_ROWS } from './ham';
 import { BOWIE_MARKS, BOWIE_ASPECT_RATIO } from './bowie';
+import { RUBEN_MENU, RUBEN_OPTIONS, RUBEN_CORRECT_INDEX } from './ruben';
 
 // Kept in the same order as Vragen.txt so the running order matches what's
 // planned there.
@@ -92,5 +93,16 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
     marks: BOWIE_MARKS,
     timeLimitSec: 60,
     points: 1500,
+  },
+  {
+    type: 'multiple_choice',
+    title: 'Cena da Ruben',
+    text: "You're at an Italian restaurant and you want to have a nice meal. The problem: you are Ruben, and therefore gluten intolerant. What do you pick?",
+    playerText: "You are Ruben, and you're gluten intolerant. What do you order?",
+    options: RUBEN_OPTIONS,
+    correctIndex: RUBEN_CORRECT_INDEX,
+    menu: RUBEN_MENU,
+    timeLimitSec: 45,
+    points: 1000,
   },
 ];

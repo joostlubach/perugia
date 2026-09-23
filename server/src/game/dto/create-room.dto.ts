@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { Question } from '../types';
+import { MenuCourse, Question } from '../types';
 import {
   ArrayMinSize,
   IsArray,
@@ -56,6 +56,11 @@ export class QuestionInputDto {
   @IsInt()
   @Min(0)
   correctIndex?: number;
+
+  // multiple_choice only, optional -- see MultipleChoiceQuestion.menu.
+  @IsOptional()
+  @IsArray()
+  menu?: MenuCourse[];
 
   // multi_select only
   @ValidateIf((q) => q.type === 'multi_select')
@@ -144,6 +149,7 @@ export function questionInputToQuestion(input: QuestionInputDto, id: string): Qu
       points: input.points,
       options: input.options!,
       correctIndex: input.correctIndex!,
+      menu: input.menu,
     };
   }
   if (input.type === 'podium_order') {

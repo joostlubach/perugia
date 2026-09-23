@@ -12,6 +12,7 @@ import {
 } from '../../scoring';
 import { Countdown } from '../../components/Countdown';
 import { Shape } from '../../components/Shape';
+import { MenuCard } from '../../components/MenuCard';
 import { DragCanvas, dragSoundPropsFor } from '../../components/DragCanvas';
 import { PodiumOrder } from '../../components/PodiumOrder';
 import { PlateBoard } from '../../components/PlateBoard';
@@ -128,7 +129,11 @@ export function TestQuestion({
         <Countdown startedAt={startedAt} timeLimitSec={question.timeLimitSec} onExpire={() => finish(null)} />
       ) : null}
 
-      {!result && question.type === 'multiple_choice' && (
+      {!result && question.type === 'multiple_choice' && question.menu && (
+        <MenuCard menu={question.menu} onPick={finish} />
+      )}
+
+      {!result && question.type === 'multiple_choice' && !question.menu && (
         <div className="option-grid">
           {question.options.map((text, i) => (
             <button

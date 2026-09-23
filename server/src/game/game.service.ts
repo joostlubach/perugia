@@ -234,6 +234,7 @@ export class GameService {
           title: question.title,
           text: question.text,
           options: question.options,
+          menu: question.menu,
           timeLimitSec: question.timeLimitSec,
           points: question.points,
           ...(revealed ? { correctIndex: question.correctIndex } : {}),
@@ -351,6 +352,7 @@ export class GameService {
           title: question.title,
           text: question.playerText ?? question.text,
           options: question.options,
+          menu: question.menu,
           timeLimitSec: question.timeLimitSec,
           points: question.points,
         };
