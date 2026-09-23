@@ -1,15 +1,96 @@
 import { DistributiveOmit, Question } from './types';
+import { KARTING_WINNER_GROUP, KARTING_LOSER_GROUP } from './karting';
+import { DINNER_HEAD, DINNER_LEFT, DINNER_RIGHT, DINNER_CORRECT_PRIMO, DINNER_CORRECT_SECONDO } from './dinner';
+import { HAM_ROWS } from './ham';
+import { BOWIE_MARKS, BOWIE_ASPECT_RATIO } from './bowie';
 
+// Kept in the same order as Vragen.txt so the running order matches what's
+// planned there.
 export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
   {
-    // TODO: verify this count yourself before Friday -- automated lyric
-    // counts came back inconsistent (32 vs 44) depending on how repeated
-    // chorus lines get transcribed, so don't trust this number blindly.
+    type: 'multiple_choice',
+    title: 'The Lake',
+    text: 'Which story is based on the area around the ice cold swimming lake?',
+    options: ['Pinocchio', 'Narnia', 'Alice in Wonderland', 'The Wizard of Oz'],
+    correctIndex: 1,
+    timeLimitSec: 20,
+    points: 1000,
+  },
+  {
+    type: 'multi_select',
+    title: 'Assisi',
+    text: 'Which saint(s) do we associate with the town of Assisi? Select all that apply.',
+    options: [
+      'St. Francis',
+      'St. Anthony',
+      'St. Carlo',
+      'St. Clare',
+      'St. Catherine',
+      'St. Nicholas',
+      'St. Peter',
+    ],
+    correctIndexes: [0, 2, 3],
+    timeLimitSec: 30,
+    points: 1500,
+  },
+  {
     type: 'drag_count',
+    title: 'Pedro',
     text: "How many times does the word \"Pedro\" appear in Raffaella Carra's song \"Pedro\"?",
     dragLabel: 'Pedro',
-    correctCount: 32,
+    correctCount: 48,
     timeLimitSec: 45,
+    points: 1500,
+  },
+  {
+    type: 'multiple_choice',
+    title: 'Pool Party',
+    text: 'How many liters of water did the pool lose after the first pool party?',
+    options: ['30 liters', '300 liters', '3000 liters', '30.000 liters'],
+    correctIndex: 2,
+    timeLimitSec: 20,
+    points: 1000,
+  },
+  {
+    type: 'podium_order',
+    title: 'Karting',
+    text: 'Who finished where in karting? Put both groups in the right order.',
+    correctOrder: [KARTING_WINNER_GROUP, KARTING_LOSER_GROUP],
+    groupLabels: ['Winner group', 'Loser group'],
+    timeLimitSec: 90,
+    points: 2000,
+  },
+  {
+    type: 'ham_cut',
+    title: 'Ham cutting',
+    text: 'Drag the two points to find the line that cuts the ham exactly in half.',
+    imageUrl: '/images/ham.jpg',
+    rows: HAM_ROWS,
+    timeLimitSec: 45,
+    points: 1500,
+  },
+  {
+    type: 'plate_assignment',
+    title: 'Primo / Secondo',
+    text: 'At the final dinner, who had a primo, who had a secondo, and who had both?',
+    head: DINNER_HEAD,
+    left: DINNER_LEFT,
+    right: DINNER_RIGHT,
+    correctPrimo: DINNER_CORRECT_PRIMO,
+    correctSecondo: DINNER_CORRECT_SECONDO,
+    timeLimitSec: 90,
+    points: 2000,
+  },
+  {
+    type: 'trace_marks',
+    title: "Bowie's scratches",
+    text: "Everyone fell into the pool at the pool party. Everyone? No, one friend was able to resist any attempt. But he paid dearly. Draw as best as you can the marks on Bowie's side from the pool party",
+    playerText: 'Draw the scratches as best as you can',
+    imageUrl: '/images/bowie-nomarks.jpeg',
+    revealImageUrl: '/images/bowie-marks.jpg',
+    aspectRatio: BOWIE_ASPECT_RATIO,
+    marks: BOWIE_MARKS,
+    timeLimitSec: 60,
     points: 1500,
   },
 ];

@@ -5,6 +5,7 @@ import { QuestionInput } from '../../types';
 const PLACEHOLDER = `[
   {
     "type": "multiple_choice",
+    "title": "Short label",
     "text": "Your question here?",
     "options": ["Option A", "Option B", "Option C", "Option D"],
     "correctIndex": 0,
@@ -13,7 +14,7 @@ const PLACEHOLDER = `[
   }
 ]`;
 
-export function HostSetup({ onCreated }: { onCreated: (code: string, hostToken: string) => void }) {
+export function HostSetup({ onCreated }: { onCreated: (hostToken: string) => void }) {
   const [customizing, setCustomizing] = useState(false);
   const [json, setJson] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -23,8 +24,8 @@ export function HostSetup({ onCreated }: { onCreated: (code: string, hostToken: 
     setLoading(true);
     setError(null);
     try {
-      const { code, hostToken } = await api.createRoom(questions);
-      onCreated(code, hostToken);
+      const { hostToken } = await api.createRoom(questions);
+      onCreated(hostToken);
     } catch (err) {
       setError((err as Error).message);
     } finally {

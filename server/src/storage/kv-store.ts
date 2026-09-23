@@ -3,7 +3,8 @@ import { Redis } from '@upstash/redis';
 import { Room } from '../game/types';
 import { RoomStore } from './store.interface';
 
-const TTL_SECONDS = 60 * 60 * 12; // rooms auto-expire after 12h
+const TTL_SECONDS = 60 * 60 * 12; // the room auto-expires after 12h
+const KEY = 'perugia-quiz:room';
 
 // Works with any Vercel Marketplace Redis integration (Upstash) -- these
 // set either the legacy KV_REST_API_* vars or the newer UPSTASH_REDIS_REST_*
@@ -18,20 +19,16 @@ function redisFromEnv(): Redis {
 export class KvRoomStore implements RoomStore {
   private redis = redisFromEnv();
 
-  private key(code: string): string {
-    return `perugia-quiz:room:${code}`;
-  }
-
-  async get(code: string): Promise<Room | null> {
-    const room = await this.redis.get<Room>(this.key(code));
+  async get(): Promise<Room | null> {
+    const room = await this.redis.get<Room>(KEY);
     return room ?? null;
   }
 
   async set(room: Room): Promise<void> {
-    await this.redis.set(this.key(room.code), room, { ex: TTL_SECONDS });
+    await this.redis.set(KEY, room, { ex: TTL_SECONDS });
   }
 
-  async delete(code: string): Promise<void> {
-    await this.redis.del(this.key(code));
+  async delete(): Promise<void> {
+    await this.redis.del(KEY);
   }
 }

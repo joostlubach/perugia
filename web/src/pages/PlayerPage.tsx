@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { api } from '../api';
+import { HamLine, MultiSelectAnswer, PlateAnswer, TraceAnswer } from '../types';
 import { usePolling } from '../hooks/usePolling';
 import { audio } from '../audio';
 import { MuteToggle } from '../components/MuteToggle';
@@ -11,7 +12,6 @@ import { PlayerLeaderboard } from './player/PlayerLeaderboard';
 import { PlayerFinal } from './player/PlayerFinal';
 
 interface Session {
-  code: string;
   playerId: string;
   playerToken: string;
 }
@@ -27,7 +27,7 @@ export function PlayerPage() {
 
   const fetchView = useCallback(() => {
     if (!session) return Promise.reject(new Error('no session'));
-    return api.getPlayerView(session.code, session.playerId, session.playerToken);
+    return api.getPlayerView(session.playerId, session.playerToken);
   }, [session]);
 
   const { data: view, error } = usePolling(fetchView, 1000, Boolean(session));
@@ -53,14 +53,14 @@ export function PlayerPage() {
     }
   }, [view]);
 
-  const handleJoined = (code: string, playerId: string, playerToken: string) => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ code, playerId, playerToken }));
-    setSession({ code, playerId, playerToken });
+  const handleJoined = (playerId: string, playerToken: string) => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ playerId, playerToken }));
+    setSession({ playerId, playerToken });
   };
 
-  const answer = (optionIndex: number) => {
+  const answer = (value: number | string[][] | PlateAnswer | HamLine | MultiSelectAnswer | TraceAnswer) => {
     if (!session) return;
-    api.submitAnswer(session.code, session.playerId, session.playerToken, optionIndex).catch(() => {});
+    api.submitAnswer(session.playerId, session.playerToken, value).catch(() => {});
   };
 
   return (

@@ -7,17 +7,17 @@ import { RoomStore } from './store.interface';
 // prefer KvRoomStore (see kv-store.ts).
 @Injectable()
 export class MemoryRoomStore implements RoomStore {
-  private rooms = new Map<string, Room>();
+  private room: Room | null = null;
 
-  async get(code: string): Promise<Room | null> {
-    return this.rooms.get(code) ?? null;
+  async get(): Promise<Room | null> {
+    return this.room;
   }
 
   async set(room: Room): Promise<void> {
-    this.rooms.set(room.code, room);
+    this.room = room;
   }
 
-  async delete(code: string): Promise<void> {
-    this.rooms.delete(code);
+  async delete(): Promise<void> {
+    this.room = null;
   }
 }

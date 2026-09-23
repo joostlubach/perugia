@@ -1,8 +1,20 @@
-import { PlayerRoomView } from '../../types';
-import { AnswerButton } from '../../components/AnswerButton';
+import { HamLine, MultiSelectAnswer, PlateAnswer, PlayerRoomView, TraceAnswer } from '../../types';
+import { Countdown } from '../../components/Countdown';
+import { Shape } from '../../components/Shape';
 import { DragCanvas, dragSoundPropsFor } from '../../components/DragCanvas';
+import { PodiumOrder } from '../../components/PodiumOrder';
+import { PlateBoard } from '../../components/PlateBoard';
+import { HamCutBoard } from '../../components/HamCutBoard';
+import { MultiSelectBoard } from '../../components/MultiSelectBoard';
+import { TraceMarksBoard } from '../../components/TraceMarksBoard';
 
-export function PlayerQuestion({ view, onAnswer }: { view: PlayerRoomView; onAnswer: (value: number) => void }) {
+export function PlayerQuestion({
+  view,
+  onAnswer,
+}: {
+  view: PlayerRoomView;
+  onAnswer: (value: number | string[][] | PlateAnswer | HamLine | MultiSelectAnswer | TraceAnswer) => void;
+}) {
   if (view.hasAnswered) {
     return (
       <div className="page">
@@ -15,31 +27,87 @@ export function PlayerQuestion({ view, onAnswer }: { view: PlayerRoomView; onAns
   const question = view.question;
   if (!question) return null;
 
-  if (question.type === 'drag_count') {
-    return (
-      <div className="page">
-        <h1 className="title">Guarda lo schermo! 👀</h1>
-        <p className="subtitle">{question.text}</p>
-        <DragCanvas
-          dragLabel={question.dragLabel}
-          {...dragSoundPropsFor(question.dragLabel)}
-          startedAt={view.questionStartedAt}
-          timeLimitSec={question.timeLimitSec}
-          onSubmit={onAnswer}
-        />
-      </div>
-    );
-  }
+  const startedAt = view.questionStartedAt;
 
   return (
     <div className="page">
-      <h1 className="title">Guarda lo schermo! 👀</h1>
-      <p className="subtitle">Pick the shape that matches the right answer</p>
-      <div className="player-answer-grid">
-        {question.options.map((_, i) => (
-          <AnswerButton key={i} index={i} onClick={() => onAnswer(i)} />
-        ))}
+      <div className="hint">
+        Question {view.currentQuestionIndex + 1} / {view.totalQuestions} · {question.title} · {question.points} pts
       </div>
+      <h1 className="question-text">{question.text}</h1>
+
+      {question.type === 'multiple_choice' && (
+        <>
+          <Countdown startedAt={startedAt} timeLimitSec={question.timeLimitSec} />
+          <div className="option-grid">
+            {question.options.map((text, i) => (
+              <button key={i} className={`shape-btn shape-${i}`} onClick={() => onAnswer(i)}>
+                <Shape index={i} />
+                <span style={{ flex: 1, textAlign: 'left' }}>{text}</span>
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+
+      {question.type === 'drag_count' && (
+        <DragCanvas
+          dragLabel={question.dragLabel}
+          {...dragSoundPropsFor(question.dragLabel)}
+          startedAt={startedAt}
+          timeLimitSec={question.timeLimitSec}
+          onSubmit={onAnswer}
+        />
+      )}
+
+      {question.type === 'podium_order' && (
+        <PodiumOrder
+          groups={question.groups}
+          groupLabels={question.groupLabels}
+          startedAt={startedAt}
+          timeLimitSec={question.timeLimitSec}
+          onSubmit={onAnswer}
+        />
+      )}
+
+      {question.type === 'plate_assignment' && (
+        <PlateBoard
+          head={question.head}
+          left={question.left}
+          right={question.right}
+          startedAt={startedAt}
+          timeLimitSec={question.timeLimitSec}
+          onSubmit={onAnswer}
+        />
+      )}
+
+      {question.type === 'ham_cut' && (
+        <HamCutBoard
+          imageUrl={question.imageUrl}
+          startedAt={startedAt}
+          timeLimitSec={question.timeLimitSec}
+          onSubmit={onAnswer}
+        />
+      )}
+
+      {question.type === 'multi_select' && (
+        <MultiSelectBoard
+          options={question.options}
+          startedAt={startedAt}
+          timeLimitSec={question.timeLimitSec}
+          onSubmit={(selected) => onAnswer({ selected })}
+        />
+      )}
+
+      {question.type === 'trace_marks' && (
+        <TraceMarksBoard
+          imageUrl={question.imageUrl}
+          aspectRatio={question.aspectRatio}
+          startedAt={startedAt}
+          timeLimitSec={question.timeLimitSec}
+          onSubmit={(strokes) => onAnswer({ strokes })}
+        />
+      )}
     </div>
   );
 }

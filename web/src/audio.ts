@@ -5,6 +5,7 @@ const SOUND_FILES = {
   victory: '/audio/victory.mp3',
   funny: '/audio/funny-sting.mp3',
   pedro: '/audio/pedro.mp3',
+  fidatidime: '/audio/fidatidime.mp3',
 } as const;
 
 export type SoundKey = keyof typeof SOUND_FILES;

@@ -15,6 +15,7 @@ export function DragCanvas({
   dragLabel,
   dropSound,
   dropSoundSequence,
+  doneSound,
   startedAt,
   timeLimitSec,
   onSubmit,
@@ -26,6 +27,8 @@ export function DragCanvas({
   // drop, cycling -- e.g. a "pedro pedro pedro pedro PE" chant played one
   // word per drag. Takes priority over dropSound when both are given.
   dropSoundSequence?: { url: string; boundaries: number[] };
+  // Played when the player clicks "Done dragging" (not on timer expiry).
+  doneSound?: SoundKey;
   startedAt: number | null;
   timeLimitSec: number;
   onSubmit: (count: number) => void;
@@ -53,6 +56,11 @@ export function DragCanvas({
     setSubmitted(true);
     onSubmit(countRef.current);
   };
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (canvas) canvas.scrollTop = canvas.scrollHeight;
+  }, [tokens.length]);
 
   const drop = (clientX: number, clientY: number) => {
     const canvas = canvasRef.current;
@@ -104,7 +112,13 @@ export function DragCanvas({
           >
             {dragLabel}
           </div>
-          <button className="btn btn-primary btn-lg" onClick={submit}>
+          <button
+            className="btn btn-primary btn-lg"
+            onClick={() => {
+              if (doneSound) audio.play(doneSound);
+              submit();
+            }}
+          >
             ✅ Done dragging
           </button>
           {startedAt && <Countdown startedAt={startedAt} timeLimitSec={timeLimitSec} onExpire={submit} />}
@@ -128,7 +142,13 @@ const PEDRO_WORD_BOUNDARIES = [0, 0.4, 0.9, 1.5, 2.4, 3.033];
 
 // Shared by the real player view and the local test harness so both stay in
 // sync if this ever changes.
-export function dragSoundPropsFor(dragLabel: string): { dropSoundSequence?: { url: string; boundaries: number[] } } {
+export function dragSoundPropsFor(dragLabel: string): {
+  dropSoundSequence?: { url: string; boundaries: number[] };
+  doneSound?: SoundKey;
+} {
   if (dragLabel.toLowerCase() !== 'pedro') return {};
-  return { dropSoundSequence: { url: '/audio/pedrope.mp3', boundaries: PEDRO_WORD_BOUNDARIES } };
+  return {
+    dropSoundSequence: { url: '/audio/pedrope.mp3', boundaries: PEDRO_WORD_BOUNDARIES },
+    doneSound: 'fidatidime',
+  };
 }

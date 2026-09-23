@@ -24,7 +24,7 @@ export function TestNavigator({
       <select value={index} onChange={(e) => onGoTo(Number(e.target.value))}>
         {questions.map((q, i) => (
           <option key={i} value={i}>
-            {resultMark(results[i])} {i + 1}. {q.text}
+            {resultMark(results[i])} {i + 1}. {q.title}
           </option>
         ))}
       </select>

@@ -1,0 +1,93 @@
+(
+  Which story is based on the area around the ice cold swimming lake?
+  - Pinocchio
+  - Narnia [correct]
+  - Alice in Wonderland
+  - The Wizard of Oz
+)
+
+(
+  Which saint do we associate with the town of Assisi (multiple answers possible):
+  - St. Francis [correct]
+  - St. Anthony
+  - St. Carlo [correct]
+  - St. Clare [correct]
+  - St. Catherine
+  - St. Nicholas
+  - St. Peter
+)
+
+(
+  Pedro
+
+  Correct answer: 48 pedro's
+)
+
+(
+  How many liters of water did the pool lose after the first pool party?
+  - 30 liters
+  - 300 liters
+  - 3000 liters [correct]
+  - 30.000 liters
+)
+
+(
+  Karting
+
+  Winner group rankings:
+  1. Ruben
+  2. Sally
+  3. Milan
+  4. Leonardo
+  5. Dex
+  6. Bas
+  7. Pietro
+  8. Sanne
+
+  Loser group rankings:
+  1. Ismail
+  2. Roland
+  3. Bowie 
+  4. Kyle
+  5. Riemer
+  6. Joost
+  7. Gökhan
+)
+
+(Bowie's marks)
+
+(Ham cutting)
+
+(
+  Primo / secondo final dinner
+
+          Bas
+        ------
+ Ruben  |    | Bowie
+ Kyle   |    | Sally
+ Jasper |    | Sanne
+ Joost  |    | Gökhan
+ Ismail |    | Milan
+ Dex    |    | Roland
+        ------
+
+
+  Bas: both
+  Ruben: primo
+  Bowie: ?
+  Kyle: ?
+  Sally: ?
+  Jasper: both
+  Sanne: both
+  Joost: both
+  Gökhan: primo
+  Ismail: ?
+  Milan: ?
+  Dex: both
+  Roland: ?
+)
+(
+  Bowie's scratch marks
+
+  Draw the scratch marks on bowie-nomarks with a red pen; scored against bowie-marks.
+)

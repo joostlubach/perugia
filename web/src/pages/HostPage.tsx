@@ -11,7 +11,6 @@ import { HostLeaderboard } from './host/HostLeaderboard';
 import { HostFinal } from './host/HostFinal';
 
 interface Session {
-  code: string;
   hostToken: string;
 }
 
@@ -26,7 +25,7 @@ export function HostPage() {
 
   const fetchView = useCallback(() => {
     if (!session) return Promise.reject(new Error('no session'));
-    return api.getHostView(session.code, session.hostToken);
+    return api.getHostView(session.hostToken);
   }, [session]);
 
   const { data: view, error } = usePolling(fetchView, 1200, Boolean(session));
@@ -47,13 +46,13 @@ export function HostPage() {
     if (view.status === 'ended') audio.play('victory');
   }, [view]);
 
-  const handleCreated = (code: string, hostToken: string) => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ code, hostToken }));
-    setSession({ code, hostToken });
+  const handleCreated = (hostToken: string) => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ hostToken }));
+    setSession({ hostToken });
   };
 
-  const start = () => session && api.startGame(session.code, session.hostToken);
-  const advance = () => session && api.advance(session.code, session.hostToken);
+  const start = () => session && api.startGame(session.hostToken);
+  const advance = () => session && api.advance(session.hostToken);
 
   return (
     <>

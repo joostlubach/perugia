@@ -1,10 +1,25 @@
 import { useEffect, useRef, useState } from 'react';
-import { QuestionInput } from '../../types';
+import { HamLine, MultiSelectAnswer, PlateAnswer, QuestionInput, TraceAnswer } from '../../types';
 import { audio } from '../../audio';
-import { scoreForAnswer } from '../../scoring';
+import {
+  countCorrectPlacements,
+  countCorrectPlateMarks,
+  countCorrectSelections,
+  scoreForAnswer,
+  scoreHamCut,
+  scoreTraceMarks,
+  totalPlacements,
+} from '../../scoring';
 import { Countdown } from '../../components/Countdown';
 import { Shape } from '../../components/Shape';
 import { DragCanvas, dragSoundPropsFor } from '../../components/DragCanvas';
+import { PodiumOrder } from '../../components/PodiumOrder';
+import { PlateBoard } from '../../components/PlateBoard';
+import { HamCutBoard } from '../../components/HamCutBoard';
+import { MultiSelectBoard } from '../../components/MultiSelectBoard';
+import { TraceMarksBoard } from '../../components/TraceMarksBoard';
+
+type Answer = number | string[][] | PlateAnswer | HamLine | MultiSelectAnswer | TraceAnswer | null;
 
 export function TestQuestion({
   question,
@@ -22,18 +37,68 @@ export function TestQuestion({
   const [startedAt] = useState(() => Date.now());
   const [result, setResult] = useState<TestResult | null>(null);
   const resultRef = useRef<TestResult | null>(null);
+  const partialCredit =
+    question.type === 'podium_order' ||
+    question.type === 'plate_assignment' ||
+    question.type === 'ham_cut' ||
+    question.type === 'multi_select' ||
+    question.type === 'trace_marks';
+  const isPercent = question.type === 'ham_cut' || question.type === 'trace_marks';
 
-  const correctValue = question.type === 'multiple_choice' ? question.correctIndex : question.correctCount;
+  const seats =
+    question.type === 'plate_assignment' ? [question.head, ...question.left, ...question.right] : [];
 
-  const finish = (value: number | null) => {
+  const correctValue =
+    question.type === 'multiple_choice'
+      ? question.correctIndex
+      : question.type === 'drag_count'
+      ? question.correctCount
+      : question.type === 'plate_assignment'
+      ? seats.length * 2
+      : question.type === 'ham_cut' || question.type === 'trace_marks'
+      ? 100
+      : question.type === 'multi_select'
+      ? question.options.length
+      : totalPlacements(question.correctOrder);
+
+  const [podiumGroups] = useState(() =>
+    question.type === 'podium_order' ? question.correctOrder.map((group) => [...group].sort()) : [],
+  );
+
+  const finish = (answer: Answer) => {
     if (resultRef.current) return;
     const elapsedMs = Date.now() - startedAt;
-    const correct = value === correctValue;
+    let value: number | null;
+    if (Array.isArray(answer) && question.type === 'podium_order') {
+      value = countCorrectPlacements(answer, question.correctOrder);
+    } else if (answer && !Array.isArray(answer) && typeof answer === 'object' && 'p1' in answer && question.type === 'ham_cut') {
+      value = scoreHamCut(answer, question.rows);
+    } else if (answer && !Array.isArray(answer) && typeof answer === 'object' && 'strokes' in answer && question.type === 'trace_marks') {
+      value = scoreTraceMarks(answer.strokes, question.marks, question.aspectRatio);
+    } else if (answer && !Array.isArray(answer) && typeof answer === 'object' && 'selected' in answer && question.type === 'multi_select') {
+      value = countCorrectSelections(answer.selected, question.correctIndexes, question.options.length);
+    } else if (answer && !Array.isArray(answer) && typeof answer === 'object' && question.type === 'plate_assignment') {
+      value = countCorrectPlateMarks(
+        answer as PlateAnswer,
+        { correctPrimo: question.correctPrimo, correctSecondo: question.correctSecondo },
+        seats,
+      );
+    } else {
+      value = answer as number | null;
+    }
+    const correct =
+      question.type === 'ham_cut'
+        ? (value ?? 0) >= 95
+        : question.type === 'trace_marks'
+        ? (value ?? 0) >= 80
+        : value === correctValue;
+    // Mirrors the server: podium_order/plate_assignment/ham_cut get partial credit.
+    const points = partialCredit ? Math.round((question.points * (value ?? 0)) / correctValue) : question.points;
     const next: TestResult = {
       value,
       elapsedMs,
       correct,
-      pointsAwarded: correct ? scoreForAnswer(question.points, question.timeLimitSec, elapsedMs) : 0,
+      pointsAwarded: (correct || partialCredit) && points > 0 ? scoreForAnswer(points, question.timeLimitSec, elapsedMs) : 0,
     };
     resultRef.current = next;
     setResult(next);
@@ -54,11 +119,11 @@ export function TestQuestion({
   return (
     <div className="page">
       <div className="hint">
-        Question {index + 1} / {total} · {question.points} pts · {question.timeLimitSec}s
+        Question {index + 1} / {total} · {question.title} · {question.points} pts · {question.timeLimitSec}s
       </div>
-      <h1 className="question-text">{question.text}</h1>
+      <h1 className="question-text">{('playerText' in question && question.playerText) || question.text}</h1>
       {result ? (
-        <ResultBanner result={result} correctValue={correctValue} />
+        <ResultBanner result={result} correctValue={correctValue} partialCredit={partialCredit} isPercent={isPercent} />
       ) : question.type === 'multiple_choice' ? (
         <Countdown startedAt={startedAt} timeLimitSec={question.timeLimitSec} onExpire={() => finish(null)} />
       ) : null}
@@ -90,6 +155,55 @@ export function TestQuestion({
         />
       )}
 
+      {!result && question.type === 'podium_order' && (
+        <PodiumOrder
+          groups={podiumGroups}
+          groupLabels={question.groupLabels}
+          startedAt={startedAt}
+          timeLimitSec={question.timeLimitSec}
+          onSubmit={finish}
+        />
+      )}
+
+      {!result && question.type === 'plate_assignment' && (
+        <PlateBoard
+          head={question.head}
+          left={question.left}
+          right={question.right}
+          startedAt={startedAt}
+          timeLimitSec={question.timeLimitSec}
+          onSubmit={finish}
+        />
+      )}
+
+      {!result && question.type === 'ham_cut' && (
+        <HamCutBoard
+          imageUrl={question.imageUrl}
+          startedAt={startedAt}
+          timeLimitSec={question.timeLimitSec}
+          onSubmit={finish}
+        />
+      )}
+
+      {!result && question.type === 'multi_select' && (
+        <MultiSelectBoard
+          options={question.options}
+          startedAt={startedAt}
+          timeLimitSec={question.timeLimitSec}
+          onSubmit={(selected) => finish({ selected })}
+        />
+      )}
+
+      {!result && question.type === 'trace_marks' && (
+        <TraceMarksBoard
+          imageUrl={question.imageUrl}
+          aspectRatio={question.aspectRatio}
+          startedAt={startedAt}
+          timeLimitSec={question.timeLimitSec}
+          onSubmit={(strokes) => finish({ strokes })}
+        />
+      )}
+
       {result && onNext && (
         <button className="btn btn-primary btn-lg" onClick={onNext}>
           Next question ▶
@@ -106,17 +220,35 @@ export interface TestResult {
   pointsAwarded: number;
 }
 
-function ResultBanner({ result, correctValue }: { result: TestResult; correctValue: number }) {
+function ResultBanner({
+  result,
+  correctValue,
+  partialCredit,
+  isPercent,
+}: {
+  result: TestResult;
+  correctValue: number;
+  partialCredit: boolean;
+  isPercent: boolean;
+}) {
   const seconds = (result.elapsedMs / 1000).toFixed(1);
   if (result.value === null) {
     return <h2 className="title">Tempo scaduto! ⏰</h2>;
   }
   return (
     <div>
-      <h2 className="title">{result.correct ? 'Perfetto! 🎉' : 'Peccato! 😅'}</h2>
+      <h2 className="title">
+        {result.correct ? 'Perfetto! 🎉' : result.pointsAwarded > 0 ? 'Quasi! 👌' : 'Peccato! 😅'}
+      </h2>
       <p className="subtitle">
-        {result.correct ? `+${result.pointsAwarded} points` : `No points · correct was ${correctValue}`} · answered
-        in {seconds}s
+        {isPercent
+          ? `${result.value}% · +${result.pointsAwarded} points`
+          : partialCredit
+          ? `${result.value} / ${correctValue} placed right · +${result.pointsAwarded} points`
+          : result.correct
+          ? `+${result.pointsAwarded} points`
+          : `No points · correct was ${correctValue}`}{' '}
+        · answered in {seconds}s
       </p>
     </div>
   );
