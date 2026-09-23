@@ -2,6 +2,7 @@ import { ForbiddenException, Inject, Injectable, NotFoundException } from '@nest
 import { ROOM_STORE, RoomStore } from '../storage/store.interface';
 import { CreateRoomDto, questionInputToQuestion } from './dto/create-room.dto';
 import {
+  countCorrectGroupings,
   countCorrectPlacements,
   countCorrectPlateMarks,
   countCorrectSelections,
@@ -128,6 +129,16 @@ export class GameService {
       // Partial credit per correctly placed driver; `correct` only when all are right.
       const total = totalPlacements(question.correctOrder);
       value = countCorrectPlacements(answer as string[][], question.correctOrder);
+      correct = value === total;
+      pointsAwarded =
+        value > 0 ? scoreForAnswer(Math.round((question.points * value) / total), question.timeLimitSec, elapsedMs) : 0;
+    } else if (question.type === 'travel_map') {
+      if (!Array.isArray(answer) || answer.some((group) => !Array.isArray(group))) {
+        throw new ForbiddenException('Wrong answer shape for this question');
+      }
+      // Partial credit per person placed at the right stop.
+      const total = totalPlacements(question.correctGroups);
+      value = countCorrectGroupings(answer as string[][], question.correctGroups);
       correct = value === total;
       pointsAwarded =
         value > 0 ? scoreForAnswer(Math.round((question.points * value) / total), question.timeLimitSec, elapsedMs) : 0;
@@ -287,6 +298,21 @@ export class GameService {
           points: question.points,
           ...(revealed ? { revealImageUrl: question.revealImageUrl } : {}),
         };
+      } else if (question.type === 'travel_map') {
+        hostQuestion = {
+          id: question.id,
+          type: 'travel_map',
+          title: question.title,
+          text: question.text,
+          mapUrl: question.mapUrl,
+          aspectRatio: question.aspectRatio,
+          landmarks: question.landmarks,
+          stops: question.stops,
+          people: sortedPeople(question.correctGroups),
+          timeLimitSec: question.timeLimitSec,
+          points: question.points,
+          ...(revealed ? { correctGroups: question.correctGroups } : {}),
+        };
       } else if (question.type === 'multi_select') {
         hostQuestion = {
           id: question.id,
@@ -391,6 +417,20 @@ export class GameService {
           timeLimitSec: question.timeLimitSec,
           points: question.points,
         };
+      } else if (question.type === 'travel_map') {
+        playerQuestion = {
+          id: question.id,
+          type: 'travel_map',
+          title: question.title,
+          text: question.playerText ?? question.text,
+          mapUrl: question.mapUrl,
+          aspectRatio: question.aspectRatio,
+          landmarks: question.landmarks,
+          stops: question.stops,
+          people: sortedPeople(question.correctGroups),
+          timeLimitSec: question.timeLimitSec,
+          points: question.points,
+        };
       } else if (question.type === 'multi_select') {
         playerQuestion = {
           id: question.id,
@@ -419,6 +459,7 @@ export class GameService {
       if (question.type === 'multiple_choice') correctValue = question.correctIndex;
       else if (question.type === 'drag_count') correctValue = question.correctCount;
       else if (question.type === 'podium_order') correctValue = totalPlacements(question.correctOrder);
+      else if (question.type === 'travel_map') correctValue = totalPlacements(question.correctGroups);
       else if (question.type === 'ham_cut' || question.type === 'trace_marks') correctValue = 100;
       else if (question.type === 'multi_select') correctValue = question.options.length;
       else correctValue = [question.head, ...question.left, ...question.right].length * 2;
@@ -460,6 +501,10 @@ export class GameService {
     }
     return room;
   }
+}
+
+function sortedPeople(groups: string[][]): string[] {
+  return groups.flat().sort();
 }
 
 function sortedGroups(groups: string[][]): string[][] {

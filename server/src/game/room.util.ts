@@ -21,6 +21,21 @@ export function countCorrectPlacements(order: string[][], correctOrder: string[]
   );
 }
 
+// Counts people placed at their correct stop. Anyone placed at more than one
+// stop only counts at the first.
+export function countCorrectGroupings(groups: string[][], correctGroups: string[][]): number {
+  const seen = new Set<string>();
+  let count = 0;
+  groups.forEach((group, g) => {
+    for (const key of group) {
+      if (seen.has(key)) continue;
+      seen.add(key);
+      if (correctGroups[g]?.includes(key)) count++;
+    }
+  });
+  return count;
+}
+
 export function totalPlacements(correctOrder: string[][]): number {
   return correctOrder.reduce((sum, group) => sum + group.length, 0);
 }

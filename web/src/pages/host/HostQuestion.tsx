@@ -3,6 +3,7 @@ import { HostRoomView } from '../../types';
 import { AnswerOption } from '../../components/AnswerOption';
 import { Countdown } from '../../components/Countdown';
 import { MenuCard } from '../../components/MenuCard';
+import { TravelMap } from '../../components/TravelMap';
 
 export function HostQuestion({ view, onExpire }: { view: HostRoomView; onExpire: () => void }) {
   const question = view.question!;
@@ -35,6 +36,14 @@ export function HostQuestion({ view, onExpire }: { view: HostRoomView; onExpire:
             <AnswerOption key={i} index={i} text={text} count={view.optionCounts[i] ?? 0} maxCount={maxCount} />
           ))}
         </div>
+      ) : question.type === 'travel_map' ? (
+        <TravelMap
+          mapUrl={question.mapUrl}
+          aspectRatio={question.aspectRatio}
+          landmarks={question.landmarks}
+          stops={question.stops}
+          large
+        />
       ) : question.type === 'podium_order' ? (
         <p className="subtitle">Put everyone on the podium in finishing order!</p>
       ) : question.type === 'plate_assignment' ? (

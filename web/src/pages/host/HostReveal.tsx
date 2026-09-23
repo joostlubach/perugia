@@ -1,6 +1,7 @@
 import { HostRoomView } from '../../types';
 import { AnswerOption } from '../../components/AnswerOption';
 import { MenuCard } from '../../components/MenuCard';
+import { TravelMap } from '../../components/TravelMap';
 import { PodiumStand } from '../../components/PodiumStand';
 import { Seat } from '../../components/PlateBoard';
 
@@ -33,6 +34,30 @@ export function HostReveal({ view, onNext }: { view: HostRoomView; onNext: () =>
             />
           ))}
         </div>
+      ) : question.type === 'travel_map' ? (
+        <>
+          <TravelMap
+            mapUrl={question.mapUrl}
+            aspectRatio={question.aspectRatio}
+            landmarks={question.landmarks}
+            stops={question.stops}
+            groups={question.correctGroups}
+            large
+          />
+          <ol className="leaderboard-list">
+            {view.guesses
+              .slice()
+              .sort((a, b) => b.value - a.value)
+              .map((g) => (
+                <li key={g.playerId} style={{ background: g.correct ? 'var(--gold)' : 'white' }}>
+                  <span>{g.correct ? '✅' : '🗺️'} {g.name}</span>
+                  <span>
+                    {g.value} / {question.people.length}
+                  </span>
+                </li>
+              ))}
+          </ol>
+        </>
       ) : question.type === 'podium_order' ? (
         <>
           <div className="podium-order">

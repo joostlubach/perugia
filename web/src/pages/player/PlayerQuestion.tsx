@@ -8,6 +8,7 @@ import { PlateBoard } from '../../components/PlateBoard';
 import { HamCutBoard } from '../../components/HamCutBoard';
 import { MultiSelectBoard } from '../../components/MultiSelectBoard';
 import { TraceMarksBoard } from '../../components/TraceMarksBoard';
+import { TravelMapBoard } from '../../components/TravelMapBoard';
 
 export function PlayerQuestion({
   view,
@@ -72,6 +73,19 @@ export function PlayerQuestion({
         <PodiumOrder
           groups={question.groups}
           groupLabels={question.groupLabels}
+          startedAt={startedAt}
+          timeLimitSec={question.timeLimitSec}
+          onSubmit={onAnswer}
+        />
+      )}
+
+      {question.type === 'travel_map' && (
+        <TravelMapBoard
+          mapUrl={question.mapUrl}
+          aspectRatio={question.aspectRatio}
+          landmarks={question.landmarks}
+          stops={question.stops}
+          people={question.people}
           startedAt={startedAt}
           timeLimitSec={question.timeLimitSec}
           onSubmit={onAnswer}

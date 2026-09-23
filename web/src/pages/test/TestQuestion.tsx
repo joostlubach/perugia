@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { HamLine, MultiSelectAnswer, PlateAnswer, QuestionInput, TraceAnswer } from '../../types';
 import { audio } from '../../audio';
 import {
+  countCorrectGroupings,
   countCorrectPlacements,
   countCorrectPlateMarks,
   countCorrectSelections,
@@ -19,6 +20,7 @@ import { PlateBoard } from '../../components/PlateBoard';
 import { HamCutBoard } from '../../components/HamCutBoard';
 import { MultiSelectBoard } from '../../components/MultiSelectBoard';
 import { TraceMarksBoard } from '../../components/TraceMarksBoard';
+import { TravelMapBoard } from '../../components/TravelMapBoard';
 
 type Answer = number | string[][] | PlateAnswer | HamLine | MultiSelectAnswer | TraceAnswer | null;
 
@@ -40,6 +42,7 @@ export function TestQuestion({
   const resultRef = useRef<TestResult | null>(null);
   const partialCredit =
     question.type === 'podium_order' ||
+    question.type === 'travel_map' ||
     question.type === 'plate_assignment' ||
     question.type === 'ham_cut' ||
     question.type === 'multi_select' ||
@@ -60,8 +63,13 @@ export function TestQuestion({
       ? 100
       : question.type === 'multi_select'
       ? question.options.length
+      : question.type === 'travel_map'
+      ? totalPlacements(question.correctGroups)
       : totalPlacements(question.correctOrder);
 
+  const [travelPeople] = useState(() =>
+    question.type === 'travel_map' ? question.correctGroups.flat().sort() : [],
+  );
   const [podiumGroups] = useState(() =>
     question.type === 'podium_order' ? question.correctOrder.map((group) => [...group].sort()) : [],
   );
@@ -72,6 +80,8 @@ export function TestQuestion({
     let value: number | null;
     if (Array.isArray(answer) && question.type === 'podium_order') {
       value = countCorrectPlacements(answer, question.correctOrder);
+    } else if (Array.isArray(answer) && question.type === 'travel_map') {
+      value = countCorrectGroupings(answer, question.correctGroups);
     } else if (answer && !Array.isArray(answer) && typeof answer === 'object' && 'p1' in answer && question.type === 'ham_cut') {
       value = scoreHamCut(answer, question.rows);
     } else if (answer && !Array.isArray(answer) && typeof answer === 'object' && 'strokes' in answer && question.type === 'trace_marks') {
@@ -167,6 +177,19 @@ export function TestQuestion({
         <PodiumOrder
           groups={podiumGroups}
           groupLabels={question.groupLabels}
+          startedAt={startedAt}
+          timeLimitSec={question.timeLimitSec}
+          onSubmit={finish}
+        />
+      )}
+
+      {!result && question.type === 'travel_map' && (
+        <TravelMapBoard
+          mapUrl={question.mapUrl}
+          aspectRatio={question.aspectRatio}
+          landmarks={question.landmarks}
+          stops={question.stops}
+          people={travelPeople}
           startedAt={startedAt}
           timeLimitSec={question.timeLimitSec}
           onSubmit={finish}

@@ -13,7 +13,8 @@ export class AnswerDto {
   @Min(0)
   value?: number;
 
-  // Avatar keys per group, first place first -- podium_order only.
+  // Avatar keys per group, first place first -- podium_order; avatar keys
+  // per map stop -- travel_map.
   @IsOptional()
   @IsArray()
   order?: string[][];

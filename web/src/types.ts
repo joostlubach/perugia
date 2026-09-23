@@ -91,8 +91,33 @@ export interface TraceMarksInput {
   points: number;
 }
 
+// A spot on a map image, in fractions of its width/height from the top left.
+export interface MapPin {
+  label: string;
+  icon: string;
+  x: number;
+  y: number;
+  side?: 'left' | 'right';
+}
+
+export interface TravelMapInput {
+  type: 'travel_map';
+  title: string;
+  text: string;
+  playerText?: string;
+  mapUrl: string;
+  aspectRatio: number;
+  landmarks: MapPin[];
+  stops: MapPin[];
+  // Avatar keys per stop, in the same order as `stops`.
+  correctGroups: string[][];
+  timeLimitSec: number;
+  points: number;
+}
+
 export type QuestionInput =
   | MultipleChoiceInput
+  | TravelMapInput
   | DragCountInput
   | PodiumOrderInput
   | PlateAssignmentInput
@@ -194,6 +219,20 @@ export type HostQuestionView =
       timeLimitSec: number;
       points: number;
       revealImageUrl?: string;
+    }
+  | {
+      id: string;
+      type: 'travel_map';
+      title: string;
+      text: string;
+      mapUrl: string;
+      aspectRatio: number;
+      landmarks: MapPin[];
+      stops: MapPin[];
+      people: string[];
+      timeLimitSec: number;
+      points: number;
+      correctGroups?: string[][];
     };
 
 export interface HostGuess {
@@ -292,6 +331,19 @@ export type PlayerQuestionView =
       text: string;
       imageUrl: string;
       aspectRatio: number;
+      timeLimitSec: number;
+      points: number;
+    }
+  | {
+      id: string;
+      type: 'travel_map';
+      title: string;
+      text: string;
+      mapUrl: string;
+      aspectRatio: number;
+      landmarks: MapPin[];
+      stops: MapPin[];
+      people: string[];
       timeLimitSec: number;
       points: number;
     };

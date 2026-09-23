@@ -4,6 +4,7 @@ import { DINNER_HEAD, DINNER_LEFT, DINNER_RIGHT, DINNER_CORRECT_PRIMO, DINNER_CO
 import { HAM_ROWS } from './ham';
 import { BOWIE_MARKS, BOWIE_ASPECT_RATIO } from './bowie';
 import { RUBEN_MENU, RUBEN_OPTIONS, RUBEN_CORRECT_INDEX } from './ruben';
+import { TRAVEL_MAP_URL, TRAVEL_MAP_ASPECT_RATIO, TRAVEL_LANDMARKS, TRAVEL_STOPS, TRAVEL_CORRECT_GROUPS } from './travel';
 
 // Kept in the same order as Vragen.txt so the running order matches what's
 // planned there.
@@ -128,5 +129,18 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
     correctIndex: 2,
     timeLimitSec: 20,
     points: 1000,
+  },
+  {
+    type: 'travel_map',
+    title: 'On the way',
+    text: 'Everyone made their way from Amsterdam to Perugia. Where was everyone along the way? Drag each person to the right spot on the map.',
+    playerText: 'Drag everyone to where they were on the way to Perugia',
+    mapUrl: TRAVEL_MAP_URL,
+    aspectRatio: TRAVEL_MAP_ASPECT_RATIO,
+    landmarks: TRAVEL_LANDMARKS,
+    stops: TRAVEL_STOPS,
+    correctGroups: TRAVEL_CORRECT_GROUPS,
+    timeLimitSec: 120,
+    points: 2000,
   },
 ];

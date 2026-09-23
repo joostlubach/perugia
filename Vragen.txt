@@ -136,3 +136,14 @@
   - It was a septic tank [correct]
   - Who knowah? Is Italia, we puttah the swimming pool where we wantah!
 )
+
+(
+  On the way -- drag everyone onto the map (Amsterdam top left, Perugia bottom right)
+
+  Train, Zürich: Kyle, Joost
+  Car 1, Strasbourg: Ruben, Jaro, Mark
+  Car 2, Brennerpass: Bas, Jasper, Riemer
+  Car 3, Luxembourg: Ismail
+  Car 4, Milano: Sally, Sanne
+  Airplane, Firenze: Bowie, Roland, Milan, Dex, Gökhan
+)

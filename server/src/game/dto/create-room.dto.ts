@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { MenuCourse, Question } from '../types';
+import { MapPin, MenuCourse, Question } from '../types';
 import {
   ArrayMinSize,
   IsArray,
@@ -15,7 +15,7 @@ import {
 } from 'class-validator';
 
 export class QuestionInputDto {
-  @IsIn(['multiple_choice', 'drag_count', 'podium_order', 'plate_assignment', 'ham_cut', 'multi_select', 'trace_marks'])
+  @IsIn(['multiple_choice', 'drag_count', 'podium_order', 'plate_assignment', 'ham_cut', 'multi_select', 'trace_marks', 'travel_map'])
   type!:
     | 'multiple_choice'
     | 'drag_count'
@@ -23,7 +23,8 @@ export class QuestionInputDto {
     | 'plate_assignment'
     | 'ham_cut'
     | 'multi_select'
-    | 'trace_marks';
+    | 'trace_marks'
+    | 'travel_map';
 
   @IsString()
   title!: string;
@@ -128,13 +129,32 @@ export class QuestionInputDto {
   @IsString()
   revealImageUrl?: string;
 
-  @ValidateIf((q) => q.type === 'trace_marks')
+  @ValidateIf((q) => q.type === 'trace_marks' || q.type === 'travel_map')
   @IsNumber()
   aspectRatio?: number;
 
   @ValidateIf((q) => q.type === 'trace_marks')
   @IsArray()
   marks?: { x: number; y: number }[][];
+
+  // travel_map only
+  @ValidateIf((q) => q.type === 'travel_map')
+  @IsString()
+  mapUrl?: string;
+
+  @ValidateIf((q) => q.type === 'travel_map')
+  @IsArray()
+  landmarks?: MapPin[];
+
+  @ValidateIf((q) => q.type === 'travel_map')
+  @IsArray()
+  @ArrayMinSize(1)
+  stops?: MapPin[];
+
+  @ValidateIf((q) => q.type === 'travel_map')
+  @IsArray()
+  @ArrayMinSize(1)
+  correctGroups?: string[][];
 }
 
 export function questionInputToQuestion(input: QuestionInputDto, id: string): Question {
@@ -208,6 +228,22 @@ export function questionInputToQuestion(input: QuestionInputDto, id: string): Qu
       revealImageUrl: input.revealImageUrl!,
       aspectRatio: input.aspectRatio!,
       marks: input.marks!,
+    };
+  }
+  if (input.type === 'travel_map') {
+    return {
+      id,
+      type: 'travel_map',
+      title: input.title,
+      text: input.text,
+      playerText: input.playerText,
+      timeLimitSec: input.timeLimitSec,
+      points: input.points,
+      mapUrl: input.mapUrl!,
+      aspectRatio: input.aspectRatio!,
+      landmarks: input.landmarks!,
+      stops: input.stops!,
+      correctGroups: input.correctGroups!,
     };
   }
   if (input.type === 'multi_select') {
