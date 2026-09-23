@@ -141,7 +141,13 @@ export function HostPage() {
           {view.status === 'lobby' && <HostLobby view={view} onStart={start} />}
           {view.status === 'intro' && <HostIntro view={view} onStart={advance} />}
           {view.status === 'question' && <HostQuestion view={view} />}
-          {view.status === 'reveal' && <HostReveal view={view} onNext={advance} />}
+          {view.status === 'reveal' && (
+            <HostReveal
+              view={view}
+              onNext={advance}
+              onGrade={(correctAnswer) => session && api.grade(session.hostToken, correctAnswer)}
+            />
+          )}
           {view.status === 'leaderboard' && <HostLeaderboard view={view} onNext={advance} />}
           {view.status === 'finale' && <HostFinale onNext={advance} />}
           {view.status === 'ended' && <HostFinal view={view} />}

@@ -24,6 +24,16 @@ export interface MenuOrderInput {
   points: number;
 }
 
+// Free text answer; the host types the right answer in at the reveal.
+export interface OpenAnswerInput {
+  type: 'open_answer';
+  title: string;
+  text: string;
+  playerText?: string;
+  timeLimitSec: number;
+  points: number;
+}
+
 export interface MenuCourse {
   course: string;
   dishes: { name: string; description?: string }[];
@@ -149,6 +159,7 @@ export type QuestionInput =
   | HamCutInput
   | MultiSelectInput
   | MenuOrderInput
+  | OpenAnswerInput
   | TraceMarksInput;
 
 export interface PlateAnswer {
@@ -167,6 +178,10 @@ export interface MultiSelectAnswer {
 
 export interface TraceAnswer {
   strokes: Point[][];
+}
+
+export interface TextAnswer {
+  text: string;
 }
 
 export type HostQuestionView = (
@@ -190,6 +205,20 @@ export type HostQuestionView = (
       timeLimitSec: number;
       points: number;
       correctIndexes?: number[];
+    }
+  | {
+      id: string;
+      type: 'open_answer';
+      title: string;
+      text: string;
+      timeLimitSec: number;
+      points: number;
+      // Typed in by the host at the reveal.
+      correctAnswer?: string;
+      // Avatar key of the player whose answer is the right one.
+      answerFrom?: string;
+      // Other players whose answers are shown on the big screen too.
+      showAnswersOf?: string[];
     }
   | {
       id: string;
@@ -290,6 +319,8 @@ export interface HostGuess {
   avatar: string;
   value: number;
   correct: boolean;
+  text?: string;
+  pointsAwarded: number;
 }
 
 export type ReactionKind = 'mammamia' | 'mario' | 'losing' | 'gibberish' | 'congratulations' | 'letsgo';
@@ -346,6 +377,14 @@ export type PlayerQuestionView =
       title: string;
       text: string;
       menu: MenuCourse[];
+      timeLimitSec: number;
+      points: number;
+    }
+  | {
+      id: string;
+      type: 'open_answer';
+      title: string;
+      text: string;
       timeLimitSec: number;
       points: number;
     }
@@ -444,6 +483,7 @@ export interface PlayerRoomView {
   questionStartedAt: number | null;
   question: PlayerQuestionView | null;
   hasAnswered: boolean;
+  awaitingGrading: boolean;
   lastResult: PlayerLastResult | null;
   correctValue: number | null;
   score: number;

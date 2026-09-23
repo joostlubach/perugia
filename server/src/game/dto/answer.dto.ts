@@ -9,7 +9,15 @@ export class AnswerDto {
 
   // Option index for multiple_choice questions, dragged-token count for
   // drag_count, amount in cents for money_vase.
-  @ValidateIf((a) => a.order === undefined && a.plates === undefined && a.line === undefined && a.multiSelect === undefined && a.strokes === undefined)
+  @ValidateIf(
+    (a) =>
+      a.order === undefined &&
+      a.plates === undefined &&
+      a.line === undefined &&
+      a.multiSelect === undefined &&
+      a.strokes === undefined &&
+      a.text === undefined,
+  )
   @IsInt()
   @Min(0)
   value?: number;
@@ -39,4 +47,9 @@ export class AnswerDto {
   @IsOptional()
   @IsArray()
   strokes?: { x: number; y: number }[][];
+
+  // The typed answer -- open_answer only.
+  @IsOptional()
+  @IsString()
+  text?: string;
 }

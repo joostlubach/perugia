@@ -29,6 +29,20 @@ export interface MenuOrderQuestion extends QuestionBase {
   correctIndexes: number[];
 }
 
+// Player types a free answer. Nobody knows the right one beforehand: it's
+// whatever the `answerFrom` player typed, or else what the host types in at
+// the reveal. Answers are only scored then.
+export interface OpenAnswerQuestion extends QuestionBase {
+  type: 'open_answer';
+  // Set at the reveal.
+  correctAnswer?: string;
+  // Avatar key of the player whose answer is the right one (e.g. the cook).
+  answerFrom?: string;
+  // Other players whose answers are shown on the big screen too. Everyone
+  // else's stays private.
+  showAnswersOf?: string[];
+}
+
 export interface MenuCourse {
   course: string;
   dishes: MenuDish[];
@@ -151,6 +165,7 @@ export type Question =
   | HamCutQuestion
   | MultiSelectQuestion
   | MenuOrderQuestion
+  | OpenAnswerQuestion
   | TraceMarksQuestion;
 
 // Plain `Omit<Question, K>` doesn't distribute over the union and collapses
@@ -167,6 +182,8 @@ export interface PlayerAnswer {
   value: number;
   // The dish indexes ordered -- menu_order only.
   selection?: number[];
+  // What was typed -- open_answer only.
+  text?: string;
 }
 
 export interface Player {
@@ -225,6 +242,7 @@ export type HostQuestionView =
   | Omit<HamCutQuestion, 'rows'>
   | (Omit<MultiSelectQuestion, 'correctIndexes'> & { correctIndexes?: number[] })
   | (Omit<MenuOrderQuestion, 'correctIndexes'> & { correctIndexes?: number[] })
+  | OpenAnswerQuestion
   | (Omit<TraceMarksQuestion, 'marks' | 'revealImageUrl'> & { revealImageUrl?: string })
   | (Omit<TravelMapQuestion, 'correctGroups'> & { people: string[]; correctGroups?: string[][] })
   | (Omit<MoneyVaseQuestion, 'correctCents'> & { correctCents?: number });
@@ -235,6 +253,9 @@ export interface HostGuess {
   avatar: string;
   value: number;
   correct: boolean;
+  // What was typed -- open_answer only.
+  text?: string;
+  pointsAwarded: number;
 }
 
 export interface HostRoomView {
@@ -269,6 +290,7 @@ export type PlayerQuestionView =
   | Omit<HamCutQuestion, 'rows'>
   | Omit<MultiSelectQuestion, 'correctIndexes'>
   | Omit<MenuOrderQuestion, 'correctIndexes'>
+  | Omit<OpenAnswerQuestion, 'correctAnswer'>
   | Omit<TraceMarksQuestion, 'marks' | 'revealImageUrl'>
   // People are sorted alphabetically so they don't leak the answer.
   | (Omit<TravelMapQuestion, 'correctGroups'> & { people: string[] })
@@ -281,6 +303,8 @@ export interface PlayerRoomView {
   questionStartedAt: number | null;
   question: PlayerQuestionView | null;
   hasAnswered: boolean;
+  // An open_answer question that the host hasn't given the right answer for yet.
+  awaitingGrading: boolean;
   lastResult: PlayerAnswer | null;
   // The correct option index, correct count or total placements, depending on question type.
   correctValue: number | null;

@@ -40,10 +40,20 @@ host:
     trace_marks: "Draw the scratch marks!"
     multi_select: "Select all that apply -- more than one answer may be correct!"
     drag_count: "Drag as many \"{label}\" as you count, then lock it in!"
+    open_answer: "Type your answer on your phone!"
 
   reveal:
     title: "Of course it was"
     hamGoal: "The goal was a perfect 50/50 split by area."
+    # Open question. The right answer is what {name} (Kyle) typed; the host only
+    # types it in when he didn't answer.
+    typeCorrectAnswer: "Type the correct answer"
+    checkAnswers: "✅ Check answers"
+    noAnswer: "(nothing)"
+    featuredAnswer: "{name} says it's..."
+    # {keeper} is the player whose answer is the right one (Kyle), {name} the one shown (Ruben).
+    playerAnswer: "By the way, Kyle DID tell {name}, and {name} answered"
+    correctCount: "{count} of {total} got it right"
     toLeaderboard: "📊 Show Leaderboard"
     toFinale: "🏁 Finish"
     toNextQuestion: "➡️ Next Question"
@@ -97,6 +107,9 @@ player:
     partlyCorrect: "Cosi cosa! 👌"
     wrong: "Helacchio! 😅"
     timeUp: "Out of time! ⏰"
+    # Open question, while the host hasn't typed in the right answer yet.
+    awaitingGradingTitle: "Hmm... 🤔"
+    awaitingGradingSubtitle: "The host is checking the answers. Look at the screen!"
     points: "+{points} points"
     noPoints: "Mehp"
     totalScore: "Total score: {score}"
@@ -121,6 +134,9 @@ boards:
   dragCount:
     hint: "Drag {label} in here, once per guess"
     done: "✅ Done dragging"
+  openAnswer:
+    placeholder: "Your answer..."
+    done: "✅ Send"
   hamCut:
     done: "🔪 Lock in the cut"
   menu:

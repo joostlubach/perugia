@@ -6,6 +6,7 @@ import { GameService } from './game.service';
 import { JoinRoomDto } from './dto/join-room.dto';
 import { AnswerDto } from './dto/answer.dto';
 import { ReactDto } from './dto/react.dto';
+import { GradeDto } from './dto/grade.dto';
 
 // There's only one room -- a single reunion, played once -- so none of
 // these routes take a room identifier.
@@ -56,6 +57,11 @@ export class GameController {
     return this.game.goTo(token, index);
   }
 
+  @Post('grade')
+  grade(@Query('token') token: string, @Body() dto: GradeDto) {
+    return this.game.grade(token, dto.correctAnswer);
+  }
+
   @Post('finish')
   finish(@Query('token') token: string) {
     return this.game.finish(token);
@@ -71,7 +77,7 @@ export class GameController {
     return this.game.submitAnswer(
       dto.playerId,
       dto.playerToken,
-      dto.order ?? dto.plates ?? dto.line ?? dto.multiSelect ?? dto.strokes ?? dto.value!,
+      dto.order ?? dto.plates ?? dto.line ?? dto.multiSelect ?? dto.strokes ?? dto.text ?? dto.value!,
     );
   }
 }

@@ -6,9 +6,19 @@ import { formatEuro, Vase } from '../../components/MoneyVase';
 import { PodiumStand } from '../../components/PodiumStand';
 import { Seat } from '../../components/PlateBoard';
 import { QuestionText } from '../../components/QuestionText';
+import { HostGradeBox } from './HostGradeBox';
+import { OpenAnswerSummary } from './OpenAnswerSummary';
 import { t } from '../../texts';
 
-export function HostReveal({ view, onNext }: { view: HostRoomView; onNext: () => void }) {
+export function HostReveal({
+  view,
+  onNext,
+  onGrade,
+}: {
+  view: HostRoomView;
+  onNext: () => void;
+  onGrade: (correctAnswer: string) => void;
+}) {
   const question = view.question!;
   const maxCount = Math.max(1, ...view.optionCounts);
 
@@ -20,7 +30,21 @@ export function HostReveal({ view, onNext }: { view: HostRoomView; onNext: () =>
         <img className="question-image" src={question.imageUrl} alt="" />
       )}
 
-      {question.type === 'menu_order' ? (
+      {question.type === 'open_answer' ? (
+        <>
+          {question.correctAnswer === undefined ? (
+            // Only when the answer key player didn't answer (or there isn't one).
+            <HostGradeBox onGrade={onGrade} />
+          ) : (
+            <OpenAnswerSummary
+              guesses={view.guesses}
+              correctAnswer={question.correctAnswer}
+              answerFrom={question.answerFrom}
+              showAnswersOf={question.showAnswersOf ?? []}
+            />
+          )}
+        </>
+      ) : question.type === 'menu_order' ? (
         <>
           <MenuCard menu={question.menu} counts={view.optionCounts} correctIndexes={question.correctIndexes} wide />
           <ol className="leaderboard-list">
@@ -250,7 +274,11 @@ export function HostReveal({ view, onNext }: { view: HostRoomView; onNext: () =>
         </>
       )}
 
-      <button className="btn btn-primary btn-lg" onClick={onNext}>
+      <button
+        className="btn btn-primary btn-lg"
+        disabled={question.type === 'open_answer' && question.correctAnswer === undefined}
+        onClick={onNext}
+      >
         {view.afterReveal === 'leaderboard'
           ? t('host.reveal.toLeaderboard')
           : view.afterReveal === 'finale'

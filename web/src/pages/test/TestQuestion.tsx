@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { HamLine, MultiSelectAnswer, PlateAnswer, QuestionInput, TraceAnswer } from '../../types';
+import { HamLine, MultiSelectAnswer, PlateAnswer, QuestionInput, TextAnswer, TraceAnswer } from '../../types';
 import { audio } from '../../audio';
 import {
   countCorrectGroupings,
@@ -26,8 +26,9 @@ import { TraceMarksBoard } from '../../components/TraceMarksBoard';
 import { TravelMapBoard } from '../../components/TravelMapBoard';
 import { formatEuro, MoneyVaseBoard } from '../../components/MoneyVase';
 import { QuestionText } from '../../components/QuestionText';
+import { OpenAnswerBoard } from '../../components/OpenAnswerBoard';
 
-type Answer = number | string[][] | PlateAnswer | HamLine | MultiSelectAnswer | TraceAnswer | null;
+type Answer = number | string[][] | PlateAnswer | HamLine | MultiSelectAnswer | TraceAnswer | TextAnswer | null;
 
 export function TestQuestion({
   question,
@@ -44,6 +45,8 @@ export function TestQuestion({
 }) {
   const [startedAt] = useState(() => Date.now());
   const [result, setResult] = useState<TestResult | null>(null);
+  // open_answer has no right answer until the host types it in, so the test page just shows what was typed.
+  const [typedAnswer, setTypedAnswer] = useState<string | null>(null);
   const resultRef = useRef<TestResult | null>(null);
   const partialCredit =
     question.type === 'podium_order' ||
@@ -72,6 +75,8 @@ export function TestQuestion({
       ? question.options.length
       : question.type === 'menu_order'
       ? question.menu.length
+      : question.type === 'open_answer'
+      ? 1
       : question.type === 'travel_map'
       ? totalPlacements(question.correctGroups)
       : question.type === 'money_vase'
@@ -87,6 +92,7 @@ export function TestQuestion({
 
   const finish = (answer: Answer) => {
     if (resultRef.current) return;
+    if (answer && typeof answer === 'object' && 'text' in answer) setTypedAnswer(answer.text);
     const elapsedMs = Date.now() - startedAt;
     let value: number | null;
     if (Array.isArray(answer) && question.type === 'podium_order') {
@@ -165,7 +171,12 @@ export function TestQuestion({
         <img className="question-image" src={question.imageUrl} alt="" />
       )}
       {result ? (
-        question.type === 'money_vase' && result.value !== null ? (
+        question.type === 'open_answer' ? (
+          <div>
+            <h2 className="title">“{typedAnswer || '…'}”</h2>
+            <p className="subtitle">Open question: scored live when the host types the right answer.</p>
+          </div>
+        ) : question.type === 'money_vase' && result.value !== null ? (
           <div>
             <h2 className="title">{result.correct ? 'Perfetto! 🎉' : result.pointsAwarded > 0 ? 'Quasi! 👌' : 'Peccato! 😅'}</h2>
             <p className="subtitle">
@@ -183,6 +194,10 @@ export function TestQuestion({
           onExpire={question.type === 'multiple_choice' ? () => finish(null) : undefined}
           floating
         />
+      )}
+
+      {!result && question.type === 'open_answer' && (
+        <OpenAnswerBoard startedAt={startedAt} timeLimitSec={question.timeLimitSec} onSubmit={(text) => finish({ text })} />
       )}
 
       {!result && question.type === 'menu_order' && (

@@ -64,6 +64,8 @@ export function HostQuestion({ view }: { view: HostRoomView }) {
         <p className="subtitle">{t('host.question.ham_cut')}</p>
       ) : question.type === 'trace_marks' ? (
         <p className="subtitle">{t('host.question.trace_marks')}</p>
+      ) : question.type === 'open_answer' ? (
+        <p className="subtitle">{t('host.question.open_answer')}</p>
       ) : question.type === 'multi_select' ? (
         <p className="subtitle">{t('host.question.multi_select')}</p>
       ) : (

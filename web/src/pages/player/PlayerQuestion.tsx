@@ -1,4 +1,4 @@
-import { HamLine, MultiSelectAnswer, PlateAnswer, PlayerRoomView, TraceAnswer } from '../../types';
+import { HamLine, MultiSelectAnswer, PlateAnswer, PlayerRoomView, TextAnswer, TraceAnswer } from '../../types';
 import { Countdown } from '../../components/Countdown';
 import { Shape } from '../../components/Shape';
 import { MenuOrderBoard } from '../../components/MenuOrderBoard';
@@ -11,6 +11,7 @@ import { TraceMarksBoard } from '../../components/TraceMarksBoard';
 import { TravelMapBoard } from '../../components/TravelMapBoard';
 import { MoneyVaseBoard } from '../../components/MoneyVase';
 import { QuestionText } from '../../components/QuestionText';
+import { OpenAnswerBoard } from '../../components/OpenAnswerBoard';
 import { t } from '../../texts';
 
 export function PlayerQuestion({
@@ -18,7 +19,7 @@ export function PlayerQuestion({
   onAnswer,
 }: {
   view: PlayerRoomView;
-  onAnswer: (value: number | string[][] | PlateAnswer | HamLine | MultiSelectAnswer | TraceAnswer) => void;
+  onAnswer: (value: number | string[][] | PlateAnswer | HamLine | MultiSelectAnswer | TraceAnswer | TextAnswer) => void;
 }) {
   if (view.hasAnswered) {
     return (
@@ -59,6 +60,14 @@ export function PlayerQuestion({
             </button>
           ))}
         </div>
+      )}
+
+      {question.type === 'open_answer' && (
+        <OpenAnswerBoard
+          startedAt={startedAt}
+          timeLimitSec={question.timeLimitSec}
+          onSubmit={(text) => onAnswer({ text })}
+        />
       )}
 
       {question.type === 'menu_order' && (

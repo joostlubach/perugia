@@ -118,6 +118,15 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
     points: 1000,
   },
   {
+    type: 'open_answer',
+    ...texts('kyle'),
+    // Whatever Kyle types is the right answer.
+    answerFrom: 'kyle',
+    showAnswersOf: ['ruben'],
+    timeLimitSec: 45,
+    points: 1500,
+  },
+  {
     type: 'multiple_choice',
     ...texts('pool'),
     options: [

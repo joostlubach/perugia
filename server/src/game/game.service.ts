@@ -18,6 +18,7 @@ import {
   totalPlacements,
 } from './room.util';
 import { sampleQuestions } from './questions.sample';
+import { matchesOpenAnswer } from './open-answer';
 import {
   HostGuess,
   HostQuestionView,
@@ -29,6 +30,7 @@ import {
   Point,
   Question,
   ReactionKind,
+  OpenAnswerQuestion,
   Room,
   RoomStatus,
 } from './types';
@@ -101,7 +103,7 @@ export class GameService {
       room.questionStartedAt = Date.now();
       room.allAnsweredAt = null;
     } else if (room.status === 'question') {
-      room.status = 'reveal';
+      this.reveal(room);
     } else if (room.status === 'reveal') {
       const next = afterReveal(room);
       if (next === 'intro') this.goToQuestion(room, room.currentQuestionIndex + 1);
@@ -115,12 +117,43 @@ export class GameService {
     await this.store.set(room);
   }
 
+  // The host types the right answer to an open question at its reveal; every
+  // typed answer is (re)scored against it. Can be redone to fix a typo.
+  async grade(hostToken: string, correctAnswer: string): Promise<void> {
+    const room = await this.requireHost(hostToken);
+    const question = room.questions[room.currentQuestionIndex];
+    if (!question || question.type !== 'open_answer') throw new BadRequestException('Not an open question');
+    if (room.status !== 'reveal') throw new BadRequestException('Answers can only be checked at the reveal');
+    this.gradeOpenAnswers(room, question, correctAnswer, null);
+    await this.store.set(room);
+  }
+
+  // (Re)scores every typed answer against `correctAnswer`. The player who
+  // supplied the answer (if any) gets no points for it -- they knew it.
+  private gradeOpenAnswers(room: Room, question: OpenAnswerQuestion, correctAnswer: string, keeperId: string | null) {
+    question.correctAnswer = correctAnswer.trim();
+    for (const player of Object.values(room.players)) {
+      const answer = player.answers[question.id];
+      if (!answer) continue;
+      player.score -= answer.pointsAwarded;
+      answer.correct = matchesOpenAnswer(answer.text ?? '', question.correctAnswer);
+      answer.value = answer.correct ? 1 : 0;
+      answer.pointsAwarded =
+        answer.correct && player.id !== keeperId
+          ? scoreForAnswer(question.points, question.timeLimitSec, answer.answeredAtMs)
+          : 0;
+      player.score += answer.pointsAwarded;
+    }
+  }
+
   // Host shortcut: straight to a question (zero-based), shown as its intro.
   // Earlier answers to it are wiped, points included, so it can be replayed.
   async goTo(hostToken: string, index: number): Promise<void> {
     const room = await this.requireHost(hostToken);
     if (index < 0 || index >= room.questions.length) throw new BadRequestException('No such question');
-    const questionId = room.questions[index].id;
+    const question = room.questions[index];
+    const questionId = question.id;
+    if (question.type === 'open_answer') question.correctAnswer = undefined;
     for (const player of Object.values(room.players)) {
       const answer = player.answers[questionId];
       if (!answer) continue;
@@ -154,14 +187,29 @@ export class GameService {
     const timeUp = now >= room.questionStartedAt + question.timeLimitSec * 1000 + LATE_ANSWER_GRACE_MS;
     const allDone = room.allAnsweredAt !== null && now >= room.allAnsweredAt + ALL_ANSWERED_DELAY_MS;
     if (!timeUp && !allDone) return;
-    room.status = 'reveal';
+    this.reveal(room);
     await this.store.set(room);
+  }
+
+  private reveal(room: Room) {
+    room.status = 'reveal';
+    const question = room.questions[room.currentQuestionIndex];
+    if (question.type === 'open_answer') this.gradeByAnswerKey(room, question);
+  }
+
+  // An open question with `answerFrom` is scored against that player's own
+  // answer. If they didn't answer, the host types the answer in instead.
+  private gradeByAnswerKey(room: Room, question: OpenAnswerQuestion) {
+    if (!question.answerFrom) return;
+    const keeper = Object.values(room.players).find((p) => p.avatar === question.answerFrom);
+    const text = keeper?.answers[question.id]?.text;
+    if (keeper && text) this.gradeOpenAnswers(room, question, text, keeper.id);
   }
 
   async submitAnswer(
     playerId: string,
     playerToken: string,
-    answer: number | string[][] | PlateAnswer | HamLine | number[] | Point[][],
+    answer: number | string | string[][] | PlateAnswer | HamLine | number[] | Point[][],
   ): Promise<void> {
     const room = await this.requireRoom();
     const player = room.players[playerId];
@@ -181,6 +229,7 @@ export class GameService {
     let correct: boolean;
     let pointsAwarded: number;
     let selection: number[] | undefined;
+    let text: string | undefined;
 
     if (question.type === 'podium_order') {
       if (!Array.isArray(answer) || answer.some((group) => !Array.isArray(group))) {
@@ -235,6 +284,13 @@ export class GameService {
       value = scoreTraceMarks(answer, question.marks, question.aspectRatio);
       correct = value >= TRACE_MARKS_CORRECT;
       pointsAwarded = value > 0 ? scoreForAnswer(Math.round((question.points * value) / 100), question.timeLimitSec, elapsedMs) : 0;
+    } else if (question.type === 'open_answer') {
+      if (typeof answer !== 'string') throw new ForbiddenException('Wrong answer shape for this question');
+      // Scored later, once the host types in the right answer (see grade).
+      text = answer.trim().slice(0, OPEN_ANSWER_MAX_LENGTH);
+      value = 0;
+      correct = false;
+      pointsAwarded = 0;
     } else if (question.type === 'menu_order') {
       if (!Array.isArray(answer) || answer.some((v) => typeof v !== 'number')) {
         throw new ForbiddenException('Wrong answer shape for this question');
@@ -280,6 +336,7 @@ export class GameService {
       correct,
       pointsAwarded,
       ...(selection ? { selection } : {}),
+      ...(text !== undefined ? { text } : {}),
     };
     player.score += pointsAwarded;
     if (Object.values(room.players).every((p) => p.answers[question.id])) {
@@ -353,6 +410,8 @@ export class GameService {
               avatar: p.avatar,
               value: p.answers[question.id].value,
               correct: p.answers[question.id].correct,
+              text: p.answers[question.id].text,
+              pointsAwarded: p.answers[question.id].pointsAwarded,
             }))
         : [];
 
@@ -369,6 +428,18 @@ export class GameService {
           timeLimitSec: question.timeLimitSec,
           points: question.points,
           ...(revealed ? { correctIndex: question.correctIndex } : {}),
+        };
+      } else if (question.type === 'open_answer') {
+        hostQuestion = {
+          id: question.id,
+          type: 'open_answer',
+          title: question.title,
+          text: question.text,
+          timeLimitSec: question.timeLimitSec,
+          points: question.points,
+          correctAnswer: question.correctAnswer,
+          answerFrom: question.answerFrom,
+          showAnswersOf: question.showAnswersOf,
         };
       } else if (question.type === 'menu_order') {
         hostQuestion = {
@@ -530,6 +601,15 @@ export class GameService {
           timeLimitSec: question.timeLimitSec,
           points: question.points,
         };
+      } else if (question.type === 'open_answer') {
+        playerQuestion = {
+          id: question.id,
+          type: 'open_answer',
+          title: question.title,
+          text: question.playerText ?? question.text,
+          timeLimitSec: question.timeLimitSec,
+          points: question.points,
+        };
       } else if (question.type === 'menu_order') {
         playerQuestion = {
           id: question.id,
@@ -630,6 +710,7 @@ export class GameService {
       else if (question.type === 'ham_cut' || question.type === 'trace_marks') correctValue = 100;
       else if (question.type === 'multi_select') correctValue = question.options.length;
       else if (question.type === 'menu_order') correctValue = question.menu.length;
+      else if (question.type === 'open_answer') correctValue = 1;
       else correctValue = [question.head, ...question.left, ...question.right].length * 2;
     }
 
@@ -640,6 +721,7 @@ export class GameService {
       questionStartedAt: room.questionStartedAt,
       question: playerQuestion,
       hasAnswered: question ? Boolean(player.answers[question.id]) : false,
+      awaitingGrading: question?.type === 'open_answer' && revealed && question.correctAnswer === undefined,
       lastResult: question ? player.answers[question.id] ?? null : null,
       correctValue,
       score: player.score,
@@ -707,6 +789,7 @@ function sortedGroups(groups: string[][]): string[][] {
 }
 
 const LEADERBOARD_EVERY = 5;
+const OPEN_ANSWER_MAX_LENGTH = 100;
 // After everyone has answered, give the last one a moment to look up.
 const ALL_ANSWERED_DELAY_MS = 2000;
 // Answers auto-submitted by phones as their countdown hits zero still count.

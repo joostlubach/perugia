@@ -176,6 +176,21 @@ to the final results.
 )
 
 (
+  What is the secret ingredient in Kyle's Red Wine Spaghetti?
+
+  Open question: everyone types an answer, Kyle too. Whatever Kyle typed is the
+  right answer; it's shown on the big screen at the reveal ("Kyle says it's..."),
+  with Ruben's answer and how many got it right. Other answers stay private.
+  Everyone, Ruben included, is scored against Kyle's answer.
+  If Kyle didn't answer, the host types in the answer instead.
+
+  Scoring: 1500 pts, 45s. Full points when the answer matches Kyle's, allowing for
+  case, accents, punctuation, plurals, small typos, filler words ("the", "some", ...)
+  and extra words around it ("I think it's cinnamon"). No partial points.
+  Kyle himself gets no points for this one.
+)
+
+(
   What was the reason the swimming pool was where it was?
   - Easy jumping off the wall
   - Out of the way for Pietro's wife, so it wouldn't get too noisy

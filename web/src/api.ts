@@ -7,6 +7,7 @@ import {
   QuestionInput,
   ReactionKind,
   RoomStatus,
+  TextAnswer,
   TraceAnswer,
 } from './types';
 
@@ -85,6 +86,13 @@ export const api = {
     return request<void>(`/room/goto?token=${encodeURIComponent(token)}&index=${index}`, { method: 'POST' });
   },
 
+  grade(token: string, correctAnswer: string) {
+    return request<void>(`/room/grade?token=${encodeURIComponent(token)}`, {
+      method: 'POST',
+      body: JSON.stringify({ correctAnswer }),
+    });
+  },
+
   finish(token: string) {
     return request<void>(`/room/finish?token=${encodeURIComponent(token)}`, { method: 'POST' });
   },
@@ -99,7 +107,7 @@ export const api = {
   submitAnswer(
     playerId: string,
     playerToken: string,
-    answer: number | string[][] | PlateAnswer | HamLine | MultiSelectAnswer | TraceAnswer,
+    answer: number | string[][] | PlateAnswer | HamLine | MultiSelectAnswer | TraceAnswer | TextAnswer,
   ) {
     let payload: object;
     if (Array.isArray(answer)) payload = { order: answer };
@@ -107,6 +115,7 @@ export const api = {
     else if ('p1' in answer) payload = { line: answer };
     else if ('selected' in answer) payload = { multiSelect: answer.selected };
     else if ('strokes' in answer) payload = { strokes: answer.strokes };
+    else if ('text' in answer) payload = { text: answer.text };
     else payload = { plates: answer };
     return request<void>('/room/answer', {
       method: 'POST',

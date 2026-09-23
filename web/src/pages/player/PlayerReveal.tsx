@@ -5,6 +5,15 @@ export function PlayerReveal({ view }: { view: PlayerRoomView }) {
   const correct = view.lastResult?.correct;
   // podium_order hands out partial credit, so points can come without `correct`.
   const points = view.lastResult?.pointsAwarded ?? 0;
+  if (view.awaitingGrading && view.lastResult) {
+    return (
+      <div className="page">
+        <h1 className="title">{t('player.reveal.awaitingGradingTitle')}</h1>
+        <p className="subtitle">{t('player.reveal.awaitingGradingSubtitle')}</p>
+      </div>
+    );
+  }
+
   return (
     <div className="page">
       {view.lastResult ? (

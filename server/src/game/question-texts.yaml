@@ -24,13 +24,17 @@ pedro:
 
 poolParty:
   title: Pool Party
-  host: How many liters of water did the pool lose after the first pool party?
-  player: How many liters of water did the pool lose after the first pool party?
+  host: |-
+    We made it a bit bont the second night in the pool. Not as bont as the third night, but still. Due to jumping off of the wall, the pool lost a wee bit of water. How many liters?
+  player: |-
+    How many liters of water did the pool lose after the first pool party?
 
 karting:
   title: Karting
-  host: Who finished where in karting? Put both groups in the right order.
-  player: Who finished where in karting? Put both groups in the right order.
+  host: |-
+    We had to go karting. Apart from a little incident – more about that later – we had a great time. There was a loser group and a winner group. But who finished where?
+  player: |-
+    Who finished where in karting? Put both groups in the right order.
 
 house:
   title: The house
@@ -61,6 +65,11 @@ festival:
   title: Village festival
   host: At the village festival, we arrived when the number was at 182. Which number did we have?
   player: At the village festival, we arrived when the number was at 182. Which number did we have?
+
+kyle:
+  title: Kyle's secret ingredient
+  host: What is the secret ingredient in Kyle's Red Wine Spaghetti?
+  player: What is the secret ingredient in Kyle's Red Wine Spaghetti?
 
 pool:
   title: The swimming pool
