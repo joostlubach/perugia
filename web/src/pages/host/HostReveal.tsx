@@ -1,5 +1,6 @@
 import { HostRoomView } from '../../types';
 import { AnswerOption } from '../../components/AnswerOption';
+import { MenuCard } from '../../components/MenuCard';
 import { PodiumStand } from '../../components/PodiumStand';
 import { Seat } from '../../components/PlateBoard';
 
@@ -13,7 +14,9 @@ export function HostReveal({ view, onNext }: { view: HostRoomView; onNext: () =>
       <div className="hint">{question.title}</div>
       <h2 className="question-text">{question.text}</h2>
 
-      {question.type === 'multiple_choice' ? (
+      {question.type === 'multiple_choice' && question.menu ? (
+        <MenuCard menu={question.menu} counts={view.optionCounts} correctIndex={question.correctIndex} wide />
+      ) : question.type === 'multiple_choice' ? (
         <div className="option-grid">
           {question.options.map((text, i) => (
             <AnswerOption

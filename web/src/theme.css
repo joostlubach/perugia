@@ -887,3 +887,168 @@ textarea.json-editor {
   cursor: default;
   opacity: 0.8;
 }
+
+.menu-card {
+  --menu-paper: #fbf5e6;
+  --menu-ink: #3a2414;
+  --menu-muted: #7a6450;
+  background: var(--menu-paper);
+  color: var(--menu-ink);
+  border-radius: 6px;
+  padding: 10px;
+  width: 100%;
+  max-width: 460px;
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.3);
+  font-family: 'Playfair Display', Georgia, serif;
+  text-align: center;
+}
+
+.menu-card.wide {
+  max-width: 1000px;
+}
+
+.menu-card > * {
+  border-left: 2px solid var(--italy-green);
+  border-right: 2px solid var(--italy-red);
+}
+
+.menu-header {
+  border-top: 2px solid var(--menu-ink);
+  padding: 22px 16px 10px;
+}
+
+.menu-kicker {
+  font-size: 0.8rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--menu-muted);
+}
+
+.menu-name {
+  font-size: clamp(1.8rem, 5vw, 2.6rem);
+  font-style: italic;
+  font-weight: 700;
+  margin: 4px 0;
+}
+
+.menu-courses {
+  border-bottom: 2px solid var(--menu-ink);
+  padding: 0 16px 18px;
+}
+
+.menu-card.wide .menu-courses {
+  columns: 2;
+  column-gap: 40px;
+}
+
+.menu-course {
+  break-inside: avoid;
+  padding-top: 14px;
+}
+
+.menu-course-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 6px;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--italy-red);
+}
+
+.menu-course-title::before,
+.menu-course-title::after {
+  content: '';
+  flex: 1;
+  border-top: 1px solid currentColor;
+  opacity: 0.5;
+}
+
+.menu-dish {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 8px 36px;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  background: none;
+  color: inherit;
+  font: inherit;
+  transition: background 0.15s ease, opacity 0.3s ease;
+}
+
+.menu-dish.pickable {
+  cursor: pointer;
+}
+
+.menu-dish.pickable:active {
+  background: rgba(0, 140, 69, 0.14);
+  border-color: var(--italy-green);
+}
+
+.menu-dish-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+  font-style: italic;
+}
+
+.menu-dish-description {
+  font-size: 0.85rem;
+  font-style: italic;
+  color: var(--menu-muted);
+}
+
+.menu-dish-count {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  min-width: 26px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: var(--menu-ink);
+  color: var(--menu-paper);
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.menu-dish-tag {
+  margin-left: 8px;
+  font-family: 'Poppins', sans-serif;
+  font-style: normal;
+  font-size: 0.75rem;
+}
+
+.menu-dish.gluten {
+  opacity: 0.4;
+}
+
+.menu-dish.gluten .menu-dish-name {
+  text-decoration: line-through;
+}
+
+.menu-dish.correct {
+  border-color: var(--gold);
+  background: rgba(232, 185, 35, 0.2);
+  animation: menu-pop 0.4s ease;
+}
+
+.menu-dish.correct .menu-dish-tag {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--italy-green);
+  color: white;
+  font-weight: 600;
+}
+
+@keyframes menu-pop {
+  50% {
+    transform: scale(1.06);
+  }
+}

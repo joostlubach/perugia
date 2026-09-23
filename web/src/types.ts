@@ -6,8 +6,16 @@ export interface MultipleChoiceInput {
   text: string;
   options: string[];
   correctIndex: number;
+  menu?: MenuCourse[];
   timeLimitSec: number;
   points: number;
+}
+
+// Shows a multiple_choice question as a restaurant menu card. Dishes are
+// numbered across all courses in order and line up one-to-one with `options`.
+export interface MenuCourse {
+  course: string;
+  dishes: { name: string; description?: string }[];
 }
 
 export interface DragCountInput {
@@ -116,6 +124,7 @@ export type HostQuestionView =
       title: string;
       text: string;
       options: string[];
+      menu?: MenuCourse[];
       timeLimitSec: number;
       points: number;
       correctIndex?: number;
@@ -221,6 +230,7 @@ export type PlayerQuestionView =
       title: string;
       text: string;
       options: string[];
+      menu?: MenuCourse[];
       timeLimitSec: number;
       points: number;
     }

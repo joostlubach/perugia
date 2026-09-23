@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import { HostRoomView } from '../../types';
 import { AnswerOption } from '../../components/AnswerOption';
 import { Countdown } from '../../components/Countdown';
+import { MenuCard } from '../../components/MenuCard';
 
 export function HostQuestion({ view, onExpire }: { view: HostRoomView; onExpire: () => void }) {
   const question = view.question!;
@@ -23,7 +24,9 @@ export function HostQuestion({ view, onExpire }: { view: HostRoomView; onExpire:
       <h1 className="question-text">{question.text}</h1>
       <Countdown startedAt={view.questionStartedAt} timeLimitSec={question.timeLimitSec} onExpire={handleExpire} />
       <div className="hint">{view.answeredCount} / {view.playerCount} answered</div>
-      {question.type === 'multiple_choice' ? (
+      {question.type === 'multiple_choice' && question.menu ? (
+        <MenuCard menu={question.menu} counts={view.optionCounts} wide />
+      ) : question.type === 'multiple_choice' ? (
         <div className="option-grid">
           {question.options.map((text, i) => (
             <AnswerOption key={i} index={i} text={text} count={view.optionCounts[i] ?? 0} maxCount={maxCount} />

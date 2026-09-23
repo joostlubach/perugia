@@ -14,6 +14,20 @@ export interface MultipleChoiceQuestion extends QuestionBase {
   type: 'multiple_choice';
   options: string[];
   correctIndex: number;
+  // When set, the options are shown as a restaurant menu card instead of the
+  // usual colored answer tiles. Dishes are numbered across all courses in
+  // order and must line up one-to-one with `options`.
+  menu?: MenuCourse[];
+}
+
+export interface MenuCourse {
+  course: string;
+  dishes: MenuDish[];
+}
+
+export interface MenuDish {
+  name: string;
+  description?: string;
 }
 
 // Player drags a token onto a canvas once per guessed occurrence; there's no
