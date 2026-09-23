@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
-import { Countdown } from './Countdown';
-import { audio, SoundKey } from '../audio';
-import { createAudioSequencer } from '../audioSequencer';
+import { useEffect, useRef, useState } from 'react'
+import { audio, SoundKey } from '../audio'
+import { createAudioSequencer } from '../audioSequencer'
+import { Countdown } from './Countdown'
 
 interface Token {
   id: number;
@@ -124,7 +124,7 @@ export function DragCanvas({
 // ("pedro pedro pedro pedro PE", ~3.03s total). Currently just 5 equal
 // slices -- tweak these by ear against the actual recording to line the
 // boundaries up with where each word really falls.
-const PEDRO_WORD_BOUNDARIES = [0, 0.607, 1.213, 1.82, 2.427, 3.033];
+const PEDRO_WORD_BOUNDARIES = [0, 0.4, 0.9, 1.5, 2.4, 3.033];
 
 // Shared by the real player view and the local test harness so both stay in
 // sync if this ever changes.
