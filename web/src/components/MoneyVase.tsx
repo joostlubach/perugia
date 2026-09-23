@@ -220,47 +220,87 @@ export function formatEuro(cents: number): string {
   return new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' }).format(cents / 100);
 }
 
-// A short synthesized clink for coins and rustle for bills, so there's no
-// extra audio file to ship.
+// Synthesized drop sounds, so there's no extra audio file to ship: a crinkly
+// paper rustle for bills, and a metallic ring for coins with a second, softer
+// clink as the coin lands inside the vase.
 let context: AudioContext | null = null;
 
 function playDropSound(cents: number) {
   if (audio.isMuted()) return;
   try {
     context ??= new AudioContext();
-    const ctx = context;
-    const now = ctx.currentTime;
-    const gain = ctx.createGain();
-    gain.connect(ctx.destination);
-
-    if (isBill(cents)) {
-      const length = Math.floor(ctx.sampleRate * 0.18);
-      const buffer = ctx.createBuffer(1, length, ctx.sampleRate);
-      const data = buffer.getChannelData(0);
-      for (let i = 0; i < length; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / length);
-      const noise = ctx.createBufferSource();
-      noise.buffer = buffer;
-      const filter = ctx.createBiquadFilter();
-      filter.type = 'bandpass';
-      filter.frequency.value = 2500;
-      noise.connect(filter);
-      filter.connect(gain);
-      gain.gain.setValueAtTime(0.35, now);
-      noise.start(now);
-      return;
-    }
-
-    gain.gain.setValueAtTime(0.25, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
-    for (const freq of [2400 + Math.random() * 400, 3700 + Math.random() * 500]) {
-      const osc = ctx.createOscillator();
-      osc.type = 'sine';
-      osc.frequency.value = freq;
-      osc.connect(gain);
-      osc.start(now);
-      osc.stop(now + 0.35);
-    }
+    if (isBill(cents)) playRustle(context);
+    else playClink(context, cents);
   } catch {
     // No Web Audio -- stay silent.
+  }
+}
+
+// A handful of short, randomly timed bursts of filtered noise, like paper
+// being crumpled and flicked.
+function playRustle(ctx: AudioContext) {
+  const duration = 0.32;
+  const length = Math.floor(ctx.sampleRate * duration);
+  const buffer = ctx.createBuffer(1, length, ctx.sampleRate);
+  const data = buffer.getChannelData(0);
+  const crinkles = 5 + Math.floor(Math.random() * 4);
+  for (let c = 0; c < crinkles; c++) {
+    const at = Math.floor(Math.random() * length * 0.8);
+    const size = Math.floor(ctx.sampleRate * (0.01 + Math.random() * 0.03));
+    const loudness = 0.4 + Math.random() * 0.6;
+    for (let i = 0; i < size && at + i < length; i++) {
+      data[at + i] += (Math.random() * 2 - 1) * loudness * Math.pow(1 - i / size, 2);
+    }
+  }
+  // A soft bed of hiss underneath, fading out.
+  for (let i = 0; i < length; i++) data[i] += (Math.random() * 2 - 1) * 0.08 * (1 - i / length);
+
+  const source = ctx.createBufferSource();
+  source.buffer = buffer;
+  const highpass = ctx.createBiquadFilter();
+  highpass.type = 'highpass';
+  highpass.frequency.value = 1800;
+  const peak = ctx.createBiquadFilter();
+  peak.type = 'peaking';
+  peak.frequency.value = 5000;
+  peak.gain.value = 6;
+  const gain = ctx.createGain();
+  gain.gain.value = 0.5;
+  source.connect(highpass);
+  highpass.connect(peak);
+  peak.connect(gain);
+  gain.connect(ctx.destination);
+  source.start();
+}
+
+// Coins ring at a few inharmonic partials (that's what makes them sound
+// metallic rather than like a beep); smaller coins ring higher.
+function playClink(ctx: AudioContext, cents: number) {
+  const now = ctx.currentTime;
+  const base = (cents >= 100 ? 2000 : cents >= 10 ? 2500 : 3100) * (0.95 + Math.random() * 0.1);
+  hit(ctx, now, base, 0.22);
+  hit(ctx, now + 0.07 + Math.random() * 0.04, base * 1.03, 0.08);
+}
+
+function hit(ctx: AudioContext, at: number, base: number, volume: number) {
+  const partials: [number, number, number][] = [
+    // [ratio to base, relative loudness, decay seconds]
+    [1, 1, 0.45],
+    [2.76, 0.6, 0.28],
+    [5.4, 0.35, 0.16],
+    [8.93, 0.2, 0.09],
+  ];
+  for (const [ratio, loudness, decay] of partials) {
+    const osc = ctx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.value = base * ratio;
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.0001, at);
+    gain.gain.exponentialRampToValueAtTime(volume * loudness, at + 0.003);
+    gain.gain.exponentialRampToValueAtTime(0.0001, at + decay);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(at);
+    osc.stop(at + decay + 0.02);
   }
 }
