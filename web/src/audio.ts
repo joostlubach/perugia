@@ -1,6 +1,7 @@
 const SOUND_FILES = {
   background: '/audio/tarantella-alt.mp3',
   quizMusic: '/audio/luncheon-kingdom.mp3',
+  standings: '/audio/standings.mp3',
   fidatidime: '/audio/fidatidime.mp3',
   finalLap: '/audio/mario-kart-wii-music-final-lap.mp3',
   died: '/audio/mario-died.mp3',

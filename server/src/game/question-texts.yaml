@@ -1,0 +1,93 @@
+# Every question's wording, in quiz order.
+#   title:  short label
+#   host:   long text on the big screen, read out loud
+#   player: short text on phones
+
+lake:
+  title: The Lake
+  host: |-
+    On Thursday, or Wednesday, honestly who can remember, we drove 1,5 hours to swim in an ice cold lake. Which famous story is inspired by the region around that lake?
+  player: |-
+    Which story is inspired by the lake?
+
+assisi:
+  title: Assisi
+  host: |-
+    We visited the town of Assisi. Because Pietro told us the churches wouldn't close at 18:00, we never got to visit the famous saint there. But were there more? Which saint(s) do we associate with the town of Assisi?
+  player: |-
+    Which saint(s) do we associate with the town of Assisi? Select all that apply.
+
+pedro:
+  title: Pedro
+  host: How many times does the word "Pedro" appear in Raffaella Carra's song "Pedro"?
+  player: Drag a Pedro to the box for each Pedro in the song.
+
+poolParty:
+  title: Pool Party
+  host: How many liters of water did the pool lose after the first pool party?
+  player: How many liters of water did the pool lose after the first pool party?
+
+karting:
+  title: Karting
+  host: Who finished where in karting? Put both groups in the right order.
+  player: Who finished where in karting? Put both groups in the right order.
+
+house:
+  title: The house
+  host: What was the surname of the family that owned the house?
+  player: What was the surname of the family that owned the house?
+
+bowie:
+  title: Bowie's scratches
+  host: Everyone fell into the pool at the pool party. Everyone? No, one friend was able to resist any attempt. But he paid dearly. Draw as best as you can the marks on Bowie's side from the pool party
+  player: Draw the scratches as best as you can
+
+ham:
+  title: Ham cutting
+  host: Drag the two points to find the line that cuts the ham exactly in half.
+  player: Drag the two points to find the line that cuts the ham exactly in half.
+
+dinner:
+  title: Primo / Secondo
+  host: At the final dinner, who had a primo, who had a secondo, and who had both?
+  player: At the final dinner, who had a primo, who had a secondo, and who had both?
+
+ruben:
+  title: Cena da Ruben
+  host: "You're at an Italian restaurant and you want to have a nice meal. The problem: you are Ruben, and therefore gluten intolerant. Order an antipasto, a primo, a secondo and a dolce!"
+  player: You are Ruben, and you're gluten intolerant. Order an antipasto, a primo, a secondo and a dolce!
+
+festival:
+  title: Village festival
+  host: At the village festival, we arrived when the number was at 182. Which number did we have?
+  player: At the village festival, we arrived when the number was at 182. Which number did we have?
+
+pool:
+  title: The swimming pool
+  host: What was the reason the swimming pool was where it was?
+  player: What was the reason the swimming pool was where it was?
+
+travel:
+  title: On the way
+  host: Drag each person to how they _arrived_ to Perugia
+  player: Drag each person to how they _arrived_ to Perugia
+
+perusia:
+  title: Perusia
+  host: What people used to live in Perugia before Octavian burnt their terracotta asses?
+  player: What people used to live in Perugia before Octavian burnt their terracotta asses?
+
+ancestor:
+  title: Famous ancestor
+  host: What famous artist does the Di Serego family descend from?
+  player: What famous artist does the Di Serego family descend from?
+
+serverRoom:
+  title: Server room
+  host: What did Leonardo do to power his server room at home?
+  player: What did Leonardo do to power his server room at home?
+
+splitser:
+  title: Splitser
+  host: How much money did we spend in total, according to Splitser?
+  player: How much did we spend in total, according to Splitser?

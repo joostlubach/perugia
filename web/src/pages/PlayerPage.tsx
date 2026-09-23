@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { api, isStaleSession } from '../api';
+import { isLocalHost } from '../localHost';
 import { HamLine, MultiSelectAnswer, PlateAnswer, TraceAnswer } from '../types';
 import { usePolling } from '../hooks/usePolling';
 import { audio } from '../audio';
@@ -20,8 +21,6 @@ interface Session {
 }
 
 const STORAGE_KEY = 'perugia_player';
-// On these hosts a bare /play joins the most recently created room, without the QR code.
-const LOCAL_HOSTS = ['localhost', '127.0.0.1'];
 
 export function PlayerPage() {
   const { joinCode: urlJoinCode } = useParams();
@@ -41,7 +40,7 @@ export function PlayerPage() {
   const { data: view, error } = usePolling(fetchView, 1000, Boolean(session));
 
   useEffect(() => {
-    if (urlJoinCode || session || !LOCAL_HOSTS.includes(window.location.hostname)) return;
+    if (urlJoinCode || session || !isLocalHost(window.location.hostname)) return;
     api.getJoinCode().then(({ joinCode }) => setLocalJoinCode(joinCode), () => {});
   }, [urlJoinCode, session]);
 
@@ -90,7 +89,11 @@ export function PlayerPage() {
           {view.status === 'reveal' && <PlayerReveal view={view} />}
           {view.status === 'leaderboard' && <PlayerLeaderboard view={view} />}
           {view.status === 'ended' && <PlayerFinal view={view} />}
-          <ReactionBar playerId={session.playerId} playerToken={session.playerToken} final={view.status === 'ended'} />
+          <ReactionBar
+            playerId={session.playerId}
+            playerToken={session.playerToken}
+            phase={view.status === 'lobby' ? 'lobby' : view.status === 'ended' ? 'final' : 'game'}
+          />
         </div>
       )}
     </>

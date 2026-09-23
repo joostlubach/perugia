@@ -52,6 +52,8 @@ export function HostPage() {
     else audio.stop('background');
     if (view.status !== 'lobby' && view.status !== 'ended') audio.loop('quizMusic', QUIZ_MUSIC_VOLUME);
     else audio.stop('quizMusic');
+    if (view.status === 'ended') audio.play('standings');
+    else audio.stop('standings');
     if (view.status === 'intro' && view.currentQuestionIndex === view.totalQuestions - FINAL_LAP_QUESTIONS) {
       audio.play('finalLap');
     }
@@ -74,16 +76,23 @@ export function HostPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Cmd+Shift+Escape: reload into a fresh room. The flag tells the reloaded
-  // page to create the room.
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (!e.metaKey || !e.shiftKey || e.key !== 'Escape') return;
+  // Cmd+Shift+1 reloads into a fresh room (the flag tells the reloaded page
+  // to create it); Cmd+Shift+2 jumps straight to the final results.
+  const onShortcut = useRef<(e: KeyboardEvent) => void>(() => {});
+  onShortcut.current = (e) => {
+    if (!e.metaKey || !e.shiftKey) return;
+    if (e.code === 'Digit1') {
       e.preventDefault();
       sessionStorage.setItem(RESTART_KEY, '1');
       localStorage.removeItem(STORAGE_KEY);
       window.location.reload();
-    };
+    } else if (e.code === 'Digit2' && session) {
+      e.preventDefault();
+      api.finish(session.hostToken);
+    }
+  };
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => onShortcut.current(e);
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, []);

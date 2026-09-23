@@ -171,7 +171,7 @@ export interface Player {
   answers: Record<string, PlayerAnswer>;
 }
 
-export const REACTION_KINDS = ['mammamia', 'mario', 'losing', 'gibberish', 'congratulations'] as const;
+export const REACTION_KINDS = ['mammamia', 'mario', 'losing', 'gibberish', 'congratulations', 'letsgo'] as const;
 export type ReactionKind = (typeof REACTION_KINDS)[number];
 
 // A player's reaction, shown and heard on the big screen for a moment.

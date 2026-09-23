@@ -1,13 +1,22 @@
 import { audio } from './audio';
 import { ReactionKind } from './types';
 
-// `finalOnly` reactions are only offered on the final ranking screen.
-export const REACTIONS: { kind: ReactionKind; emoji: string; label: string; callout: string; finalOnly?: boolean }[] = [
+export type ReactionPhase = 'lobby' | 'game' | 'final';
+
+// `phases` limits where a reaction is offered; without it, it's always there.
+export const REACTIONS: {
+  kind: ReactionKind;
+  emoji: string;
+  label: string;
+  callout: string;
+  phases?: ReactionPhase[];
+}[] = [
+  { kind: 'letsgo', emoji: '🏁', label: "Let's go!", callout: "Let's-a go!", phases: ['lobby'] },
   { kind: 'mammamia', emoji: '😱', label: 'Mamma mia!', callout: 'Mamma mia!' },
   { kind: 'mario', emoji: '🍄', label: 'Mario!', callout: "It's-a me, Mario!" },
-  { kind: 'losing', emoji: '😭', label: 'Nooo', callout: 'Nooooo!' },
+  { kind: 'losing', emoji: '😭', label: 'Nooo', callout: 'Nooooo!', phases: ['game', 'final'] },
   { kind: 'gibberish', emoji: '🤌', label: 'Blabla', callout: 'Blablabla!' },
-  { kind: 'congratulations', emoji: '🎉', label: 'Bravo!', callout: 'Congratulations!', finalOnly: true },
+  { kind: 'congratulations', emoji: '🎉', label: 'Bravo!', callout: 'Congratulations!', phases: ['final'] },
 ];
 
 export function reactionInfo(kind: ReactionKind) {
@@ -21,6 +30,7 @@ const SOUND_URLS: Record<ReactionKind, string[]> = {
   losing: ['/audio/losing-a-mini-game.mp3'],
   gibberish: ['/audio/gibberish1.mp3', '/audio/gibberish2.mp3'],
   congratulations: ['/audio/mario-congratulations.mp3'],
+  letsgo: ['/audio/sm64_mario_lets_go.mp3'],
 };
 
 export function playReaction(kind: ReactionKind) {

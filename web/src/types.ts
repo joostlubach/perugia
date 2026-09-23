@@ -286,7 +286,7 @@ export interface HostGuess {
   correct: boolean;
 }
 
-export type ReactionKind = 'mammamia' | 'mario' | 'losing' | 'gibberish' | 'congratulations';
+export type ReactionKind = 'mammamia' | 'mario' | 'losing' | 'gibberish' | 'congratulations' | 'letsgo';
 
 export interface Reaction {
   id: string;

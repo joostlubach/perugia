@@ -9,8 +9,9 @@ interface Token {
 }
 
 // A "how many times does X happen" question: the player drags a labeled chip
-// onto the canvas once per guessed occurrence. There's no counter shown --
-// it's just a pile of chips, same as tallying by hand.
+// onto the canvas once per guessed occurrence, or a ×5 chip to add five at
+// once. There's no counter shown -- it's just a pile of chips, same as
+// tallying by hand.
 export function DragCanvas({
   dragLabel,
   dropSound,
@@ -35,6 +36,7 @@ export function DragCanvas({
 }) {
   const [tokens, setTokens] = useState<Token[]>([]);
   const [dragPos, setDragPos] = useState<{ x: number; y: number } | null>(null);
+  const dragAmount = useRef(1);
   const [submitted, setSubmitted] = useState(false);
   const canvasRef = useRef<HTMLDivElement>(null);
   const countRef = useRef(0);
@@ -63,23 +65,36 @@ export function DragCanvas({
     if (canvas) canvas.scrollTop = canvas.scrollHeight;
   }, [tokens.length]);
 
-  const drop = (clientX: number, clientY: number) => {
+  const drop = (clientX: number, clientY: number, amount: number) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const rect = canvas.getBoundingClientRect();
     if (clientX < rect.left || clientX > rect.right || clientY < rect.top || clientY > rect.bottom) return;
-    if (sequencerRef.current) sequencerRef.current.playNext();
-    else if (dropSound) audio.playOverlapping(dropSound);
-    countRef.current += 1;
-    nextId.current += 1;
-    setTokens((prev) => [...prev, { id: nextId.current, rot: Math.random() * 16 - 8 }]);
+    // A bulk drop replaces the queued chant rather than piling on top of it.
+    if (amount > 1) sequencerRef.current?.stop();
+    const added: Token[] = [];
+    for (let i = 0; i < amount; i++) {
+      // The sequencer queues slices back to back, so ×5 chants five words in a row.
+      if (sequencerRef.current) sequencerRef.current.playNext();
+      nextId.current += 1;
+      added.push({ id: nextId.current, rot: Math.random() * 16 - 8 });
+    }
+    if (!sequencerRef.current && dropSound) audio.playOverlapping(dropSound);
+    countRef.current += amount;
+    setTokens((prev) => [...prev, ...added]);
+  };
+
+  const startDrag = (e: React.PointerEvent, amount: number) => {
+    e.preventDefault();
+    dragAmount.current = amount;
+    setDragPos({ x: e.clientX, y: e.clientY });
   };
 
   useEffect(() => {
     if (!dragPos) return;
     const onMove = (e: PointerEvent) => setDragPos({ x: e.clientX, y: e.clientY });
     const onUp = (e: PointerEvent) => {
-      drop(e.clientX, e.clientY);
+      drop(e.clientX, e.clientY, dragAmount.current);
       setDragPos(null);
     };
     window.addEventListener('pointermove', onMove);
@@ -104,18 +119,18 @@ export function DragCanvas({
 
       {!submitted && (
         <>
-          <div
-            className="drag-source"
-            onPointerDown={(e) => {
-              e.preventDefault();
-              setDragPos({ x: e.clientX, y: e.clientY });
-            }}
-          >
-            {dragLabel}
+          <div className="drag-sources">
+            <div className="drag-source" onPointerDown={(e) => startDrag(e, 1)}>
+              {dragLabel}
+            </div>
+            <div className="drag-source" onPointerDown={(e) => startDrag(e, BULK_AMOUNT)}>
+              {dragLabel} ×{BULK_AMOUNT}
+            </div>
           </div>
           <button
             className="btn btn-primary btn-lg"
             onClick={() => {
+              sequencerRef.current?.stop();
               if (doneSound) audio.play(doneSound);
               submit();
             }}
@@ -128,11 +143,14 @@ export function DragCanvas({
       {dragPos && (
         <div className="drag-ghost" style={{ left: dragPos.x, top: dragPos.y }}>
           {dragLabel}
+          {dragAmount.current > 1 && ` ×${dragAmount.current}`}
         </div>
       )}
     </div>
   );
 }
+
+const BULK_AMOUNT = 5;
 
 // Timestamps (seconds) marking where each word starts/ends in pedrope.mp3
 // ("pedro pedro pedro pedro PE", ~3.03s total). Currently just 5 equal

@@ -112,6 +112,13 @@ export class GameService {
     await this.store.set(room);
   }
 
+  // Host shortcut: straight to the final results, from wherever the game is.
+  async finish(hostToken: string): Promise<void> {
+    const room = await this.requireHost(hostToken);
+    room.status = 'ended';
+    await this.store.set(room);
+  }
+
   private goToQuestion(room: Room, index: number) {
     room.status = 'intro';
     room.currentQuestionIndex = index;

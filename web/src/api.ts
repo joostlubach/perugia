@@ -81,6 +81,10 @@ export const api = {
     return request<void>(`/room/advance?token=${encodeURIComponent(token)}&from=${from}`, { method: 'POST' });
   },
 
+  finish(token: string) {
+    return request<void>(`/room/finish?token=${encodeURIComponent(token)}`, { method: 'POST' });
+  },
+
   react(playerId: string, playerToken: string, kind: ReactionKind) {
     return request<void>('/room/react', {
       method: 'POST',

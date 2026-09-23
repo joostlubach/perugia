@@ -23,6 +23,8 @@ export interface AudioSequencer {
   // Plays the next slice of the file (per `boundaries`), wrapping back to
   // the start after the last one. No-op (silently) if still preloading.
   playNext(): void;
+  // Cuts off whatever is playing or queued.
+  stop(): void;
 }
 
 // `boundaries` is a list of timestamps in seconds marking slice edges, e.g.
@@ -44,6 +46,7 @@ export function createAudioSequencer(url: string, boundaries: number[]): AudioSe
   // off -- the chant just keeps playing until it catches up to however many
   // have actually been dropped.
   let nextStartTime = 0;
+  let sources: AudioBufferSourceNode[] = [];
 
   return {
     playNext() {
@@ -59,9 +62,19 @@ export function createAudioSequencer(url: string, boundaries: number[]): AudioSe
       source.buffer = buffer;
       source.connect(context.destination);
       source.start(startTime, offset, duration);
+      sources.push(source);
+      source.onended = () => {
+        sources = sources.filter((s) => s !== source);
+      };
 
       nextStartTime = startTime + duration;
       index = (index + 1) % segmentCount;
+    },
+
+    stop() {
+      for (const source of sources) source.stop();
+      sources = [];
+      nextStartTime = 0;
     },
   };
 }

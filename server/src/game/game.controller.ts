@@ -1,6 +1,7 @@
 import { Body, Controller, ForbiddenException, Get, Post, Query, Req } from '@nestjs/common';
 import { Request } from 'express';
 import { RoomStatus } from './types';
+import { isLocalHost } from './local-host';
 import { GameService } from './game.service';
 import { JoinRoomDto } from './dto/join-room.dto';
 import { AnswerDto } from './dto/answer.dto';
@@ -23,10 +24,10 @@ export class GameController {
   }
 
   // Lets a bare /play on localhost join the current room without scanning
-  // the QR code. Deployed, the Host header is never localhost.
+  // the QR code. Deployed, the Host header is never a local address.
   @Get('join-code')
   getJoinCode(@Req() req: Request) {
-    if (!LOCAL_HOSTS.includes(req.hostname)) throw new ForbiddenException();
+    if (!isLocalHost(req.hostname)) throw new ForbiddenException();
     return this.game.getJoinCode();
   }
 
@@ -50,6 +51,11 @@ export class GameController {
     return this.game.advance(token, from);
   }
 
+  @Post('finish')
+  finish(@Query('token') token: string) {
+    return this.game.finish(token);
+  }
+
   @Post('react')
   react(@Body() dto: ReactDto) {
     return this.game.react(dto.playerId, dto.playerToken, dto.kind);
@@ -64,5 +70,3 @@ export class GameController {
     );
   }
 }
-
-const LOCAL_HOSTS = ['localhost', '127.0.0.1'];
