@@ -1,5 +1,5 @@
 import { PointerEvent as ReactPointerEvent, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Countdown } from './Countdown';
+import { useCountdown } from './Countdown';
 import { PodiumAvatar, PodiumStand } from './PodiumStand';
 import { PodiumTray } from './PodiumTray';
 
@@ -59,6 +59,7 @@ export function PodiumOrder({
     setSubmitted(true);
     onSubmit(slotsRef.current.map((group) => group.map((key) => key ?? '')));
   };
+  useCountdown(startedAt, timeLimitSec, submit);
 
   const drop = (state: DragState, clientX: number, clientY: number) => {
     const target = document
@@ -156,7 +157,6 @@ export function PodiumOrder({
           <button className="btn btn-primary btn-lg" onClick={submit}>
             🏁 Lock it in
           </button>
-          {startedAt && <Countdown startedAt={startedAt} timeLimitSec={timeLimitSec} onExpire={submit} />}
         </>
       )}
 

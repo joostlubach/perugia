@@ -6,6 +6,7 @@ import {
   PlayerRoomView,
   QuestionInput,
   ReactionKind,
+  RoomStatus,
   TraceAnswer,
 } from './types';
 
@@ -16,10 +17,24 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
   });
   if (!res.ok) {
     const body = await res.json().catch(() => ({}));
-    throw new Error(body.message || `Request failed: ${res.status}`);
+    throw new ApiError(res.status, body.message || `Request failed: ${res.status}`);
   }
   if (res.status === 204) return undefined as T;
   return res.json();
+}
+
+export class ApiError extends Error {
+  constructor(
+    readonly status: number,
+    message: string,
+  ) {
+    super(message);
+  }
+}
+
+// The session belongs to a room that's gone or was replaced.
+export function isStaleSession(error: Error | null): boolean {
+  return error instanceof ApiError && (error.status === 403 || error.status === 404);
 }
 
 export const api = {
@@ -31,17 +46,19 @@ export const api = {
     return request<string[]>('/avatars');
   },
 
-  createRoom(questions?: QuestionInput[]) {
-    return request<{ hostToken: string }>('/room', {
-      method: 'POST',
-      body: JSON.stringify(questions ? { questions } : {}),
-    });
+  createRoom() {
+    return request<{ hostToken: string }>('/room', { method: 'POST' });
   },
 
-  joinRoom(name: string, avatar: string) {
+  // Only answered on localhost.
+  getJoinCode() {
+    return request<{ joinCode: string }>('/room/join-code');
+  },
+
+  joinRoom(joinCode: string, name: string, avatar: string) {
     return request<{ playerId: string; playerToken: string }>('/room/join', {
       method: 'POST',
-      body: JSON.stringify({ name, avatar }),
+      body: JSON.stringify({ joinCode, name, avatar }),
     });
   },
 
@@ -59,8 +76,9 @@ export const api = {
     return request<void>(`/room/start?token=${encodeURIComponent(token)}`, { method: 'POST' });
   },
 
-  advance(token: string) {
-    return request<void>(`/room/advance?token=${encodeURIComponent(token)}`, { method: 'POST' });
+  // `from` is the status being advanced out of, so a double press only advances once.
+  advance(token: string, from: RoomStatus) {
+    return request<void>(`/room/advance?token=${encodeURIComponent(token)}&from=${from}`, { method: 'POST' });
   },
 
   react(playerId: string, playerToken: string, kind: ReactionKind) {

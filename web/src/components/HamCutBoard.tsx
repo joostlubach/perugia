@@ -1,5 +1,5 @@
 import { PointerEvent as ReactPointerEvent, useEffect, useRef, useState } from 'react';
-import { Countdown } from './Countdown';
+import { useCountdown } from './Countdown';
 import { HamLine, Point } from '../types';
 
 // Two draggable control points define a line; the player is trying to find
@@ -32,6 +32,7 @@ export function HamCutBoard({
     setSubmitted(true);
     onSubmit({ p1: p1Ref.current, p2: p2Ref.current });
   };
+  useCountdown(startedAt, timeLimitSec, submit);
 
   const posFromEvent = (clientX: number, clientY: number): Point => {
     const rect = containerRef.current!.getBoundingClientRect();
@@ -101,7 +102,6 @@ export function HamCutBoard({
           <button className="btn btn-primary btn-lg" onClick={submit}>
             🔪 Lock in the cut
           </button>
-          {startedAt && <Countdown startedAt={startedAt} timeLimitSec={timeLimitSec} onExpire={submit} />}
         </>
       )}
     </div>

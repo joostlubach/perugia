@@ -1,10 +1,17 @@
 import { customAlphabet } from 'nanoid';
 import { MenuCourse, Point } from './types';
 
-const generateToken = customAlphabet('23456789abcdefghjkmnpqrstuvwxyz', 24);
+const TOKEN_ALPHABET = '23456789abcdefghjkmnpqrstuvwxyz';
+const generateToken = customAlphabet(TOKEN_ALPHABET, 24);
+// Short enough to type over from the big screen, long enough not to guess.
+const generateJoinCode = customAlphabet(TOKEN_ALPHABET, 6);
 
 export function newToken(): string {
   return generateToken();
+}
+
+export function newJoinCode(): string {
+  return generateJoinCode();
 }
 
 export function scoreForAnswer(points: number, timeLimitSec: number, elapsedMs: number): number {

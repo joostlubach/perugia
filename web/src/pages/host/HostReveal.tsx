@@ -251,7 +251,11 @@ export function HostReveal({ view, onNext }: { view: HostRoomView; onNext: () =>
       )}
 
       <button className="btn btn-primary btn-lg" onClick={onNext}>
-        📊 Show Leaderboard
+        {view.afterReveal === 'leaderboard'
+          ? '📊 Show Leaderboard'
+          : view.afterReveal === 'ended'
+          ? '🏁 Final Results'
+          : '➡️ Next Question'}
       </button>
     </div>
   );

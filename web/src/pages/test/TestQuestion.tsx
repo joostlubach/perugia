@@ -135,7 +135,6 @@ export function TestQuestion({
     resultRef.current = next;
     setResult(next);
     onResult(next);
-    if (correct) audio.play('correct');
   };
 
   useEffect(() => {
@@ -169,9 +168,14 @@ export function TestQuestion({
         ) : (
           <ResultBanner result={result} correctValue={correctValue} partialCredit={partialCredit} isPercent={isPercent} />
         )
-      ) : question.type === 'multiple_choice' ? (
-        <Countdown startedAt={startedAt} timeLimitSec={question.timeLimitSec} onExpire={() => finish(null)} />
-      ) : null}
+      ) : (
+        <Countdown
+          startedAt={startedAt}
+          timeLimitSec={question.timeLimitSec}
+          onExpire={question.type === 'multiple_choice' ? () => finish(null) : undefined}
+          floating
+        />
+      )}
 
       {!result && question.type === 'menu_order' && (
         <MenuOrderBoard

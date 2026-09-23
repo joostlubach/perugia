@@ -1,5 +1,5 @@
 import { PointerEvent as ReactPointerEvent, useRef, useState } from 'react';
-import { Countdown } from './Countdown';
+import { useCountdown } from './Countdown';
 import { Point } from '../types';
 
 // Freehand red-pen drawing over a photo. Strokes are kept in normalized [0,1]
@@ -31,6 +31,7 @@ export function TraceMarksBoard({
     setSubmitted(true);
     onSubmit(strokesRef.current);
   };
+  useCountdown(startedAt, timeLimitSec, submit);
 
   const posFromEvent = (e: ReactPointerEvent): Point => {
     const rect = containerRef.current!.getBoundingClientRect();
@@ -104,7 +105,6 @@ export function TraceMarksBoard({
           <button className="btn btn-primary btn-lg" onClick={submit}>
             🖍️ Done drawing
           </button>
-          {startedAt && <Countdown startedAt={startedAt} timeLimitSec={timeLimitSec} onExpire={submit} />}
         </>
       )}
     </div>

@@ -1,6 +1,5 @@
 import { ForbiddenException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { ROOM_STORE, RoomStore } from '../storage/store.interface';
-import { CreateRoomDto, questionInputToQuestion } from './dto/create-room.dto';
 import {
   countCorrectGroupings,
   countCorrectMenuPicks,
@@ -8,6 +7,7 @@ import {
   countCorrectPlateMarks,
   countCorrectSelections,
   HamLine,
+  newJoinCode,
   newToken,
   PlateAnswer,
   scoreForAnswer,
@@ -29,24 +29,24 @@ import {
   Question,
   ReactionKind,
   Room,
+  RoomStatus,
 } from './types';
 
 @Injectable()
 export class GameService {
   constructor(@Inject(ROOM_STORE) private readonly store: RoomStore) {}
 
-  async createRoom(dto: CreateRoomDto): Promise<{ hostToken: string }> {
-    const questions: Question[] =
-      dto.questions && dto.questions.length > 0
-        ? dto.questions.map((q, i) => questionInputToQuestion(q, `q${i}`))
-        : sampleQuestions.map((q, i) => ({ ...q, id: `q${i}` }));
+  async createRoom(): Promise<{ hostToken: string }> {
+    const questions: Question[] = sampleQuestions.map((q, i) => ({ ...q, id: `q${i}` }));
 
     const room: Room = {
       hostToken: newToken(),
+      joinCode: newJoinCode(),
       status: 'lobby',
       questions,
       currentQuestionIndex: -1,
       questionStartedAt: null,
+      allAnsweredAt: null,
       players: {},
       createdAt: Date.now(),
     };
@@ -54,8 +54,16 @@ export class GameService {
     return { hostToken: room.hostToken };
   }
 
-  async joinRoom(name: string, avatar: string): Promise<{ playerId: string; playerToken: string }> {
+  async getJoinCode(): Promise<{ joinCode: string }> {
     const room = await this.requireRoom();
+    return { joinCode: room.joinCode };
+  }
+
+  async joinRoom(joinCode: string, name: string, avatar: string): Promise<{ playerId: string; playerToken: string }> {
+    const room = await this.requireRoom();
+    if (joinCode !== room.joinCode) {
+      throw new ForbiddenException('Scan the QR code on the big screen to join');
+    }
     if (Object.values(room.players).some((p) => p.avatar === avatar)) {
       throw new ForbiddenException('That avatar has already been picked');
     }
@@ -76,29 +84,51 @@ export class GameService {
 
   async startGame(hostToken: string): Promise<void> {
     const room = await this.requireHost(hostToken);
-    room.status = 'question';
-    room.currentQuestionIndex = 0;
-    room.questionStartedAt = Date.now();
+    if (room.status !== 'lobby') return;
+    this.goToQuestion(room, 0);
     await this.store.set(room);
   }
 
-  async advance(hostToken: string): Promise<void> {
+  // `from` makes a double press (button plus space, or two quick presses)
+  // advance only once: it's ignored unless the room is still in that status.
+  async advance(hostToken: string, from?: RoomStatus): Promise<void> {
     const room = await this.requireHost(hostToken);
+    if (from && room.status !== from) return;
 
-    if (room.status === 'question') {
+    if (room.status === 'intro') {
+      room.status = 'question';
+      room.questionStartedAt = Date.now();
+      room.allAnsweredAt = null;
+    } else if (room.status === 'question') {
       room.status = 'reveal';
     } else if (room.status === 'reveal') {
-      room.status = 'leaderboard';
+      const next = afterReveal(room);
+      if (next === 'intro') this.goToQuestion(room, room.currentQuestionIndex + 1);
+      else room.status = next;
     } else if (room.status === 'leaderboard') {
-      const nextIndex = room.currentQuestionIndex + 1;
-      if (nextIndex < room.questions.length) {
-        room.currentQuestionIndex = nextIndex;
-        room.questionStartedAt = Date.now();
-        room.status = 'question';
-      } else {
-        room.status = 'ended';
-      }
+      if (room.currentQuestionIndex + 1 < room.questions.length) this.goToQuestion(room, room.currentQuestionIndex + 1);
+      else room.status = 'ended';
     }
+    await this.store.set(room);
+  }
+
+  private goToQuestion(room: Room, index: number) {
+    room.status = 'intro';
+    room.currentQuestionIndex = index;
+    room.questionStartedAt = null;
+    room.allAnsweredAt = null;
+  }
+
+  // Closes answering once time is up or everyone has answered. Runs lazily
+  // whenever anyone polls, so there's no timer to keep on the server.
+  private async settle(room: Room): Promise<void> {
+    if (room.status !== 'question' || !room.questionStartedAt) return;
+    const question = room.questions[room.currentQuestionIndex];
+    const now = Date.now();
+    const timeUp = now >= room.questionStartedAt + question.timeLimitSec * 1000 + LATE_ANSWER_GRACE_MS;
+    const allDone = room.allAnsweredAt !== null && now >= room.allAnsweredAt + ALL_ANSWERED_DELAY_MS;
+    if (!timeUp && !allDone) return;
+    room.status = 'reveal';
     await this.store.set(room);
   }
 
@@ -218,6 +248,9 @@ export class GameService {
       ...(selection ? { selection } : {}),
     };
     player.score += pointsAwarded;
+    if (Object.values(room.players).every((p) => p.answers[question.id])) {
+      room.allAnsweredAt = Date.now();
+    }
     await this.store.set(room);
   }
 
@@ -241,6 +274,7 @@ export class GameService {
 
   async getHostView(hostToken: string): Promise<HostRoomView> {
     const room = await this.requireHost(hostToken);
+    await this.settle(room);
     const since = Date.now() - REACTION_WINDOW_MS;
     const reactions = (await this.store.recentReactions()).filter((r) => r.at >= since);
     return { ...this.toHostView(room), reactions };
@@ -252,6 +286,7 @@ export class GameService {
     if (!player || player.token !== playerToken) {
       throw new ForbiddenException('Unknown player');
     }
+    await this.settle(room);
     return this.toPlayerView(room, player);
   }
 
@@ -412,6 +447,7 @@ export class GameService {
 
     return {
       status: room.status,
+      joinCode: room.joinCode,
       currentQuestionIndex: room.currentQuestionIndex,
       totalQuestions: room.questions.length,
       questionStartedAt: room.questionStartedAt,
@@ -419,6 +455,7 @@ export class GameService {
       answeredCount,
       optionCounts,
       guesses,
+      afterReveal: afterReveal(room),
       playerCount: Object.keys(room.players).length,
       players: Object.values(room.players).map((p) => ({ id: p.id, name: p.name, avatar: p.avatar, score: p.score })),
       leaderboard: this.leaderboard(room),
@@ -597,6 +634,12 @@ export class GameService {
   }
 }
 
+function afterReveal(room: Room): 'leaderboard' | 'intro' | 'ended' {
+  const next = room.currentQuestionIndex + 1;
+  if (next >= room.questions.length) return 'ended';
+  return next % LEADERBOARD_EVERY === 0 ? 'leaderboard' : 'intro';
+}
+
 function sortedPeople(groups: string[][]): string[] {
   return groups.flat().sort();
 }
@@ -605,6 +648,11 @@ function sortedGroups(groups: string[][]): string[][] {
   return groups.map((group) => [...group].sort());
 }
 
+const LEADERBOARD_EVERY = 5;
+// After everyone has answered, give the last one a moment to look up.
+const ALL_ANSWERED_DELAY_MS = 2000;
+// Answers auto-submitted by phones as their countdown hits zero still count.
+const LATE_ANSWER_GRACE_MS = 1500;
 // Reactions older than this aren't sent to the host anymore.
 const REACTION_WINDOW_MS = 10_000;
 const TRACE_MARKS_CORRECT = 80;

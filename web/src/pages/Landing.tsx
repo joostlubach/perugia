@@ -1,5 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 
+// Players don't start here: they join through the QR code in the host's lobby.
+
 export function Landing() {
   const navigate = useNavigate();
   return (
@@ -9,9 +11,6 @@ export function Landing() {
       <div className="btn-row">
         <button className="btn btn-primary btn-lg" onClick={() => navigate('/host')}>
           📺 I'm the Host
-        </button>
-        <button className="btn btn-accent btn-lg" onClick={() => navigate('/play')}>
-          📱 I'm a Player
         </button>
       </div>
     </div>

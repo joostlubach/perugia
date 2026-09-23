@@ -1,4 +1,6 @@
-export type RoomStatus = 'lobby' | 'question' | 'reveal' | 'leaderboard' | 'ended';
+// `intro` shows the question on the big screen while the host reads it out;
+// answering only opens in `question`.
+export type RoomStatus = 'lobby' | 'intro' | 'question' | 'reveal' | 'leaderboard' | 'ended';
 
 interface QuestionBase {
   id: string;
@@ -169,7 +171,7 @@ export interface Player {
   answers: Record<string, PlayerAnswer>;
 }
 
-export const REACTION_KINDS = ['mammamia', 'mario', 'chihuahua'] as const;
+export const REACTION_KINDS = ['mammamia', 'mario', 'losing', 'gibberish', 'congratulations'] as const;
 export type ReactionKind = (typeof REACTION_KINDS)[number];
 
 // A player's reaction, shown and heard on the big screen for a moment.
@@ -192,10 +194,14 @@ export interface LeaderboardEntry {
 // Only one of these ever exists at a time -- a single reunion, played once.
 export interface Room {
   hostToken: string;
+  // Part of the join URL behind the lobby's QR code; nobody can join without it.
+  joinCode: string;
   status: RoomStatus;
   questions: Question[];
   currentQuestionIndex: number;
   questionStartedAt: number | null;
+  // When the last player answered the current question.
+  allAnsweredAt: number | null;
   players: Record<string, Player>;
   createdAt: number;
 }
@@ -225,6 +231,7 @@ export interface HostGuess {
 
 export interface HostRoomView {
   status: RoomStatus;
+  joinCode: string;
   currentQuestionIndex: number;
   totalQuestions: number;
   questionStartedAt: number | null;
@@ -234,6 +241,8 @@ export interface HostRoomView {
   optionCounts: number[];
   // Only populated for drag_count and podium_order questions once revealed.
   guesses: HostGuess[];
+  // Where advancing from the reveal goes.
+  afterReveal: 'leaderboard' | 'intro' | 'ended';
   playerCount: number;
   players: LeaderboardEntry[];
   leaderboard: LeaderboardEntry[];

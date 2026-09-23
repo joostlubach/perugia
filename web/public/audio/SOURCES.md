@@ -4,61 +4,15 @@ All files below were downloaded for private, one-night personal use (family reun
 party quiz app) — not for redistribution or resale. Attribution is included here for
 completeness even where the license does not strictly require it.
 
-## background-tarantella.mp3
+## Added by hand (source not recorded)
 
-- Track: "Tarantella Napoletana" — Giovanni Vicari and his Original Orchestra
-- Source: Internet Archive, Great 78 Project (digitized by George Blood, L.P.)
-- URL: https://archive.org/details/78_tarantella-napoletana_giovanni-vicari-and-his-original-orchestra-giovanni-vicari_gbia0011479a
-- Direct file: https://archive.org/download/78_tarantella-napoletana_giovanni-vicari-and-his-original-orchestra-giovanni-vicari_gbia0011479a/Tarantella%20Napoletana%20-%20Giovanni%20Vicari%20and%20his%20Original%20Orchestra.mp3
-- License: Historical 78rpm recording hosted by Internet Archive for free streaming/download;
-  no explicit rights statement listed on the item page (pre-1972 recording, likely public
-  domain or orphaned rights). Used here for private, non-commercial, single-event use only.
-- Duration: ~3:02
-
-## correct.mp3
-
-- Sound: "Quiz Gameshow Correct Ding 04.mp3" by craigscottuk
-- Source: Freesound.org
-- URL: https://freesound.org/people/craigscottuk/sounds/644949/
-- License: CC0 1.0 (Public Domain)
-- Duration: ~2.0s
-
-## reveal.mp3
-
-- Sound: "drumroll.wav" by FOSSA11
-- Source: Freesound.org
-- URL: https://freesound.org/people/FOSSA11/sounds/49306/
-- License: CC0 1.0 (Public Domain)
-- Duration: ~4.8s
-
-## victory.mp3
-
-- Sound: "Success Fanfare Trumpets.mp3" by FunWithSound
-- Source: Freesound.org
-- URL: https://freesound.org/people/FunWithSound/sounds/456966/
-- License: CC0 1.0 (Public Domain)
-- Duration: ~4.4s
-- Note: could not find a CC0/PD Italian-flavored (mandolin) victory fanfare; used a
-  generic brass fanfare instead.
-
-## funny-sting.mp3
-
-- Sound: "Slide Whistle.wav" by WalliumVA
-- Source: Freesound.org
-- URL: https://freesound.org/people/WalliumVA/sounds/672965/
-- License: CC0 1.0 (Public Domain)
-- Duration: ~0.8s
-- Note: generic comedic slide-whistle sting, not derived from any copyrighted game audio.
-
-## Reaction sounds (not bundled yet)
-
-Players' reactions play on the big screen and on their phone. Drop the files
-here with exactly these names and they're used automatically:
-
-- `reaction-mamma-mia.mp3` -- someone shouting "Mamma mia!"
-- `reaction-mario.mp3` -- someone shouting "Mario!"
-- `reaction-chihuahua.mp3` -- a chihuahua barking (keep it short, ~1s)
-
-Until a file is there, the app falls back to the browser's Italian
-text-to-speech voice for the two shouts and a synthesized yap for the
-chihuahua (see web/src/reactions.ts).
+- `tarantella-alt.mp3` -- lobby music, main screen only
+- `luncheon-kingdom.mp3` -- quiet background music during the quiz itself, main screen only
+- `mario-kart-wii-music-final-lap.mp3` -- main screen, when the last three questions start
+- `mario-died.mp3` -- every phone except the winner's, at the end
+- `mario_coin_sound_1.mp3` -- each coin dropped in the Splitser vase
+- `fidatidime.mp3`, `pedrope.mp3` -- the Pedro drag-count question
+- `its-me-mario.mp3`, `mamma-mia_caQRETK.mp3`, `losing-a-mini-game.mp3`,
+  `gibberish1.mp3` / `gibberish2.mp3` (picked at random) -- soundboard reactions,
+  played on the main screen.
+- `mario-congratulations.mp3` -- the extra 🎉 Bravo! reaction, only on the final ranking screen

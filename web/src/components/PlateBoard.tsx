@@ -1,6 +1,6 @@
 import { PointerEvent as ReactPointerEvent, useEffect, useRef, useState } from 'react';
 import { avatarName, avatarSrc } from '../avatar';
-import { Countdown } from './Countdown';
+import { useCountdown } from './Countdown';
 import { PlateAnswer } from '../types';
 
 interface Marks {
@@ -49,6 +49,7 @@ export function PlateBoard({
       secondo: seats.filter((s) => current[s].secondo),
     });
   };
+  useCountdown(startedAt, timeLimitSec, submit);
 
   const drop = (course: Course, clientX: number, clientY: number) => {
     const target = document.elementFromPoint(clientX, clientY)?.closest<HTMLElement>('[data-seat]');
@@ -108,7 +109,6 @@ export function PlateBoard({
           <button className="btn btn-primary btn-lg" onClick={submit}>
             ✅ Done
           </button>
-          {startedAt && <Countdown startedAt={startedAt} timeLimitSec={timeLimitSec} onExpire={submit} />}
         </>
       )}
 

@@ -10,6 +10,7 @@ export default function App() {
       <Route path="/" element={<Landing />} />
       <Route path="/host" element={<HostPage />} />
       <Route path="/play" element={<PlayerPage />} />
+      <Route path="/play/:joinCode" element={<PlayerPage />} />
       <Route path="/test" element={<TestPage />} />
     </Routes>
   );

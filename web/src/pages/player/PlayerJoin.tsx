@@ -2,7 +2,13 @@ import { useEffect, useState } from 'react';
 import { api } from '../../api';
 import { avatarName, avatarSrc } from '../../avatar';
 
-export function PlayerJoin({ onJoined }: { onJoined: (playerId: string, playerToken: string) => void }) {
+export function PlayerJoin({
+  joinCode,
+  onJoined,
+}: {
+  joinCode: string;
+  onJoined: (playerId: string, playerToken: string) => void;
+}) {
   const [avatars, setAvatars] = useState<string[] | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -20,7 +26,7 @@ export function PlayerJoin({ onJoined }: { onJoined: (playerId: string, playerTo
     setLoading(true);
     setError(null);
     try {
-      const { playerId, playerToken } = await api.joinRoom(avatarName(selected), selected);
+      const { playerId, playerToken } = await api.joinRoom(joinCode, avatarName(selected), selected);
       onJoined(playerId, playerToken);
     } catch (err) {
       setError((err as Error).message);
@@ -30,7 +36,7 @@ export function PlayerJoin({ onJoined }: { onJoined: (playerId: string, playerTo
   };
 
   return (
-    <div className="page">
+    <div className="page join-page">
       <h1 className="title">Who are you? 🎊</h1>
       <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
         {!avatars ? (

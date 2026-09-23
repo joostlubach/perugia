@@ -1,11 +1,10 @@
 const SOUND_FILES = {
   background: '/audio/tarantella-alt.mp3',
-  correct: '/audio/correct.mp3',
-  reveal: '/audio/reveal.mp3',
-  victory: '/audio/victory.mp3',
-  funny: '/audio/funny-sting.mp3',
-  pedro: '/audio/pedro.mp3',
+  quizMusic: '/audio/luncheon-kingdom.mp3',
   fidatidime: '/audio/fidatidime.mp3',
+  finalLap: '/audio/mario-kart-wii-music-final-lap.mp3',
+  died: '/audio/mario-died.mp3',
+  coin: '/audio/mario_coin_sound_1.mp3',
 } as const;
 
 export type SoundKey = keyof typeof SOUND_FILES;
@@ -40,17 +39,17 @@ export const audio = {
     new Audio(SOUND_FILES[key]).play().catch(() => {});
   },
 
-  loopBackground() {
+  // Starts looping music, or keeps it going if it already is.
+  loop(key: SoundKey, volume: number) {
     if (muted) return;
-    const el = getElement('background');
+    const el = getElement(key);
     el.loop = true;
-    el.volume = 0.5;
+    el.volume = volume;
     el.play().catch(() => {});
   },
 
-  stopBackground() {
-    const el = elements.get('background');
-    if (el) el.pause();
+  stop(key: SoundKey) {
+    elements.get(key)?.pause();
   },
 
   isMuted() {

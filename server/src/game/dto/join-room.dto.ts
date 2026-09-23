@@ -3,6 +3,9 @@ import { AVATAR_KEYS } from '../avatars';
 
 export class JoinRoomDto {
   @IsString()
+  joinCode!: string;
+
+  @IsString()
   @Length(1, 24)
   name!: string;
 

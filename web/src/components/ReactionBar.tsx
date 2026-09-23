@@ -6,7 +6,7 @@ import { ReactionKind } from '../types';
 const COOLDOWN_MS = 1200;
 
 // Fixed to the bottom of the player's screen for the whole game.
-export function ReactionBar({ playerId, playerToken }: { playerId: string; playerToken: string }) {
+export function ReactionBar({ playerId, playerToken, final }: { playerId: string; playerToken: string; final: boolean }) {
   const [coolingDown, setCoolingDown] = useState(false);
 
   const react = (kind: ReactionKind) => {
@@ -18,7 +18,7 @@ export function ReactionBar({ playerId, playerToken }: { playerId: string; playe
 
   return (
     <div className="reaction-bar">
-      {REACTIONS.map((r) => (
+      {REACTIONS.filter((r) => final || !r.finalOnly).map((r) => (
         <button key={r.kind} className="reaction-btn" disabled={coolingDown} onClick={() => react(r.kind)}>
           <span className="reaction-emoji">{r.emoji}</span>
           {r.label}

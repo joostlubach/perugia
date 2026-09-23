@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { MenuCourse } from '../types';
-import { Countdown } from './Countdown';
+import { useCountdown } from './Countdown';
 import { MenuCard } from './MenuCard';
 
 // Player orders one dish per course; tapping another dish in the same course
@@ -35,12 +35,12 @@ export function MenuOrderBoard({
     setSubmitted(true);
     onSubmit(picksRef.current.filter((p): p is number => p !== null));
   };
+  useCountdown(startedAt, timeLimitSec, submit);
 
   const complete = picks.every((p) => p !== null);
 
   return (
     <>
-      {startedAt && !submitted && <Countdown startedAt={startedAt} timeLimitSec={timeLimitSec} onExpire={submit} />}
       <MenuCard menu={menu} onPick={pick} selected={picks.filter((p): p is number => p !== null)} />
       {!submitted && (
         <button className="btn btn-primary btn-lg" disabled={!complete} onClick={submit}>

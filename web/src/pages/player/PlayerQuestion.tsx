@@ -38,23 +38,21 @@ export function PlayerQuestion({
       <div className="hint">
         Question {view.currentQuestionIndex + 1} / {view.totalQuestions} · {question.title} · {question.points} pts
       </div>
+      <Countdown startedAt={startedAt} timeLimitSec={question.timeLimitSec} floating />
       <h1 className="question-text"><QuestionText text={question.text} /></h1>
       {question.type === 'multiple_choice' && question.imageUrl && (
         <img className="question-image" src={question.imageUrl} alt="" />
       )}
 
       {question.type === 'multiple_choice' && (
-        <>
-          <Countdown startedAt={startedAt} timeLimitSec={question.timeLimitSec} />
-          <div className="option-grid">
-            {question.options.map((text, i) => (
-              <button key={i} className={`shape-btn shape-${i}`} onClick={() => onAnswer(i)}>
-                <Shape index={i} />
-                <span style={{ flex: 1, textAlign: 'left' }}>{text}</span>
-              </button>
-            ))}
-          </div>
-        </>
+        <div className="option-grid">
+          {question.options.map((text, i) => (
+            <button key={i} className={`shape-btn shape-${i}`} onClick={() => onAnswer(i)}>
+              <Shape index={i} />
+              <span style={{ flex: 1, textAlign: 'left' }}>{text}</span>
+            </button>
+          ))}
+        </div>
       )}
 
       {question.type === 'menu_order' && (

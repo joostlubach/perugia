@@ -1,6 +1,6 @@
 import { PointerEvent as ReactPointerEvent, useEffect, useRef, useState } from 'react';
 import { audio } from '../audio';
-import { Countdown } from './Countdown';
+import { useCountdown } from './Countdown';
 
 // Estimation by betting: the player drags bills and coins into a terracotta
 // vase that shows the running total. There's no way to take money back out.
@@ -32,6 +32,7 @@ export function MoneyVaseBoard({
     setSubmitted(true);
     onSubmit(totalRef.current);
   };
+  useCountdown(startedAt, timeLimitSec, submit);
 
   const drop = (cents: number, clientX: number, clientY: number) => {
     const vase = vaseRef.current;
@@ -125,7 +126,6 @@ export function MoneyVaseBoard({
             </div>
           </div>
           <div className="money-actions">
-            {startedAt && <Countdown startedAt={startedAt} timeLimitSec={timeLimitSec} onExpire={submit} />}
             <button className="btn btn-primary btn-lg" onClick={submit}>
               🏺 Bet it
             </button>
@@ -220,17 +220,18 @@ export function formatEuro(cents: number): string {
   return new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' }).format(cents / 100);
 }
 
-// Synthesized drop sounds, so there's no extra audio file to ship: a crinkly
-// paper rustle for bills, and a metallic ring for coins with a second, softer
-// clink as the coin lands inside the vase.
+// Coins get the Mario coin sound; bills a synthesized crinkly paper rustle.
 let context: AudioContext | null = null;
 
 function playDropSound(cents: number) {
   if (audio.isMuted()) return;
+  if (!isBill(cents)) {
+    audio.playOverlapping('coin');
+    return;
+  }
   try {
     context ??= new AudioContext();
-    if (isBill(cents)) playRustle(context);
-    else playClink(context, cents);
+    playRustle(context);
   } catch {
     // No Web Audio -- stay silent.
   }
@@ -271,36 +272,4 @@ function playRustle(ctx: AudioContext) {
   peak.connect(gain);
   gain.connect(ctx.destination);
   source.start();
-}
-
-// Coins ring at a few inharmonic partials (that's what makes them sound
-// metallic rather than like a beep); smaller coins ring higher.
-function playClink(ctx: AudioContext, cents: number) {
-  const now = ctx.currentTime;
-  const base = (cents >= 100 ? 2000 : cents >= 10 ? 2500 : 3100) * (0.95 + Math.random() * 0.1);
-  hit(ctx, now, base, 0.22);
-  hit(ctx, now + 0.07 + Math.random() * 0.04, base * 1.03, 0.08);
-}
-
-function hit(ctx: AudioContext, at: number, base: number, volume: number) {
-  const partials: [number, number, number][] = [
-    // [ratio to base, relative loudness, decay seconds]
-    [1, 1, 0.45],
-    [2.76, 0.6, 0.28],
-    [5.4, 0.35, 0.16],
-    [8.93, 0.2, 0.09],
-  ];
-  for (const [ratio, loudness, decay] of partials) {
-    const osc = ctx.createOscillator();
-    osc.type = 'sine';
-    osc.frequency.value = base * ratio;
-    const gain = ctx.createGain();
-    gain.gain.setValueAtTime(0.0001, at);
-    gain.gain.exponentialRampToValueAtTime(volume * loudness, at + 0.003);
-    gain.gain.exponentialRampToValueAtTime(0.0001, at + decay);
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.start(at);
-    osc.stop(at + decay + 0.02);
-  }
 }

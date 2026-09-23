@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
 import QRCode from 'qrcode';
 
-export function JoinQrCode() {
+export function JoinQrCode({ joinCode }: { joinCode: string }) {
   const [qr, setQr] = useState<string | null>(null);
+  const url = `${window.location.origin}/play/${joinCode}`;
 
   useEffect(() => {
-    const url = `${window.location.origin}/play`;
     QRCode.toDataURL(url, { margin: 1, width: 220 })
       .then(setQr)
       .catch(() => setQr(null));
-  }, []);
+  }, [url]);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
@@ -19,6 +19,10 @@ export function JoinQrCode() {
         </div>
       )}
       <div className="hint">Scan to join on your phone</div>
+      <div className="join-url">
+        <div className="hint">or go to this URL on your phone</div>
+        <div className="join-url-text">{url.replace(/^https?:\/\//, '')}</div>
+      </div>
     </div>
   );
 }

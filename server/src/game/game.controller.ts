@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, ForbiddenException, Get, Post, Query, Req } from '@nestjs/common';
+import { Request } from 'express';
+import { RoomStatus } from './types';
 import { GameService } from './game.service';
-import { CreateRoomDto } from './dto/create-room.dto';
 import { JoinRoomDto } from './dto/join-room.dto';
 import { AnswerDto } from './dto/answer.dto';
 import { ReactDto } from './dto/react.dto';
@@ -12,8 +13,8 @@ export class GameController {
   constructor(private readonly game: GameService) {}
 
   @Post()
-  createRoom(@Body() dto: CreateRoomDto) {
-    return this.game.createRoom(dto);
+  createRoom() {
+    return this.game.createRoom();
   }
 
   @Get('host')
@@ -21,9 +22,17 @@ export class GameController {
     return this.game.getHostView(token);
   }
 
+  // Lets a bare /play on localhost join the current room without scanning
+  // the QR code. Deployed, the Host header is never localhost.
+  @Get('join-code')
+  getJoinCode(@Req() req: Request) {
+    if (!LOCAL_HOSTS.includes(req.hostname)) throw new ForbiddenException();
+    return this.game.getJoinCode();
+  }
+
   @Post('join')
   join(@Body() dto: JoinRoomDto) {
-    return this.game.joinRoom(dto.name, dto.avatar);
+    return this.game.joinRoom(dto.joinCode, dto.name, dto.avatar);
   }
 
   @Get('state')
@@ -37,8 +46,8 @@ export class GameController {
   }
 
   @Post('advance')
-  advance(@Query('token') token: string) {
-    return this.game.advance(token);
+  advance(@Query('token') token: string, @Query('from') from?: RoomStatus) {
+    return this.game.advance(token, from);
   }
 
   @Post('react')
@@ -55,3 +64,5 @@ export class GameController {
     );
   }
 }
+
+const LOCAL_HOSTS = ['localhost', '127.0.0.1'];

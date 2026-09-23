@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { api } from '../api';
+import { useParams } from 'react-router-dom';
+import { api, isStaleSession } from '../api';
 import { HamLine, MultiSelectAnswer, PlateAnswer, TraceAnswer } from '../types';
 import { usePolling } from '../hooks/usePolling';
 import { audio } from '../audio';
@@ -7,6 +8,7 @@ import { MuteToggle } from '../components/MuteToggle';
 import { ReactionBar } from '../components/ReactionBar';
 import { PlayerJoin } from './player/PlayerJoin';
 import { PlayerLobby } from './player/PlayerLobby';
+import { PlayerIntro } from './player/PlayerIntro';
 import { PlayerQuestion } from './player/PlayerQuestion';
 import { PlayerReveal } from './player/PlayerReveal';
 import { PlayerLeaderboard } from './player/PlayerLeaderboard';
@@ -18,8 +20,13 @@ interface Session {
 }
 
 const STORAGE_KEY = 'perugia_player';
+// On these hosts a bare /play joins the most recently created room, without the QR code.
+const LOCAL_HOSTS = ['localhost', '127.0.0.1'];
 
 export function PlayerPage() {
+  const { joinCode: urlJoinCode } = useParams();
+  const [localJoinCode, setLocalJoinCode] = useState<string | null>(null);
+  const joinCode = urlJoinCode ?? localJoinCode;
   const [session, setSession] = useState<Session | null>(() => {
     const raw = localStorage.getItem(STORAGE_KEY);
     return raw ? JSON.parse(raw) : null;
@@ -34,7 +41,12 @@ export function PlayerPage() {
   const { data: view, error } = usePolling(fetchView, 1000, Boolean(session));
 
   useEffect(() => {
-    if (error && (error.message.includes('404') || error.message.includes('403'))) {
+    if (urlJoinCode || session || !LOCAL_HOSTS.includes(window.location.hostname)) return;
+    api.getJoinCode().then(({ joinCode }) => setLocalJoinCode(joinCode), () => {});
+  }, [urlJoinCode, session]);
+
+  useEffect(() => {
+    if (isStaleSession(error)) {
       localStorage.removeItem(STORAGE_KEY);
       setSession(null);
     }
@@ -42,14 +54,8 @@ export function PlayerPage() {
 
   useEffect(() => {
     if (!view || view.status === lastStatus.current) return;
-    const prev = lastStatus.current;
     lastStatus.current = view.status;
-    if (prev === 'question' && view.status === 'reveal' && view.lastResult?.correct) {
-      audio.play('correct');
-    }
-    if (view.status === 'ended') {
-      audio.play(view.rank <= 3 ? 'victory' : 'funny');
-    }
+    if (view.status === 'ended' && view.rank !== 1) audio.play('died');
   }, [view]);
 
   const handleJoined = (playerId: string, playerToken: string) => {
@@ -65,16 +71,26 @@ export function PlayerPage() {
   return (
     <>
       <MuteToggle />
-      {!session || !view ? (
-        <PlayerJoin onJoined={handleJoined} />
+      {session && !view ? (
+        <div className="page">Loading...</div>
+      ) : !session || !view ? (
+        joinCode ? (
+          <PlayerJoin joinCode={joinCode} onJoined={handleJoined} />
+        ) : (
+          <div className="page">
+            <h1 className="title">Scan to join 📷</h1>
+            <p className="subtitle">Scan the QR code on the big screen to join the quiz.</p>
+          </div>
+        )
       ) : (
         <div className="with-reaction-bar">
           {view.status === 'lobby' && <PlayerLobby view={view} />}
+          {view.status === 'intro' && <PlayerIntro view={view} />}
           {view.status === 'question' && <PlayerQuestion view={view} onAnswer={answer} />}
           {view.status === 'reveal' && <PlayerReveal view={view} />}
           {view.status === 'leaderboard' && <PlayerLeaderboard view={view} />}
           {view.status === 'ended' && <PlayerFinal view={view} />}
-          <ReactionBar playerId={session.playerId} playerToken={session.playerToken} />
+          <ReactionBar playerId={session.playerId} playerToken={session.playerToken} final={view.status === 'ended'} />
         </div>
       )}
     </>

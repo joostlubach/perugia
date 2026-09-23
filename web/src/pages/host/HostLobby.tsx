@@ -7,7 +7,7 @@ export function HostLobby({ view, onStart }: { view: HostRoomView; onStart: () =
   return (
     <div className="page">
       <h1 className="title">Benvenuti! 🇮🇹</h1>
-      <JoinQrCode />
+      <JoinQrCode joinCode={view.joinCode} />
       <div className="card">
         <h2>{view.playerCount} player{view.playerCount === 1 ? '' : 's'} joined</h2>
         <div className="lobby-players">
@@ -23,7 +23,7 @@ export function HostLobby({ view, onStart }: { view: HostRoomView; onStart: () =
         className="btn btn-primary btn-lg"
         disabled={view.playerCount === 0}
         onClick={() => {
-          audio.stopBackground();
+          audio.stop('background');
           onStart();
         }}
       >

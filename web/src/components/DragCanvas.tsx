@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { audio, SoundKey } from '../audio'
 import { createAudioSequencer } from '../audioSequencer'
-import { Countdown } from './Countdown'
+import { useCountdown } from './Countdown'
 
 interface Token {
   id: number;
@@ -56,6 +56,7 @@ export function DragCanvas({
     setSubmitted(true);
     onSubmit(countRef.current);
   };
+  useCountdown(startedAt, timeLimitSec, submit);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -121,7 +122,6 @@ export function DragCanvas({
           >
             ✅ Done dragging
           </button>
-          {startedAt && <Countdown startedAt={startedAt} timeLimitSec={timeLimitSec} onExpire={submit} />}
         </>
       )}
 

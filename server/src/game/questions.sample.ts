@@ -1,4 +1,5 @@
 import { DistributiveOmit, Question } from './types';
+import { texts } from './question-texts';
 import { KARTING_WINNER_GROUP, KARTING_LOSER_GROUP } from './karting';
 import { DINNER_HEAD, DINNER_LEFT, DINNER_RIGHT, DINNER_CORRECT_PRIMO, DINNER_CORRECT_SECONDO } from './dinner';
 import { HAM_ROWS } from './ham';
@@ -11,8 +12,7 @@ import { TRAVEL_MAP_URL, TRAVEL_MAP_ASPECT_RATIO, TRAVEL_LANDMARKS, TRAVEL_STOPS
 export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
   {
     type: 'multiple_choice',
-    title: 'The Lake',
-    text: 'Which story is based on the area around the ice cold swimming lake?',
+    ...texts('lake'),
     options: ['Pinocchio', 'Narnia', 'Alice in Wonderland', 'The Wizard of Oz'],
     correctIndex: 1,
     timeLimitSec: 20,
@@ -20,8 +20,7 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
   },
   {
     type: 'multi_select',
-    title: 'Assisi',
-    text: 'Which saint(s) do we associate with the town of Assisi? Select all that apply.',
+    ...texts('assisi'),
     options: [
       'St. Francis',
       'St. Anthony',
@@ -37,8 +36,7 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
   },
   {
     type: 'drag_count',
-    title: 'Pedro',
-    text: "How many times does the word \"Pedro\" appear in Raffaella Carra's song \"Pedro\"?",
+    ...texts('pedro'),
     dragLabel: 'Pedro',
     correctCount: 48,
     timeLimitSec: 45,
@@ -46,8 +44,7 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
   },
   {
     type: 'multiple_choice',
-    title: 'Pool Party',
-    text: 'How many liters of water did the pool lose after the first pool party?',
+    ...texts('poolParty'),
     options: ['30 liters', '300 liters', '3000 liters', '30.000 liters'],
     correctIndex: 2,
     timeLimitSec: 20,
@@ -55,8 +52,7 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
   },
   {
     type: 'podium_order',
-    title: 'Karting',
-    text: 'Who finished where in karting? Put both groups in the right order.',
+    ...texts('karting'),
     correctOrder: [KARTING_WINNER_GROUP, KARTING_LOSER_GROUP],
     groupLabels: ['Winner group', 'Loser group'],
     timeLimitSec: 90,
@@ -64,8 +60,7 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
   },
   {
     type: 'multiple_choice',
-    title: 'The house',
-    text: 'What was the surname of the family that owned the house?',
+    ...texts('house'),
     options: ['Degli Oddi Baglioni', 'Buonaccorsi di Montefalco', 'Di Serego Alighieri', 'Della Rovere Portinari'],
     correctIndex: 2,
     timeLimitSec: 20,
@@ -73,9 +68,7 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
   },
   {
     type: 'trace_marks',
-    title: "Bowie's scratches",
-    text: "Everyone fell into the pool at the pool party. Everyone? No, one friend was able to resist any attempt. But he paid dearly. Draw as best as you can the marks on Bowie's side from the pool party",
-    playerText: 'Draw the scratches as best as you can',
+    ...texts('bowie'),
     imageUrl: '/images/bowie-nomarks.jpeg',
     revealImageUrl: '/images/bowie-marks.jpg',
     aspectRatio: BOWIE_ASPECT_RATIO,
@@ -85,8 +78,7 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
   },
   {
     type: 'ham_cut',
-    title: 'Ham cutting',
-    text: 'Drag the two points to find the line that cuts the ham exactly in half.',
+    ...texts('ham'),
     imageUrl: '/images/ham.jpg',
     rows: HAM_ROWS,
     timeLimitSec: 45,
@@ -94,8 +86,7 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
   },
   {
     type: 'plate_assignment',
-    title: 'Primo / Secondo',
-    text: 'At the final dinner, who had a primo, who had a secondo, and who had both?',
+    ...texts('dinner'),
     head: DINNER_HEAD,
     left: DINNER_LEFT,
     right: DINNER_RIGHT,
@@ -106,9 +97,7 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
   },
   {
     type: 'menu_order',
-    title: 'Cena da Ruben',
-    text: "You're at an Italian restaurant and you want to have a nice meal. The problem: you are Ruben, and therefore gluten intolerant. Order an antipasto, a primo, a secondo and a dolce!",
-    playerText: "You are Ruben, and you're gluten intolerant. Order an antipasto, a primo, a secondo and a dolce!",
+    ...texts('ruben'),
     menu: RUBEN_MENU,
     correctIndexes: RUBEN_CORRECT_INDEXES,
     timeLimitSec: 60,
@@ -116,8 +105,7 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
   },
   {
     type: 'multiple_choice',
-    title: 'Village festival',
-    text: 'At the village festival, we arrived when the number was at 182. Which number did we have?',
+    ...texts('festival'),
     imageUrl: '/images/festival.jpg',
     options: ['190', '256', '360', '472'],
     correctIndex: 2,
@@ -126,8 +114,7 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
   },
   {
     type: 'multiple_choice',
-    title: 'The swimming pool',
-    text: 'What was the reason the swimming pool was where it was?',
+    ...texts('pool'),
     options: [
       'Easy jumping off the wall',
       "Out of the way for Pietro's wife, so it wouldn't get too noisy",
@@ -140,8 +127,7 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
   },
   {
     type: 'travel_map',
-    title: 'On the way',
-    text: 'Drag each person to how they _arrived_ to Perugia',
+    ...texts('travel'),
     mapUrl: TRAVEL_MAP_URL,
     aspectRatio: TRAVEL_MAP_ASPECT_RATIO,
     landmarks: TRAVEL_LANDMARKS,
@@ -152,8 +138,7 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
   },
   {
     type: 'multiple_choice',
-    title: 'Perusia',
-    text: 'What people used to live in Perugia before Octavian burnt their terracotta asses?',
+    ...texts('perusia'),
     options: ['Peruvians', 'Umbrians', 'Etruscans', 'Sabines'],
     correctIndex: 2,
     timeLimitSec: 20,
@@ -161,8 +146,7 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
   },
   {
     type: 'multiple_choice',
-    title: 'Famous ancestor',
-    text: 'What famous artist does the Di Serego family descend from?',
+    ...texts('ancestor'),
     options: ['Leonardo da Vinci', 'Dante', 'Michelangelo', 'Giotto'],
     correctIndex: 1,
     timeLimitSec: 20,
@@ -170,8 +154,7 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
   },
   {
     type: 'multiple_choice',
-    title: 'Server room',
-    text: 'What did Leonardo do to power his server room at home?',
+    ...texts('serverRoom'),
     options: [
       'He tapped off a street lantern near his house',
       "He hacked his way into the electricity company so they wouldn't charge for his usage",
@@ -184,9 +167,7 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
   },
   {
     type: 'money_vase',
-    title: 'Splitser',
-    text: 'How much money did we spend in total, according to Splitser?',
-    playerText: 'How much did we spend in total, according to Splitser?',
+    ...texts('splitser'),
     // €500 and €200 bills, and every euro coin.
     denominations: [50000, 20000, 200, 100, 50, 20, 10, 5, 2, 1],
     correctCents: 881903,

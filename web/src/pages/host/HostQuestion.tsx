@@ -1,4 +1,3 @@
-import { useRef } from 'react';
 import { HostRoomView } from '../../types';
 import { AnswerOption } from '../../components/AnswerOption';
 import { Countdown } from '../../components/Countdown';
@@ -7,15 +6,9 @@ import { TravelMap } from '../../components/TravelMap';
 import { Vase } from '../../components/MoneyVase';
 import { QuestionText } from '../../components/QuestionText';
 
-export function HostQuestion({ view, onExpire }: { view: HostRoomView; onExpire: () => void }) {
+// Answering is open; the server moves on to the reveal once time is up or everyone has answered.
+export function HostQuestion({ view }: { view: HostRoomView }) {
   const question = view.question!;
-  const firedRef = useRef(false);
-
-  const handleExpire = () => {
-    if (firedRef.current) return;
-    firedRef.current = true;
-    onExpire();
-  };
 
   const maxCount = Math.max(1, ...view.optionCounts);
 
@@ -28,8 +21,15 @@ export function HostQuestion({ view, onExpire }: { view: HostRoomView; onExpire:
       {question.type === 'multiple_choice' && question.imageUrl && (
         <img className="question-image" src={question.imageUrl} alt="" />
       )}
-      <Countdown startedAt={view.questionStartedAt} timeLimitSec={question.timeLimitSec} onExpire={handleExpire} />
-      <div className="hint">{view.answeredCount} / {view.playerCount} answered</div>
+      <div className="answer-status">
+        <Countdown startedAt={view.questionStartedAt} timeLimitSec={question.timeLimitSec} />
+        <div className="answer-tally">
+          <span className="answer-tally-count">
+            {view.answeredCount} / {view.playerCount}
+          </span>
+          answered
+        </div>
+      </div>
       {question.type === 'menu_order' ? (
         <MenuCard menu={question.menu} counts={view.optionCounts} wide />
       ) : question.type === 'multiple_choice' ? (

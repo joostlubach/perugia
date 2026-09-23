@@ -1,6 +1,6 @@
 import { PointerEvent as ReactPointerEvent, useEffect, useRef, useState } from 'react';
 import { MapPin } from '../types';
-import { Countdown } from './Countdown';
+import { useCountdown } from './Countdown';
 import { TravelAvatar, TravelMap } from './TravelMap';
 
 // Player drags each person from the tray onto the map stop where they were,
@@ -40,6 +40,7 @@ export function TravelMapBoard({
     setSubmitted(true);
     onSubmit(groupsRef.current);
   };
+  useCountdown(startedAt, timeLimitSec, submit);
 
   const drop = (state: DragState, clientX: number, clientY: number) => {
     const target = document.elementFromPoint(clientX, clientY);
@@ -124,7 +125,6 @@ export function TravelMapBoard({
 
       {!submitted && (
         <div className="travel-actions">
-          {startedAt && <Countdown startedAt={startedAt} timeLimitSec={timeLimitSec} onExpire={submit} />}
           <button className="btn btn-primary btn-lg" onClick={submit}>
             🗺️ Lock it in
           </button>

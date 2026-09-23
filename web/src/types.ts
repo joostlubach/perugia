@@ -1,4 +1,4 @@
-export type RoomStatus = 'lobby' | 'question' | 'reveal' | 'leaderboard' | 'ended';
+export type RoomStatus = 'lobby' | 'intro' | 'question' | 'reveal' | 'leaderboard' | 'ended';
 
 export interface MultipleChoiceInput {
   type: 'multiple_choice';
@@ -286,7 +286,7 @@ export interface HostGuess {
   correct: boolean;
 }
 
-export type ReactionKind = 'mammamia' | 'mario' | 'chihuahua';
+export type ReactionKind = 'mammamia' | 'mario' | 'losing' | 'gibberish' | 'congratulations';
 
 export interface Reaction {
   id: string;
@@ -306,6 +306,7 @@ export interface LeaderboardEntry {
 
 export interface HostRoomView {
   status: RoomStatus;
+  joinCode: string;
   currentQuestionIndex: number;
   totalQuestions: number;
   questionStartedAt: number | null;
@@ -313,6 +314,7 @@ export interface HostRoomView {
   answeredCount: number;
   optionCounts: number[];
   guesses: HostGuess[];
+  afterReveal: 'leaderboard' | 'intro' | 'ended';
   playerCount: number;
   players: LeaderboardEntry[];
   leaderboard: LeaderboardEntry[];
