@@ -323,7 +323,7 @@ export interface HostGuess {
   pointsAwarded: number;
 }
 
-export type ReactionKind = 'mammamia' | 'mario' | 'losing' | 'gibberish' | 'congratulations' | 'letsgo';
+export type ReactionKind = 'mammamia' | 'mario' | 'losing' | 'gibberish' | 'congratulations' | 'letsgo' | 'luigi';
 
 export interface Reaction {
   id: string;

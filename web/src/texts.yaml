@@ -176,6 +176,9 @@ reactions:
   mario:
     label: "Mario!"
     callout: "It's-a me, Mario!"
+  luigi:
+    label: "Oohooh"
+    callout: "Oohooh!"
   losing:
     label: "Nooo"
     callout: "Nooooo!"

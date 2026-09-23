@@ -14,7 +14,9 @@ export const REACTIONS: {
 }[] = [
   reaction('letsgo', '🏁', ['lobby']),
   reaction('mammamia', '😱'),
-  reaction('mario', '🍄'),
+  reaction('mario', '🍄', ['lobby']),
+  // No Luigi emoji, so his green it is.
+  reaction('luigi', '💚', ['game', 'final']),
   reaction('losing', '😭', ['game', 'final']),
   reaction('gibberish', '🤌'),
   reaction('congratulations', '🎉', ['final']),
@@ -29,7 +31,7 @@ function reaction(kind: ReactionKind, emoji: string, phases?: ReactionPhase[]) {
   return { kind, emoji, label: t(`reactions.${kind}.label`), callout: t(`reactions.${kind}.callout`), phases };
 }
 
-// Several files means one is picked at random each time.
+// Several files are taken in turn, so the same one never plays twice in a row.
 const SOUND_URLS: Record<ReactionKind, string[]> = {
   mammamia: ['/audio/mamma-mia_caQRETK.mp3'],
   mario: ['/audio/its-me-mario.mp3'],
@@ -37,10 +39,15 @@ const SOUND_URLS: Record<ReactionKind, string[]> = {
   gibberish: ['/audio/gibberish1.mp3', '/audio/gibberish2.mp3'],
   congratulations: ['/audio/mario-congratulations.mp3'],
   letsgo: ['/audio/sm64_mario_lets_go.mp3'],
+  luigi: ['/audio/luigi-ho-hoh.mp3', '/audio/oaaahhhhhhoohh.mp3'],
 };
 
 export function playReaction(kind: ReactionKind) {
   if (audio.isMuted()) return;
   const urls = SOUND_URLS[kind];
-  new Audio(urls[Math.floor(Math.random() * urls.length)]).play().catch(() => {});
+  const turn = turns.get(kind) ?? 0;
+  turns.set(kind, turn + 1);
+  new Audio(urls[turn % urls.length]).play().catch(() => {});
 }
+
+const turns = new Map<ReactionKind, number>();
