@@ -16,6 +16,7 @@ import { PlayerQuestion } from './player/PlayerQuestion';
 import { PlayerReveal } from './player/PlayerReveal';
 import { PlayerLeaderboard } from './player/PlayerLeaderboard';
 import { PlayerFinal } from './player/PlayerFinal';
+import { PlayerFinale } from './player/PlayerFinale';
 
 interface Session {
   playerId: string;
@@ -23,6 +24,7 @@ interface Session {
 }
 
 const STORAGE_KEY = 'perugia_player';
+const JOIN_CODE_POLL_MS = 2000;
 
 export function PlayerPage() {
   const { joinCode: urlJoinCode } = useParams();
@@ -46,9 +48,13 @@ export function PlayerPage() {
     preloadDragSounds();
   }, []);
 
+  // Keeps checking, so it picks up a room created (or restarted) after this page opened.
   useEffect(() => {
     if (urlJoinCode || session || !isLocalHost(window.location.hostname)) return;
-    api.getJoinCode().then(({ joinCode }) => setLocalJoinCode(joinCode), () => {});
+    const check = () => api.getJoinCode().then(({ joinCode }) => setLocalJoinCode(joinCode), () => setLocalJoinCode(null));
+    check();
+    const id = setInterval(check, JOIN_CODE_POLL_MS);
+    return () => clearInterval(id);
   }, [urlJoinCode, session]);
 
   useEffect(() => {
@@ -95,6 +101,7 @@ export function PlayerPage() {
           {view.status === 'question' && <PlayerQuestion view={view} onAnswer={answer} />}
           {view.status === 'reveal' && <PlayerReveal view={view} />}
           {view.status === 'leaderboard' && <PlayerLeaderboard view={view} />}
+          {view.status === 'finale' && <PlayerFinale />}
           {view.status === 'ended' && <PlayerFinal view={view} />}
           <ReactionBar
             playerId={session.playerId}

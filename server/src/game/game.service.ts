@@ -108,7 +108,9 @@ export class GameService {
       else room.status = next;
     } else if (room.status === 'leaderboard') {
       if (room.currentQuestionIndex + 1 < room.questions.length) this.goToQuestion(room, room.currentQuestionIndex + 1);
-      else room.status = 'ended';
+      else room.status = 'finale';
+    } else if (room.status === 'finale') {
+      room.status = 'ended';
     }
     await this.store.set(room);
   }
@@ -666,9 +668,9 @@ export class GameService {
   }
 }
 
-function afterReveal(room: Room): 'leaderboard' | 'intro' | 'ended' {
+function afterReveal(room: Room): 'leaderboard' | 'intro' | 'finale' {
   const next = room.currentQuestionIndex + 1;
-  if (next >= room.questions.length) return 'ended';
+  if (next >= room.questions.length) return 'finale';
   return next % LEADERBOARD_EVERY === 0 ? 'leaderboard' : 'intro';
 }
 

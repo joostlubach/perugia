@@ -12,6 +12,7 @@ import { HostQuestion } from './host/HostQuestion';
 import { HostReveal } from './host/HostReveal';
 import { HostLeaderboard } from './host/HostLeaderboard';
 import { HostFinal } from './host/HostFinal';
+import { HostFinale } from './host/HostFinale';
 
 interface Session {
   hostToken: string;
@@ -52,7 +53,9 @@ export function HostPage() {
     lastStatus.current = view.status;
     if (view.status === 'lobby') audio.loop('background', 0.5);
     else audio.stop('background');
-    if (view.status !== 'lobby' && view.status !== 'ended') audio.loop('quizMusic', QUIZ_MUSIC_VOLUME);
+    if (view.status !== 'lobby' && view.status !== 'finale' && view.status !== 'ended') {
+      audio.loop('quizMusic', QUIZ_MUSIC_VOLUME);
+    }
     else audio.stop('quizMusic');
     if (view.status === 'ended') audio.play('standings');
     else audio.stop('standings');
@@ -139,6 +142,7 @@ export function HostPage() {
           {view.status === 'question' && <HostQuestion view={view} />}
           {view.status === 'reveal' && <HostReveal view={view} onNext={advance} />}
           {view.status === 'leaderboard' && <HostLeaderboard view={view} onNext={advance} />}
+          {view.status === 'finale' && <HostFinale onNext={advance} />}
           {view.status === 'ended' && <HostFinal view={view} />}
           <ReactionCallouts reactions={view.reactions ?? []} />
           {jumping && session && (

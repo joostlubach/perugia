@@ -1,4 +1,4 @@
-export type RoomStatus = 'lobby' | 'intro' | 'question' | 'reveal' | 'leaderboard' | 'ended';
+export type RoomStatus = 'lobby' | 'intro' | 'question' | 'reveal' | 'leaderboard' | 'finale' | 'ended';
 
 export interface MultipleChoiceInput {
   type: 'multiple_choice';
@@ -316,7 +316,7 @@ export interface HostRoomView {
   answeredCount: number;
   optionCounts: number[];
   guesses: HostGuess[];
-  afterReveal: 'leaderboard' | 'intro' | 'ended';
+  afterReveal: 'leaderboard' | 'intro' | 'finale';
   playerCount: number;
   players: LeaderboardEntry[];
   leaderboard: LeaderboardEntry[];

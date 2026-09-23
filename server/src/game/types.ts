@@ -1,6 +1,6 @@
 // `intro` shows the question on the big screen while the host reads it out;
-// answering only opens in `question`.
-export type RoomStatus = 'lobby' | 'intro' | 'question' | 'reveal' | 'leaderboard' | 'ended';
+// answering only opens in `question`. `finale` is a pause before the final results.
+export type RoomStatus = 'lobby' | 'intro' | 'question' | 'reveal' | 'leaderboard' | 'finale' | 'ended';
 
 interface QuestionBase {
   id: string;
@@ -250,7 +250,7 @@ export interface HostRoomView {
   // Only populated for drag_count and podium_order questions once revealed.
   guesses: HostGuess[];
   // Where advancing from the reveal goes.
-  afterReveal: 'leaderboard' | 'intro' | 'ended';
+  afterReveal: 'leaderboard' | 'intro' | 'finale';
   playerCount: number;
   players: LeaderboardEntry[];
   leaderboard: LeaderboardEntry[];
