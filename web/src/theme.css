@@ -1236,3 +1236,343 @@ textarea.json-editor {
   align-items: center;
   gap: 16px;
 }
+
+.money-board {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 520px;
+}
+
+.money-vase-drop {
+  position: relative;
+}
+
+.money-vase {
+  position: relative;
+  width: min(62vw, calc(34vh * 200 / 240), 260px);
+  aspect-ratio: 200 / 240;
+}
+
+.money-vase.large {
+  width: min(80vw, calc(50vh * 200 / 240), 360px);
+}
+
+.money-vase svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.3));
+}
+
+.money-vase.wobble {
+  animation: vase-wobble 0.35s ease;
+}
+
+@keyframes vase-wobble {
+  25% {
+    transform: rotate(-3deg);
+  }
+  60% {
+    transform: rotate(2deg);
+  }
+}
+
+.money-vase-total {
+  position: absolute;
+  left: 50%;
+  top: 56%;
+  transform: translate(-50%, -50%);
+  padding: 4px 12px;
+  border-radius: 10px;
+  background: #f6e3c8;
+  color: #3a1a0a;
+  border: 2px solid #2a130a;
+  font-family: 'Fredoka', sans-serif;
+  font-size: clamp(1rem, 5vw, 1.6rem);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.money-vase.large .money-vase-total {
+  font-size: clamp(1.4rem, 3vw, 2.6rem);
+}
+
+.money-falling {
+  position: absolute;
+  pointer-events: none;
+  z-index: 5;
+  transform: translate(-50%, -50%);
+  animation: money-fall 0.45s ease-in forwards;
+}
+
+@keyframes money-fall {
+  to {
+    transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(0.3);
+    opacity: 0;
+  }
+}
+
+.money-tray {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  padding: 12px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.money-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.money-source {
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.money-drag-ghost {
+  position: fixed;
+  transform: translate(-50%, -50%) rotate(-6deg);
+  pointer-events: none;
+  z-index: 1000;
+}
+
+.money-bill {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 120px;
+  height: 62px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 2px solid rgba(0, 0, 0, 0.25);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+  font-family: 'Fredoka', sans-serif;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.money-bill.bill-500 {
+  background: linear-gradient(135deg, #9a7fbf, #6b4f94 60%, #8a6fb2);
+}
+
+.money-bill.bill-200 {
+  background: linear-gradient(135deg, #e6c56a, #b88a2a 60%, #d9b453);
+}
+
+.money-bill-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.money-bill-euro {
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  writing-mode: vertical-rl;
+}
+
+.money-coin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  font-size: 0.75rem;
+  color: #3a2a10;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.35), inset 0 -2px 3px rgba(0, 0, 0, 0.2);
+}
+
+.money-coin.coin-200 {
+  width: 50px;
+  height: 50px;
+  background: radial-gradient(circle, #e2b93b 0 52%, #c9ccd1 54% 100%);
+}
+
+.money-coin.coin-100 {
+  width: 46px;
+  height: 46px;
+  background: radial-gradient(circle, #c9ccd1 0 52%, #e2b93b 54% 100%);
+}
+
+.money-coin.coin-50,
+.money-coin.coin-20,
+.money-coin.coin-10 {
+  background: radial-gradient(circle at 35% 35%, #f3d36b, #c99a24);
+}
+
+.money-coin.coin-50 {
+  width: 48px;
+  height: 48px;
+}
+
+.money-coin.coin-20 {
+  width: 42px;
+  height: 42px;
+}
+
+.money-coin.coin-10 {
+  width: 36px;
+  height: 36px;
+}
+
+.money-coin.coin-5,
+.money-coin.coin-2,
+.money-coin.coin-1 {
+  background: radial-gradient(circle at 35% 35%, #e0935c, #a0522d);
+  color: #fff6ec;
+}
+
+.money-coin.coin-5 {
+  width: 40px;
+  height: 40px;
+}
+
+.money-coin.coin-2 {
+  width: 35px;
+  height: 35px;
+}
+
+.money-coin.coin-1 {
+  width: 30px;
+  height: 30px;
+}
+
+.money-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.reaction-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 900;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 -4px 14px rgba(0, 0, 0, 0.15);
+}
+
+.reaction-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 999px;
+  background: var(--italy-green);
+  color: white;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.reaction-btn:nth-child(2) {
+  background: var(--italy-red);
+}
+
+.reaction-btn:nth-child(3) {
+  background: var(--choc-brown);
+}
+
+.reaction-btn:disabled {
+  background: #b9b1aa;
+}
+
+.reaction-emoji {
+  font-size: 1.2rem;
+}
+
+.with-reaction-bar .page {
+  padding-bottom: 88px;
+}
+
+.reaction-callouts {
+  position: fixed;
+  left: 24px;
+  bottom: 24px;
+  z-index: 900;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  pointer-events: none;
+}
+
+.reaction-callout {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  animation: reaction-in 0.3s cubic-bezier(0.2, 1.4, 0.4, 1), reaction-out 0.4s ease-in 3.1s forwards;
+}
+
+.reaction-callout img {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+.reaction-bubble {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 18px;
+  border-radius: 18px;
+  background: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.reaction-bubble::before {
+  content: '';
+  position: absolute;
+  left: -10px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 10px solid transparent;
+  border-left: 0;
+  border-right-color: white;
+}
+
+.reaction-bubble-text {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--italy-red);
+  white-space: nowrap;
+}
+
+.reaction-bubble-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--choc-brown);
+}
+
+@keyframes reaction-in {
+  from {
+    transform: scale(0.3) translateX(-60px);
+    opacity: 0;
+  }
+}
+
+@keyframes reaction-out {
+  to {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+}

@@ -3,6 +3,7 @@ import { GameService } from './game.service';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { JoinRoomDto } from './dto/join-room.dto';
 import { AnswerDto } from './dto/answer.dto';
+import { ReactDto } from './dto/react.dto';
 
 // There's only one room -- a single reunion, played once -- so none of
 // these routes take a room identifier.
@@ -38,6 +39,11 @@ export class GameController {
   @Post('advance')
   advance(@Query('token') token: string) {
     return this.game.advance(token);
+  }
+
+  @Post('react')
+  react(@Body() dto: ReactDto) {
+    return this.game.react(dto.playerId, dto.playerToken, dto.kind);
   }
 
   @Post('answer')

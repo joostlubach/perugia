@@ -169,4 +169,15 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
     timeLimitSec: 20,
     points: 1000,
   },
+  {
+    type: 'money_vase',
+    title: 'Splitser',
+    text: 'How much money did we spend in total, according to Splitser?',
+    playerText: 'How much did we spend in total, according to Splitser?',
+    // €500 and €200 bills, and every euro coin.
+    denominations: [50000, 20000, 200, 100, 50, 20, 10, 5, 2, 1],
+    correctCents: 881903,
+    timeLimitSec: 60,
+    points: 1500,
+  },
 ];

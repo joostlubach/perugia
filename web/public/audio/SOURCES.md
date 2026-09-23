@@ -49,3 +49,16 @@ completeness even where the license does not strictly require it.
 - License: CC0 1.0 (Public Domain)
 - Duration: ~0.8s
 - Note: generic comedic slide-whistle sting, not derived from any copyrighted game audio.
+
+## Reaction sounds (not bundled yet)
+
+Players' reactions play on the big screen and on their phone. Drop the files
+here with exactly these names and they're used automatically:
+
+- `reaction-mamma-mia.mp3` -- someone shouting "Mamma mia!"
+- `reaction-mario.mp3` -- someone shouting "Mario!"
+- `reaction-chihuahua.mp3` -- a chihuahua barking (keep it short, ~1s)
+
+Until a file is there, the app falls back to the browser's Italian
+text-to-speech voice for the two shouts and a synthesized yap for the
+chihuahua (see web/src/reactions.ts).

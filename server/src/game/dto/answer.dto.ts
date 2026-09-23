@@ -7,7 +7,8 @@ export class AnswerDto {
   @IsString()
   playerToken!: string;
 
-  // Option index for multiple_choice questions, dragged-token count for drag_count.
+  // Option index for multiple_choice questions, dragged-token count for
+  // drag_count, amount in cents for money_vase.
   @ValidateIf((a) => a.order === undefined && a.plates === undefined && a.line === undefined && a.multiSelect === undefined && a.strokes === undefined)
   @IsInt()
   @Min(0)

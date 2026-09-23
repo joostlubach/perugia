@@ -55,6 +55,13 @@ export function countCorrectSelections(selected: number[], correctIndexes: numbe
   return count;
 }
 
+// Mirrors scoreEstimate in server/src/game/room.util.ts.
+export function scoreEstimate(guess: number, correct: number): number {
+  if (correct <= 0) return guess === correct ? 100 : 0;
+  const error = Math.abs(guess - correct) / correct;
+  return Math.round(Math.max(0, 1 - error * 2) * 100);
+}
+
 // Mirrors scoreHamCut in server/src/game/room.util.ts.
 export function scoreHamCut(
   line: { p1: { x: number; y: number }; p2: { x: number; y: number } },

@@ -2,6 +2,7 @@ import { HostRoomView } from '../../types';
 import { AnswerOption } from '../../components/AnswerOption';
 import { MenuCard } from '../../components/MenuCard';
 import { TravelMap } from '../../components/TravelMap';
+import { formatEuro, Vase } from '../../components/MoneyVase';
 import { PodiumStand } from '../../components/PodiumStand';
 import { Seat } from '../../components/PlateBoard';
 import { QuestionText } from '../../components/QuestionText';
@@ -57,6 +58,29 @@ export function HostReveal({ view, onNext }: { view: HostRoomView; onNext: () =>
                   </span>
                 </li>
               ))}
+          </ol>
+        </>
+      ) : question.type === 'money_vase' ? (
+        <>
+          <Vase total={question.correctCents ?? 0} large />
+          <ol className="leaderboard-list">
+            {view.guesses
+              .slice()
+              .sort((a, b) => Math.abs(a.value - (question.correctCents ?? 0)) - Math.abs(b.value - (question.correctCents ?? 0)))
+              .map((g) => {
+                const diff = g.value - (question.correctCents ?? 0);
+                return (
+                  <li key={g.playerId} style={{ background: g.correct ? 'var(--gold)' : 'white' }}>
+                    <span>
+                      {g.correct ? '✅' : '💰'} {g.name}
+                    </span>
+                    <span>
+                      {formatEuro(g.value)} ({diff >= 0 ? '+' : '−'}
+                      {formatEuro(Math.abs(diff))})
+                    </span>
+                  </li>
+                );
+              })}
           </ol>
         </>
       ) : question.type === 'podium_order' ? (

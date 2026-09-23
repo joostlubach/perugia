@@ -117,8 +117,18 @@ export interface TravelMapQuestion extends QuestionBase {
   correctGroups: string[][];
 }
 
+// Estimation: player drags bills and coins into a vase, which shows the
+// running total. Nothing comes back out. Amounts are in euro cents.
+export interface MoneyVaseQuestion extends QuestionBase {
+  type: 'money_vase';
+  // Values of the bills and coins the player can drag, largest first.
+  denominations: number[];
+  correctCents: number;
+}
+
 export type Question =
   | MultipleChoiceQuestion
+  | MoneyVaseQuestion
   | TravelMapQuestion
   | DragCountQuestion
   | PodiumOrderQuestion
@@ -136,7 +146,8 @@ export interface PlayerAnswer {
   correct: boolean;
   pointsAwarded: number;
   // Meaning depends on the question type: option index for multiple_choice,
-  // dragged-token count for drag_count, correct placements for podium_order.
+  // dragged-token count for drag_count, correct placements for podium_order,
+  // guessed amount in cents for money_vase.
   value: number;
 }
 
@@ -148,6 +159,19 @@ export interface Player {
   score: number;
   joinedAt: number;
   answers: Record<string, PlayerAnswer>;
+}
+
+export const REACTION_KINDS = ['mammamia', 'mario', 'chihuahua'] as const;
+export type ReactionKind = (typeof REACTION_KINDS)[number];
+
+// A player's reaction, shown and heard on the big screen for a moment.
+export interface Reaction {
+  id: string;
+  playerId: string;
+  name: string;
+  avatar: string;
+  kind: ReactionKind;
+  at: number;
 }
 
 export interface LeaderboardEntry {
@@ -179,7 +203,8 @@ export type HostQuestionView =
   | Omit<HamCutQuestion, 'rows'>
   | (Omit<MultiSelectQuestion, 'correctIndexes'> & { correctIndexes?: number[] })
   | (Omit<TraceMarksQuestion, 'marks' | 'revealImageUrl'> & { revealImageUrl?: string })
-  | (Omit<TravelMapQuestion, 'correctGroups'> & { people: string[]; correctGroups?: string[][] });
+  | (Omit<TravelMapQuestion, 'correctGroups'> & { people: string[]; correctGroups?: string[][] })
+  | (Omit<MoneyVaseQuestion, 'correctCents'> & { correctCents?: number });
 
 export interface HostGuess {
   playerId: string;
@@ -203,6 +228,8 @@ export interface HostRoomView {
   playerCount: number;
   players: LeaderboardEntry[];
   leaderboard: LeaderboardEntry[];
+  // Reactions from the last few seconds, oldest first.
+  reactions: Reaction[];
 }
 
 export type PlayerQuestionView =
@@ -215,7 +242,8 @@ export type PlayerQuestionView =
   | Omit<MultiSelectQuestion, 'correctIndexes'>
   | Omit<TraceMarksQuestion, 'marks' | 'revealImageUrl'>
   // People are sorted alphabetically so they don't leak the answer.
-  | (Omit<TravelMapQuestion, 'correctGroups'> & { people: string[] });
+  | (Omit<TravelMapQuestion, 'correctGroups'> & { people: string[] })
+  | Omit<MoneyVaseQuestion, 'correctCents'>;
 
 export interface PlayerRoomView {
   status: RoomStatus;

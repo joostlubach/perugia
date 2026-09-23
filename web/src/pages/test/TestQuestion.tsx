@@ -7,6 +7,7 @@ import {
   countCorrectPlateMarks,
   countCorrectSelections,
   scoreForAnswer,
+  scoreEstimate,
   scoreHamCut,
   scoreTraceMarks,
   totalPlacements,
@@ -21,6 +22,7 @@ import { HamCutBoard } from '../../components/HamCutBoard';
 import { MultiSelectBoard } from '../../components/MultiSelectBoard';
 import { TraceMarksBoard } from '../../components/TraceMarksBoard';
 import { TravelMapBoard } from '../../components/TravelMapBoard';
+import { formatEuro, MoneyVaseBoard } from '../../components/MoneyVase';
 import { QuestionText } from '../../components/QuestionText';
 
 type Answer = number | string[][] | PlateAnswer | HamLine | MultiSelectAnswer | TraceAnswer | null;
@@ -44,6 +46,7 @@ export function TestQuestion({
   const partialCredit =
     question.type === 'podium_order' ||
     question.type === 'travel_map' ||
+    question.type === 'money_vase' ||
     question.type === 'plate_assignment' ||
     question.type === 'ham_cut' ||
     question.type === 'multi_select' ||
@@ -66,6 +69,8 @@ export function TestQuestion({
       ? question.options.length
       : question.type === 'travel_map'
       ? totalPlacements(question.correctGroups)
+      : question.type === 'money_vase'
+      ? question.correctCents
       : totalPlacements(question.correctOrder);
 
   const [travelPeople] = useState(() =>
@@ -98,14 +103,23 @@ export function TestQuestion({
     } else {
       value = answer as number | null;
     }
+    // money_vase keeps the guessed cents as `value` but scores by closeness.
+    const closeness = question.type === 'money_vase' ? scoreEstimate(value ?? 0, question.correctCents) : null;
     const correct =
-      question.type === 'ham_cut'
+      closeness !== null
+        ? value !== null && closeness >= 98
+        : question.type === 'ham_cut'
         ? (value ?? 0) >= 95
         : question.type === 'trace_marks'
         ? (value ?? 0) >= 80
         : value === correctValue;
     // Mirrors the server: podium_order/plate_assignment/ham_cut get partial credit.
-    const points = partialCredit ? Math.round((question.points * (value ?? 0)) / correctValue) : question.points;
+    const points =
+      closeness !== null
+        ? Math.round((question.points * closeness) / 100)
+        : partialCredit
+        ? Math.round((question.points * (value ?? 0)) / correctValue)
+        : question.points;
     const next: TestResult = {
       value,
       elapsedMs,
@@ -138,7 +152,17 @@ export function TestQuestion({
         <img className="question-image" src={question.imageUrl} alt="" />
       )}
       {result ? (
-        <ResultBanner result={result} correctValue={correctValue} partialCredit={partialCredit} isPercent={isPercent} />
+        question.type === 'money_vase' && result.value !== null ? (
+          <div>
+            <h2 className="title">{result.correct ? 'Perfetto! 🎉' : result.pointsAwarded > 0 ? 'Quasi! 👌' : 'Peccato! 😅'}</h2>
+            <p className="subtitle">
+              You bet {formatEuro(result.value)} · correct was {formatEuro(question.correctCents)} · +{result.pointsAwarded}{' '}
+              points
+            </p>
+          </div>
+        ) : (
+          <ResultBanner result={result} correctValue={correctValue} partialCredit={partialCredit} isPercent={isPercent} />
+        )
       ) : question.type === 'multiple_choice' ? (
         <Countdown startedAt={startedAt} timeLimitSec={question.timeLimitSec} onExpire={() => finish(null)} />
       ) : null}
@@ -178,6 +202,15 @@ export function TestQuestion({
         <PodiumOrder
           groups={podiumGroups}
           groupLabels={question.groupLabels}
+          startedAt={startedAt}
+          timeLimitSec={question.timeLimitSec}
+          onSubmit={finish}
+        />
+      )}
+
+      {!result && question.type === 'money_vase' && (
+        <MoneyVaseBoard
+          denominations={question.denominations}
           startedAt={startedAt}
           timeLimitSec={question.timeLimitSec}
           onSubmit={finish}

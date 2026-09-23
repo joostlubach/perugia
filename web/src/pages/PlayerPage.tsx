@@ -4,6 +4,7 @@ import { HamLine, MultiSelectAnswer, PlateAnswer, TraceAnswer } from '../types';
 import { usePolling } from '../hooks/usePolling';
 import { audio } from '../audio';
 import { MuteToggle } from '../components/MuteToggle';
+import { ReactionBar } from '../components/ReactionBar';
 import { PlayerJoin } from './player/PlayerJoin';
 import { PlayerLobby } from './player/PlayerLobby';
 import { PlayerQuestion } from './player/PlayerQuestion';
@@ -69,13 +70,14 @@ export function PlayerPage() {
       {!session || !view ? (
         <PlayerJoin onJoined={handleJoined} />
       ) : (
-        <>
+        <div className="with-reaction-bar">
           {view.status === 'lobby' && <PlayerLobby view={view} />}
           {view.status === 'question' && <PlayerQuestion view={view} onAnswer={answer} />}
           {view.status === 'reveal' && <PlayerReveal view={view} />}
           {view.status === 'leaderboard' && <PlayerLeaderboard view={view} />}
           {view.status === 'ended' && <PlayerFinal view={view} />}
-        </>
+          <ReactionBar playerId={session.playerId} playerToken={session.playerToken} />
+        </div>
       )}
     </>
   );

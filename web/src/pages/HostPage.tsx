@@ -3,6 +3,7 @@ import { api } from '../api';
 import { usePolling } from '../hooks/usePolling';
 import { audio } from '../audio';
 import { MuteToggle } from '../components/MuteToggle';
+import { ReactionCallouts } from '../components/ReactionCallouts';
 import { HostSetup } from './host/HostSetup';
 import { HostLobby } from './host/HostLobby';
 import { HostQuestion } from './host/HostQuestion';
@@ -66,6 +67,7 @@ export function HostPage() {
           {view.status === 'reveal' && <HostReveal view={view} onNext={advance} />}
           {view.status === 'leaderboard' && <HostLeaderboard view={view} onNext={advance} />}
           {view.status === 'ended' && <HostFinal view={view} />}
+          <ReactionCallouts reactions={view.reactions ?? []} />
         </>
       )}
     </>
