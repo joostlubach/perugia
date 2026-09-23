@@ -140,10 +140,10 @@
 (
   On the way -- drag everyone onto the map (Amsterdam top left, Perugia bottom right)
 
-  Train, Zürich: Kyle, Joost
-  Car 1, Strasbourg: Ruben, Jaro, Mark
-  Car 2, Brennerpass: Bas, Jasper, Riemer
-  Car 3, Luxembourg: Ismail
-  Car 4, Milano: Sally, Sanne
-  Airplane, Firenze: Bowie, Roland, Milan, Dex, Gökhan
+  Interrail (Zürich): Kyle, Joost
+  Ruben's car (Strasbourg): Ruben, Jaro, Mark
+  Bas' car (Brennerpass): Bas, Jasper, Riemer
+  Izzie's car (Luxembourg): Ismail
+  Car 4 (Milano): Sally, Sanne
+  Airplane (Firenze): Bowie, Roland, Milan, Dex, Gökhan
 )

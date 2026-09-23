@@ -13,12 +13,12 @@ export const TRAVEL_LANDMARKS: MapPin[] = [
 ];
 
 export const TRAVEL_STOPS: MapPin[] = [
-  { label: 'Zürich', icon: '🚆', x: 0.478, y: 0.561, side: 'left' },
-  { label: 'Strasbourg', icon: '🚗', x: 0.409, y: 0.448, side: 'right' },
-  { label: 'Brennerpass', icon: '🚗', x: 0.734, y: 0.595, side: 'right' },
-  { label: 'Luxembourg', icon: '🚗', x: 0.27, y: 0.35, side: 'left' },
+  { label: 'Interrail', icon: '🚆', x: 0.478, y: 0.561, side: 'left' },
+  { label: "Ruben's car", icon: '🚗', x: 0.409, y: 0.448, side: 'right' },
+  { label: "Bas' car", icon: '🚗', x: 0.734, y: 0.595, side: 'right' },
+  { label: "Izzie's car", icon: '🚗', x: 0.27, y: 0.35, side: 'left' },
   { label: 'Milano', icon: '🚗', x: 0.534, y: 0.734, side: 'left' },
-  { label: 'Firenze', icon: '✈️', x: 0.712, y: 0.883, side: 'left' },
+  { label: 'Airplane', icon: '✈️', x: 0.712, y: 0.883, side: 'left' },
 ];
 
 // Same order as TRAVEL_STOPS: train, car 1, car 2, car 3, car 4, airplane.
