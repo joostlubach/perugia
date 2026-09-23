@@ -151,4 +151,13 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
     timeLimitSec: 20,
     points: 1000,
   },
+  {
+    type: 'multiple_choice',
+    title: 'Famous ancestor',
+    text: 'What famous artist does the Di Serego family descend from?',
+    options: ['Leonardo da Vinci', 'Dante', 'Michelangelo', 'Giotto'],
+    correctIndex: 1,
+    timeLimitSec: 20,
+    points: 1000,
+  },
 ];

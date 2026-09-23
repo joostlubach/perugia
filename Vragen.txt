@@ -156,3 +156,11 @@
   - Etruscans [correct]
   - Sabines
 )
+
+(
+  What famous artist does the Di Serego family descend from?
+  - Leonardo da Vinci
+  - Dante [correct]
+  - Michelangelo
+  - Giotto
+)
