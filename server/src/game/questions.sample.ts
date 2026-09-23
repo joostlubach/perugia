@@ -115,4 +115,18 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
     timeLimitSec: 20,
     points: 1000,
   },
+  {
+    type: 'multiple_choice',
+    title: 'The swimming pool',
+    text: 'What was the reason the swimming pool was where it was?',
+    options: [
+      'Easy jumping off the wall',
+      "Out of the way for Pietro's wife, so it wouldn't get too noisy",
+      'It was a septic tank',
+      'Who knowah? Is Italia, we puttah the swimming pool where we wantah!',
+    ],
+    correctIndex: 3,
+    timeLimitSec: 20,
+    points: 1000,
+  },
 ];
