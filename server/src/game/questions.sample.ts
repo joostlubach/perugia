@@ -142,4 +142,13 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
     timeLimitSec: 120,
     points: 2000,
   },
+  {
+    type: 'multiple_choice',
+    title: 'Perusia',
+    text: 'What people used to live in Perugia before Octavian burnt their terracotta asses?',
+    options: ['Peruvians', 'Umbrians', 'Etruscans', 'Sabines'],
+    correctIndex: 2,
+    timeLimitSec: 20,
+    points: 1000,
+  },
 ];
