@@ -5,6 +5,7 @@ import {
   PlateAnswer,
   PlayerRoomView,
   QuestionInput,
+  ReactionKind,
   TraceAnswer,
 } from './types';
 
@@ -60,6 +61,13 @@ export const api = {
 
   advance(token: string) {
     return request<void>(`/room/advance?token=${encodeURIComponent(token)}`, { method: 'POST' });
+  },
+
+  react(playerId: string, playerToken: string, kind: ReactionKind) {
+    return request<void>('/room/react', {
+      method: 'POST',
+      body: JSON.stringify({ playerId, playerToken, kind }),
+    });
   },
 
   submitAnswer(

@@ -266,6 +266,17 @@ export interface HostGuess {
   correct: boolean;
 }
 
+export type ReactionKind = 'mammamia' | 'mario' | 'chihuahua';
+
+export interface Reaction {
+  id: string;
+  playerId: string;
+  name: string;
+  avatar: string;
+  kind: ReactionKind;
+  at: number;
+}
+
 export interface LeaderboardEntry {
   id: string;
   name: string;
@@ -285,6 +296,7 @@ export interface HostRoomView {
   playerCount: number;
   players: LeaderboardEntry[];
   leaderboard: LeaderboardEntry[];
+  reactions: Reaction[];
 }
 
 export type PlayerQuestionView =

@@ -161,6 +161,19 @@ export interface Player {
   answers: Record<string, PlayerAnswer>;
 }
 
+export const REACTION_KINDS = ['mammamia', 'mario', 'chihuahua'] as const;
+export type ReactionKind = (typeof REACTION_KINDS)[number];
+
+// A player's reaction, shown and heard on the big screen for a moment.
+export interface Reaction {
+  id: string;
+  playerId: string;
+  name: string;
+  avatar: string;
+  kind: ReactionKind;
+  at: number;
+}
+
 export interface LeaderboardEntry {
   id: string;
   name: string;
@@ -215,6 +228,8 @@ export interface HostRoomView {
   playerCount: number;
   players: LeaderboardEntry[];
   leaderboard: LeaderboardEntry[];
+  // Reactions from the last few seconds, oldest first.
+  reactions: Reaction[];
 }
 
 export type PlayerQuestionView =

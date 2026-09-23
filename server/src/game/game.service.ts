@@ -26,6 +26,7 @@ import {
   PlayerRoomView,
   Point,
   Question,
+  ReactionKind,
   Room,
 } from './types';
 
@@ -206,9 +207,29 @@ export class GameService {
     await this.store.set(room);
   }
 
+  async react(playerId: string, playerToken: string, kind: ReactionKind): Promise<void> {
+    // Only reads the room (to check who's reacting); the reaction itself is
+    // stored separately so it never overwrites an answer saved meanwhile.
+    const room = await this.requireRoom();
+    const player = room.players[playerId];
+    if (!player || player.token !== playerToken) {
+      throw new ForbiddenException('Unknown player');
+    }
+    await this.store.addReaction({
+      id: newToken(),
+      playerId,
+      name: player.name,
+      avatar: player.avatar,
+      kind,
+      at: Date.now(),
+    });
+  }
+
   async getHostView(hostToken: string): Promise<HostRoomView> {
     const room = await this.requireHost(hostToken);
-    return this.toHostView(room);
+    const since = Date.now() - REACTION_WINDOW_MS;
+    const reactions = (await this.store.recentReactions()).filter((r) => r.at >= since);
+    return { ...this.toHostView(room), reactions };
   }
 
   async getPlayerView(playerId: string, playerToken: string): Promise<PlayerRoomView> {
@@ -370,6 +391,7 @@ export class GameService {
       playerCount: Object.keys(room.players).length,
       players: Object.values(room.players).map((p) => ({ id: p.id, name: p.name, avatar: p.avatar, score: p.score })),
       leaderboard: this.leaderboard(room),
+      reactions: [],
     };
   }
 
@@ -542,6 +564,8 @@ function sortedGroups(groups: string[][]): string[][] {
   return groups.map((group) => [...group].sort());
 }
 
+// Reactions older than this aren't sent to the host anymore.
+const REACTION_WINDOW_MS = 10_000;
 const TRACE_MARKS_CORRECT = 80;
 const MONEY_VASE_CORRECT = 98;
 const TRACE_MARKS_MAX_POINTS = 5000;

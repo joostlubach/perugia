@@ -1452,3 +1452,127 @@ textarea.json-editor {
   align-items: center;
   gap: 16px;
 }
+
+.reaction-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 900;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 -4px 14px rgba(0, 0, 0, 0.15);
+}
+
+.reaction-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 999px;
+  background: var(--italy-green);
+  color: white;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.reaction-btn:nth-child(2) {
+  background: var(--italy-red);
+}
+
+.reaction-btn:nth-child(3) {
+  background: var(--choc-brown);
+}
+
+.reaction-btn:disabled {
+  background: #b9b1aa;
+}
+
+.reaction-emoji {
+  font-size: 1.2rem;
+}
+
+.with-reaction-bar .page {
+  padding-bottom: 88px;
+}
+
+.reaction-callouts {
+  position: fixed;
+  left: 24px;
+  bottom: 24px;
+  z-index: 900;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  pointer-events: none;
+}
+
+.reaction-callout {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  animation: reaction-in 0.3s cubic-bezier(0.2, 1.4, 0.4, 1), reaction-out 0.4s ease-in 3.1s forwards;
+}
+
+.reaction-callout img {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+.reaction-bubble {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 18px;
+  border-radius: 18px;
+  background: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.reaction-bubble::before {
+  content: '';
+  position: absolute;
+  left: -10px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 10px solid transparent;
+  border-left: 0;
+  border-right-color: white;
+}
+
+.reaction-bubble-text {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--italy-red);
+  white-space: nowrap;
+}
+
+.reaction-bubble-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--choc-brown);
+}
+
+@keyframes reaction-in {
+  from {
+    transform: scale(0.3) translateX(-60px);
+    opacity: 0;
+  }
+}
+
+@keyframes reaction-out {
+  to {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+}
