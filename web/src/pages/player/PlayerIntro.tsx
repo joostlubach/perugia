@@ -1,13 +1,14 @@
 import { PlayerRoomView } from '../../types';
+import { t } from '../../texts';
 
 export function PlayerIntro({ view }: { view: PlayerRoomView }) {
   return (
     <div className="page">
       <div className="hint">
-        Question {view.currentQuestionIndex + 1} / {view.totalQuestions}
+        {t('player.intro.header', { number: view.currentQuestionIndex + 1, total: view.totalQuestions })}
       </div>
-      <h1 className="title">Look at the screen! 👀</h1>
-      <p className="subtitle">You can answer once the question has been read out.</p>
+      <h1 className="title">{t('player.intro.title')}</h1>
+      <p className="subtitle">{t('player.intro.subtitle')}</p>
     </div>
   );
 }

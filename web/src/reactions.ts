@@ -1,5 +1,6 @@
 import { audio } from './audio';
 import { ReactionKind } from './types';
+import { t } from './texts';
 
 export type ReactionPhase = 'lobby' | 'game' | 'final';
 
@@ -11,16 +12,21 @@ export const REACTIONS: {
   callout: string;
   phases?: ReactionPhase[];
 }[] = [
-  { kind: 'letsgo', emoji: '🏁', label: "Let's go!", callout: "Let's-a go!", phases: ['lobby'] },
-  { kind: 'mammamia', emoji: '😱', label: 'Mamma mia!', callout: 'Mamma mia!' },
-  { kind: 'mario', emoji: '🍄', label: 'Mario!', callout: "It's-a me, Mario!" },
-  { kind: 'losing', emoji: '😭', label: 'Nooo', callout: 'Nooooo!', phases: ['game', 'final'] },
-  { kind: 'gibberish', emoji: '🤌', label: 'Blabla', callout: 'Blablabla!' },
-  { kind: 'congratulations', emoji: '🎉', label: 'Bravo!', callout: 'Congratulations!', phases: ['final'] },
+  reaction('letsgo', '🏁', ['lobby']),
+  reaction('mammamia', '😱'),
+  reaction('mario', '🍄'),
+  reaction('losing', '😭', ['game', 'final']),
+  reaction('gibberish', '🤌'),
+  reaction('congratulations', '🎉', ['final']),
 ];
 
 export function reactionInfo(kind: ReactionKind) {
   return REACTIONS.find((r) => r.kind === kind)!;
+}
+
+// Label and callout wording lives in texts.yaml under `reactions`.
+function reaction(kind: ReactionKind, emoji: string, phases?: ReactionPhase[]) {
+  return { kind, emoji, label: t(`reactions.${kind}.label`), callout: t(`reactions.${kind}.callout`), phases };
 }
 
 // Several files means one is picked at random each time.

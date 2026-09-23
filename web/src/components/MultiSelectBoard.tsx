@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import { useCountdown } from './Countdown';
+import { t } from '../texts';
 
 // A checklist of options where any number (including zero) can be correct.
 // Player toggles as many as they like, then locks in the whole set at once.
@@ -57,7 +58,7 @@ export function MultiSelectBoard({
       {!submitted && (
         <>
           <button className="btn btn-primary btn-lg" onClick={submit}>
-            ✅ Lock in answers
+            {t('boards.multiSelect.done')}
           </button>
         </>
       )}

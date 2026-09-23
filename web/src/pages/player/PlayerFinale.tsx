@@ -1,8 +1,10 @@
+import { t } from '../../texts';
+
 export function PlayerFinale() {
   return (
     <div className="page">
-      <h1 className="title">Finito! 🏁</h1>
-      <p className="subtitle">That was the last question. The results are coming up on the big screen...</p>
+      <h1 className="title">{t('player.finale.title')}</h1>
+      <p className="subtitle">{t('player.finale.subtitle')}</p>
     </div>
   );
 }

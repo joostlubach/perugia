@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import { MenuCourse } from '../types';
 import { useCountdown } from './Countdown';
 import { MenuCard } from './MenuCard';
+import { t } from '../texts';
 
 // Player orders one dish per course; tapping another dish in the same course
 // swaps it. The order is placed once every course has a dish, or when time runs out.
@@ -44,7 +45,7 @@ export function MenuOrderBoard({
       <MenuCard menu={menu} onPick={pick} selected={picks.filter((p): p is number => p !== null)} />
       {!submitted && (
         <button className="btn btn-primary btn-lg" disabled={!complete} onClick={submit}>
-          🍽️ Place order
+          {t('boards.menu.order')}
         </button>
       )}
     </>

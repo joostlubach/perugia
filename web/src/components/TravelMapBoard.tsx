@@ -2,6 +2,7 @@ import { PointerEvent as ReactPointerEvent, useEffect, useRef, useState } from '
 import { MapPin } from '../types';
 import { useCountdown } from './Countdown';
 import { TravelAvatar, TravelMap } from './TravelMap';
+import { t } from '../texts';
 
 // Player drags each person from the tray onto the map stop where they were,
 // and can move them between stops or back to the tray until locking in.
@@ -111,7 +112,7 @@ export function TravelMapBoard({
       />
 
       <div className="travel-tray" data-travel-tray>
-        {tray.length === 0 && <span className="hint">Everyone's on the map</span>}
+        {tray.length === 0 && <span className="hint">{t('boards.travelMap.allPlaced')}</span>}
         {tray.map((key) => (
           <div
             key={key}
@@ -126,7 +127,7 @@ export function TravelMapBoard({
       {!submitted && (
         <div className="travel-actions">
           <button className="btn btn-primary btn-lg" onClick={submit}>
-            🗺️ Lock it in
+            {t('boards.travelMap.done')}
           </button>
         </div>
       )}

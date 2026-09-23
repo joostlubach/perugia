@@ -11,6 +11,7 @@ import { TraceMarksBoard } from '../../components/TraceMarksBoard';
 import { TravelMapBoard } from '../../components/TravelMapBoard';
 import { MoneyVaseBoard } from '../../components/MoneyVase';
 import { QuestionText } from '../../components/QuestionText';
+import { t } from '../../texts';
 
 export function PlayerQuestion({
   view,
@@ -22,8 +23,8 @@ export function PlayerQuestion({
   if (view.hasAnswered) {
     return (
       <div className="page">
-        <h1 className="title">Risposta inviata! ✅</h1>
-        <p className="subtitle">Waiting for everyone else...</p>
+        <h1 className="title">{t('player.question.answeredTitle')}</h1>
+        <p className="subtitle">{t('player.question.answeredSubtitle')}</p>
       </div>
     );
   }
@@ -36,7 +37,12 @@ export function PlayerQuestion({
   return (
     <div className="page">
       <div className="hint">
-        Question {view.currentQuestionIndex + 1} / {view.totalQuestions} · {question.title} · {question.points} pts
+        {t('player.question.header', {
+          number: view.currentQuestionIndex + 1,
+          total: view.totalQuestions,
+          title: question.title,
+          points: question.points,
+        })}
       </div>
       <Countdown startedAt={startedAt} timeLimitSec={question.timeLimitSec} floating />
       <h1 className="question-text"><QuestionText text={question.text} /></h1>

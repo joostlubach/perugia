@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { audio, SoundKey } from '../audio'
 import { createAudioSequencer, preloadAudio } from '../audioSequencer'
 import { useCountdown } from './Countdown'
+import { t } from '../texts';
 
 interface Token {
   id: number;
@@ -109,7 +110,7 @@ export function DragCanvas({
   return (
     <div style={{ width: '100%', maxWidth: 520, display: 'flex', flexDirection: 'column', gap: 16, alignItems: 'center' }}>
       <div ref={canvasRef} className="drag-canvas">
-        {tokens.length === 0 && <span className="hint">Drag {dragLabel} in here, once per guess</span>}
+        {tokens.length === 0 && <span className="hint">{t('boards.dragCount.hint', { label: dragLabel })}</span>}
         {tokens.map((t) => (
           <span key={t.id} className="drag-token" style={{ transform: `rotate(${t.rot}deg)` }}>
             {dragLabel}
@@ -135,7 +136,7 @@ export function DragCanvas({
               submit();
             }}
           >
-            ✅ Done dragging
+            {t('boards.dragCount.done')}
           </button>
         </>
       )}

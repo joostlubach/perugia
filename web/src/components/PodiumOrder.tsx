@@ -2,6 +2,7 @@ import { PointerEvent as ReactPointerEvent, useEffect, useLayoutEffect, useRef, 
 import { useCountdown } from './Countdown';
 import { PodiumAvatar, PodiumStand } from './PodiumStand';
 import { PodiumTray } from './PodiumTray';
+import { t } from '../texts';
 
 // Player drags avatars from each group's tray onto its podium, and can
 // rearrange them there (swapping with whoever is in the way) until they
@@ -155,7 +156,7 @@ export function PodiumOrder({
       {!submitted && (
         <>
           <button className="btn btn-primary btn-lg" onClick={submit}>
-            🏁 Lock it in
+            {t('boards.podium.done')}
           </button>
         </>
       )}

@@ -1,6 +1,7 @@
 import { PointerEvent as ReactPointerEvent, useEffect, useRef, useState } from 'react';
 import { audio } from '../audio';
 import { useCountdown } from './Countdown';
+import { t } from '../texts';
 
 // Estimation by betting: the player drags bills and coins into a terracotta
 // vase that shows the running total. There's no way to take money back out.
@@ -108,7 +109,7 @@ export function MoneyVaseBoard({
 
       {!submitted && (
         <>
-          <div className="hint">No refunds: bet money is bet! 🙅</div>
+          <div className="hint">{t('boards.moneyVase.noRefunds')}</div>
           <div className="money-tray">
             <div className="money-row">
               {bills.map((cents) => (
@@ -127,7 +128,7 @@ export function MoneyVaseBoard({
           </div>
           <div className="money-actions">
             <button className="btn btn-primary btn-lg" onClick={submit}>
-              🏺 Bet it
+              {t('boards.moneyVase.done')}
             </button>
           </div>
         </>

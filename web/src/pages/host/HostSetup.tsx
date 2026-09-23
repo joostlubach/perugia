@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { api } from '../../api';
+import { t } from '../../texts';
 
 export function HostSetup({ onCreated }: { onCreated: (hostToken: string) => void }) {
   const [error, setError] = useState<string | null>(null);
@@ -20,10 +21,10 @@ export function HostSetup({ onCreated }: { onCreated: (hostToken: string) => voi
 
   return (
     <div className="page">
-      <h1 className="title">Host Setup</h1>
+      <h1 className="title">{t('host.setup.title')}</h1>
       <div className="card">
         <button className="btn btn-primary btn-lg" disabled={loading} onClick={create}>
-          🎉 Create Room
+          {t('host.setup.createRoom')}
         </button>
         {error && <p className="error-text">{error}</p>}
       </div>

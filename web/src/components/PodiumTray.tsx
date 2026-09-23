@@ -1,5 +1,6 @@
 import { PointerEvent } from 'react';
 import { PodiumAvatar } from './PodiumStand';
+import { t } from '../texts';
 
 // The avatars of a group that haven't been put on the podium yet. Also a
 // drop target, to take someone back off the podium.
@@ -16,7 +17,7 @@ export function PodiumTray({
 }) {
   return (
     <div className="podium-tray" data-podium-group={groupIndex} data-podium-tray>
-      {avatars.length === 0 && <span className="hint">Everyone's on the podium</span>}
+      {avatars.length === 0 && <span className="hint">{t('boards.podium.allPlaced')}</span>}
       {avatars.map((key) => (
         <div
           key={key}

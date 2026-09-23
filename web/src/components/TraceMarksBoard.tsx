@@ -1,6 +1,7 @@
 import { PointerEvent as ReactPointerEvent, useRef, useState } from 'react';
 import { useCountdown } from './Countdown';
 import { Point } from '../types';
+import { t } from '../texts';
 
 // Freehand red-pen drawing over a photo. Strokes are kept in normalized [0,1]
 // image coordinates so they score the same regardless of screen size.
@@ -96,14 +97,14 @@ export function TraceMarksBoard({
         <>
           <div className="trace-actions">
             <button className="btn" disabled={strokes.length === 0} onClick={() => setStrokes((s) => s.slice(0, -1))}>
-              ↩️ Undo
+              {t('boards.traceMarks.undo')}
             </button>
             <button className="btn" disabled={strokes.length === 0} onClick={() => setStrokes([])}>
-              🗑️ Clear
+              {t('boards.traceMarks.clear')}
             </button>
           </div>
           <button className="btn btn-primary btn-lg" onClick={submit}>
-            🖍️ Done drawing
+            {t('boards.traceMarks.done')}
           </button>
         </>
       )}

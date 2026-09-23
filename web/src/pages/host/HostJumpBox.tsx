@@ -1,4 +1,5 @@
 import { FormEvent, useState } from 'react';
+import { t } from '../../texts';
 
 // Small overlay for jumping to a question by its 1-based number.
 export function HostJumpBox({
@@ -25,7 +26,7 @@ export function HostJumpBox({
     <div className="jump-box-backdrop" onClick={onClose}>
       <form className="jump-box" onSubmit={submit} onClick={(e) => e.stopPropagation()}>
         <label className="hint" htmlFor="jump-box-input">
-          Go to question (1–{totalQuestions})
+          {t('host.jump.label', { total: totalQuestions })}
         </label>
         <input
           id="jump-box-input"
@@ -38,7 +39,7 @@ export function HostJumpBox({
           onKeyDown={(e) => e.key === 'Escape' && onClose()}
         />
         <button className="btn btn-primary" disabled={!valid}>
-          Go
+          {t('host.jump.go')}
         </button>
       </form>
     </div>

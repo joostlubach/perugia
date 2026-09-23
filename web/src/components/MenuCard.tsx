@@ -1,4 +1,5 @@
 import { MenuCourse } from '../types';
+import { t } from '../texts';
 
 // A menu_order question drawn as a restaurant menu. Dish indexes run across
 // all courses in order. Pass `onPick` to make dishes tappable and `selected`
@@ -25,9 +26,9 @@ export function MenuCard({
   return (
     <div className={`menu-card ${wide ? 'wide' : ''}`}>
       <div className="menu-header">
-        <div className="menu-kicker">~ Perugia ~</div>
-        <div className="menu-name">Osteria del Grifo</div>
-        <div className="menu-kicker">Menù del giorno</div>
+        <div className="menu-kicker">{t('boards.menu.kicker')}</div>
+        <div className="menu-name">{t('boards.menu.name')}</div>
+        <div className="menu-kicker">{t('boards.menu.subtitle')}</div>
       </div>
 
       <div className="menu-courses">
@@ -44,7 +45,7 @@ export function MenuCard({
                 <>
                   <span className="menu-dish-name">
                     {dish.name}
-                    {revealed && <span className="menu-dish-tag">{isCorrect ? 'senza glutine ✓' : '🌾'}</span>}
+                    {revealed && <span className="menu-dish-tag">{isCorrect ? t('boards.menu.glutenFree') : '🌾'}</span>}
                   </span>
                   {dish.description && <span className="menu-dish-description">{dish.description}</span>}
                   {counts && <span className="menu-dish-count">{counts[i] ?? 0}</span>}

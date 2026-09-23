@@ -6,6 +6,7 @@ import { formatEuro, Vase } from '../../components/MoneyVase';
 import { PodiumStand } from '../../components/PodiumStand';
 import { Seat } from '../../components/PlateBoard';
 import { QuestionText } from '../../components/QuestionText';
+import { t } from '../../texts';
 
 export function HostReveal({ view, onNext }: { view: HostRoomView; onNext: () => void }) {
   const question = view.question!;
@@ -13,7 +14,7 @@ export function HostReveal({ view, onNext }: { view: HostRoomView; onNext: () =>
 
   return (
     <div className="page">
-      <h1 className="title">La risposta giusta è...</h1>
+      <h1 className="title">{t('host.reveal.title')}</h1>
       <div className="hint">{question.title}</div>
       <h2 className="question-text"><QuestionText text={question.text} /></h2>
       {question.type === 'multiple_choice' && question.imageUrl && (
@@ -180,7 +181,7 @@ export function HostReveal({ view, onNext }: { view: HostRoomView; onNext: () =>
       ) : question.type === 'ham_cut' ? (
         <>
           <img src={question.imageUrl} alt="" style={{ maxWidth: 200, borderRadius: 16 }} />
-          <p className="subtitle">The goal was a perfect 50/50 split by area.</p>
+          <p className="subtitle">{t('host.reveal.hamGoal')}</p>
           <ol className="leaderboard-list">
             {view.guesses
               .slice()
@@ -252,10 +253,10 @@ export function HostReveal({ view, onNext }: { view: HostRoomView; onNext: () =>
 
       <button className="btn btn-primary btn-lg" onClick={onNext}>
         {view.afterReveal === 'leaderboard'
-          ? '📊 Show Leaderboard'
+          ? t('host.reveal.toLeaderboard')
           : view.afterReveal === 'finale'
-          ? '🏁 Finish'
-          : '➡️ Next Question'}
+          ? t('host.reveal.toFinale')
+          : t('host.reveal.toNextQuestion')}
       </button>
     </div>
   );

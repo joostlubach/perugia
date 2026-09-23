@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { api } from '../../api';
 import { avatarName, avatarSrc } from '../../avatar';
+import { t } from '../../texts';
 
 export function PlayerJoin({
   joinCode,
@@ -20,7 +21,7 @@ export function PlayerJoin({
 
   const join = async () => {
     if (!selected) {
-      setError('Pick an avatar first');
+      setError(t('player.join.pickAvatarFirst'));
       return;
     }
     setLoading(true);
@@ -37,10 +38,10 @@ export function PlayerJoin({
 
   return (
     <div className="page join-page">
-      <h1 className="title">Who are you? 🎊</h1>
+      <h1 className="title">{t('player.join.title')}</h1>
       <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
         {!avatars ? (
-          <p className="hint">Loading...</p>
+          <p className="hint">{t('common.loading')}</p>
         ) : (
           <div className="avatar-grid">
             {avatars.map((key) => (
@@ -56,7 +57,7 @@ export function PlayerJoin({
           </div>
         )}
         <button className="btn btn-primary btn-lg" disabled={loading || !selected} onClick={join}>
-          🇮🇹 Andiamo!
+          {t('player.join.join')}
         </button>
         {error && <p className="error-text">{error}</p>}
       </div>

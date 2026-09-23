@@ -2,6 +2,7 @@ import { HostRoomView } from '../../types';
 import { MenuCard } from '../../components/MenuCard';
 import { TravelMap } from '../../components/TravelMap';
 import { QuestionText } from '../../components/QuestionText';
+import { t } from '../../texts';
 
 // The question on its own while the host reads it out; phones say "look at the screen".
 export function HostIntro({ view, onStart }: { view: HostRoomView; onStart: () => void }) {
@@ -11,7 +12,11 @@ export function HostIntro({ view, onStart }: { view: HostRoomView; onStart: () =
   return (
     <div className="page">
       <div className="hint">
-        Question {view.currentQuestionIndex + 1} / {view.totalQuestions} · {question.title}
+        {t('host.questionHeader', {
+          number: view.currentQuestionIndex + 1,
+          total: view.totalQuestions,
+          title: question.title,
+        })}
       </div>
       <h1 className="question-text intro"><QuestionText text={question.text} /></h1>
       {imageUrl && <img className="question-image" src={imageUrl} alt="" />}
@@ -26,7 +31,7 @@ export function HostIntro({ view, onStart }: { view: HostRoomView; onStart: () =
       )}
       {question.type === 'menu_order' && <MenuCard menu={question.menu} wide />}
       <button className="btn btn-primary btn-lg" onClick={onStart}>
-        ▶️ Andiamo!
+        {t('host.intro.start')}
       </button>
     </div>
   );

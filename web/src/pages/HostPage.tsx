@@ -13,6 +13,7 @@ import { HostReveal } from './host/HostReveal';
 import { HostLeaderboard } from './host/HostLeaderboard';
 import { HostFinal } from './host/HostFinal';
 import { HostFinale } from './host/HostFinale';
+import { t } from '../texts';
 
 interface Session {
   hostToken: string;
@@ -132,7 +133,7 @@ export function HostPage() {
     <>
       <MuteToggle />
       {restarting || (session && !view) ? (
-        <div className="page">Loading...</div>
+        <div className="page">{t('common.loading')}</div>
       ) : !session || !view ? (
         <HostSetup onCreated={handleCreated} />
       ) : (

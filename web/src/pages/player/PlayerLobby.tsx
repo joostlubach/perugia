@@ -1,12 +1,13 @@
 import { PlayerRoomView } from '../../types';
+import { t } from '../../texts';
 
 export function PlayerLobby({ view }: { view: PlayerRoomView }) {
   return (
     <div className="page">
-      <h1 className="title">You're in! 🍕</h1>
-      <p className="subtitle">Sit tight, the host will start soon...</p>
+      <h1 className="title">{t('player.lobby.title')}</h1>
+      <p className="subtitle">{t('player.lobby.subtitle')}</p>
       <div className="card">
-        <p>{view.playerCount} player{view.playerCount === 1 ? '' : 's'} in the room</p>
+        <p>{t('player.lobby.playersInRoom', { count: view.playerCount })}</p>
       </div>
     </div>
   );

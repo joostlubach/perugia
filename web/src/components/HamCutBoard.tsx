@@ -1,6 +1,7 @@
 import { PointerEvent as ReactPointerEvent, useEffect, useRef, useState } from 'react';
 import { useCountdown } from './Countdown';
 import { HamLine, Point } from '../types';
+import { t } from '../texts';
 
 // Two draggable control points define a line; the player is trying to find
 // the line that splits the pictured object into two equal-area halves.
@@ -100,7 +101,7 @@ export function HamCutBoard({
       {!submitted && (
         <>
           <button className="btn btn-primary btn-lg" onClick={submit}>
-            🔪 Lock in the cut
+            {t('boards.hamCut.done')}
           </button>
         </>
       )}

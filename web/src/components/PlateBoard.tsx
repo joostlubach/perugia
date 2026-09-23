@@ -2,6 +2,7 @@ import { PointerEvent as ReactPointerEvent, useEffect, useRef, useState } from '
 import { avatarName, avatarSrc } from '../avatar';
 import { useCountdown } from './Countdown';
 import { PlateAnswer } from '../types';
+import { t } from '../texts';
 
 interface Marks {
   primo: boolean;
@@ -100,14 +101,14 @@ export function PlateBoard({
         <>
           <div className="course-source-row">
             <div className="course-source primo" onPointerDown={(e) => startDrag('primo', e)}>
-              🍝 Primo
+              {t('boards.plates.primo')}
             </div>
             <div className="course-source secondo" onPointerDown={(e) => startDrag('secondo', e)}>
-              🥩 Secondo
+              {t('boards.plates.secondo')}
             </div>
           </div>
           <button className="btn btn-primary btn-lg" onClick={submit}>
-            ✅ Done
+            {t('boards.plates.done')}
           </button>
         </>
       )}

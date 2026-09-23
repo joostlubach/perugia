@@ -17,6 +17,7 @@ import { PlayerReveal } from './player/PlayerReveal';
 import { PlayerLeaderboard } from './player/PlayerLeaderboard';
 import { PlayerFinal } from './player/PlayerFinal';
 import { PlayerFinale } from './player/PlayerFinale';
+import { t } from '../texts';
 
 interface Session {
   playerId: string;
@@ -84,14 +85,14 @@ export function PlayerPage() {
     <>
       <MuteToggle />
       {session && !view ? (
-        <div className="page">Loading...</div>
+        <div className="page">{t('common.loading')}</div>
       ) : !session || !view ? (
         joinCode ? (
           <PlayerJoin joinCode={joinCode} onJoined={handleJoined} />
         ) : (
           <div className="page">
-            <h1 className="title">Scan to join 📷</h1>
-            <p className="subtitle">Scan the QR code on the big screen to join the quiz.</p>
+            <h1 className="title">{t('player.scan.title')}</h1>
+            <p className="subtitle">{t('player.scan.subtitle')}</p>
           </div>
         )
       ) : (

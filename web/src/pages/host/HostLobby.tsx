@@ -2,14 +2,15 @@ import { HostRoomView } from '../../types';
 import { JoinQrCode } from '../../components/JoinQrCode';
 import { avatarSrc } from '../../avatar';
 import { audio } from '../../audio';
+import { t } from '../../texts';
 
 export function HostLobby({ view, onStart }: { view: HostRoomView; onStart: () => void }) {
   return (
     <div className="page">
-      <h1 className="title">Benvenuti! 🇮🇹</h1>
+      <h1 className="title">{t('host.lobby.title')}</h1>
       <JoinQrCode joinCode={view.joinCode} />
       <div className="card">
-        <h2>{view.playerCount} player{view.playerCount === 1 ? '' : 's'} joined</h2>
+        <h2>{t('host.lobby.playersJoined', { count: view.playerCount })}</h2>
         <div className="lobby-players">
           {view.players.map((p) => (
             <div key={p.id} className="lobby-player">
@@ -27,7 +28,7 @@ export function HostLobby({ view, onStart }: { view: HostRoomView; onStart: () =
           onStart();
         }}
       >
-        🚀 Andiamo! Start Game
+        {t('host.lobby.start')}
       </button>
     </div>
   );

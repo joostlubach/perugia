@@ -5,6 +5,7 @@ import { MenuCard } from '../../components/MenuCard';
 import { TravelMap } from '../../components/TravelMap';
 import { Vase } from '../../components/MoneyVase';
 import { QuestionText } from '../../components/QuestionText';
+import { t } from '../../texts';
 
 // Answering is open; the server moves on to the reveal once time is up or everyone has answered.
 export function HostQuestion({ view }: { view: HostRoomView }) {
@@ -15,7 +16,11 @@ export function HostQuestion({ view }: { view: HostRoomView }) {
   return (
     <div className="page">
       <div className="hint">
-        Question {view.currentQuestionIndex + 1} / {view.totalQuestions} · {question.title}
+        {t('host.questionHeader', {
+          number: view.currentQuestionIndex + 1,
+          total: view.totalQuestions,
+          title: question.title,
+        })}
       </div>
       <h1 className="question-text"><QuestionText text={question.text} /></h1>
       {question.type === 'multiple_choice' && question.imageUrl && (
@@ -27,7 +32,7 @@ export function HostQuestion({ view }: { view: HostRoomView }) {
           <span className="answer-tally-count">
             {view.answeredCount} / {view.playerCount}
           </span>
-          answered
+          {t('host.question.answered')}
         </div>
       </div>
       {question.type === 'menu_order' ? (
@@ -49,20 +54,20 @@ export function HostQuestion({ view }: { view: HostRoomView }) {
       ) : question.type === 'money_vase' ? (
         <>
           <Vase total={null} large />
-          <p className="subtitle">Drag the money into the vase. No refunds: bet money is bet!</p>
+          <p className="subtitle">{t('host.question.money_vase')}</p>
         </>
       ) : question.type === 'podium_order' ? (
-        <p className="subtitle">Put everyone on the podium in finishing order!</p>
+        <p className="subtitle">{t('host.question.podium_order')}</p>
       ) : question.type === 'plate_assignment' ? (
-        <p className="subtitle">Who had a primo, who had a secondo, who had both?</p>
+        <p className="subtitle">{t('host.question.plate_assignment')}</p>
       ) : question.type === 'ham_cut' ? (
-        <p className="subtitle">Find the line that cuts the ham exactly in half!</p>
+        <p className="subtitle">{t('host.question.ham_cut')}</p>
       ) : question.type === 'trace_marks' ? (
-        <p className="subtitle">Grab the red pen and draw the scratch marks!</p>
+        <p className="subtitle">{t('host.question.trace_marks')}</p>
       ) : question.type === 'multi_select' ? (
-        <p className="subtitle">Select all that apply -- more than one answer may be correct!</p>
+        <p className="subtitle">{t('host.question.multi_select')}</p>
       ) : (
-        <p className="subtitle">Drag as many "{question.dragLabel}" as you count, then lock it in!</p>
+        <p className="subtitle">{t('host.question.drag_count', { label: question.dragLabel })}</p>
       )}
     </div>
   );

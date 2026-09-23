@@ -1,4 +1,5 @@
 import { PlayerRoomView } from '../../types';
+import { t } from '../../texts';
 
 export function PlayerReveal({ view }: { view: PlayerRoomView }) {
   const correct = view.lastResult?.correct;
@@ -8,16 +9,20 @@ export function PlayerReveal({ view }: { view: PlayerRoomView }) {
     <div className="page">
       {view.lastResult ? (
         <>
-          <h1 className="title">{correct ? 'Perfetto! 🎉' : points > 0 ? 'Quasi! 👌' : 'Peccato! 😅'}</h1>
+          <h1 className="title">{correct
+              ? t('player.reveal.correct')
+              : points > 0
+              ? t('player.reveal.partlyCorrect')
+              : t('player.reveal.wrong')}</h1>
           <p className="subtitle">
-            {points > 0 ? `+${points} points` : 'Better luck next time'}
+            {points > 0 ? t('player.reveal.points', { points }) : t('player.reveal.noPoints')}
           </p>
         </>
       ) : (
-        <h1 className="title">Tempo scaduto! ⏰</h1>
+        <h1 className="title">{t('player.reveal.timeUp')}</h1>
       )}
       <div className="card">
-        <p>Total score: {view.score}</p>
+        <p>{t('player.reveal.totalScore', { score: view.score })}</p>
       </div>
     </div>
   );
