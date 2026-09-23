@@ -144,7 +144,7 @@
 
   Interrail (Zürich): Kyle, Joost
   Ruben's car (Strasbourg): Ruben, Jaro, Mark, Dex
-  Bas' car (Brennerpass): Bas, Jasper, Sanne, Riemer
+  Bas' car (Brennerpass): Bas, Jasper, Sanne
   Izzie's car (Luxembourg): Ismail
-  Airplane (Firenze): Bowie, Roland, Milan, Gökhan, Sally
+  Airplane (Firenze): Bowie, Roland, Milan, Gökhan, Sally, Riemer
 )
