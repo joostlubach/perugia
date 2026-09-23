@@ -1,11 +1,23 @@
-import { DistributiveOmit, Question } from './types';
-import { texts } from './question-texts';
-import { KARTING_WINNER_GROUP, KARTING_LOSER_GROUP } from './karting';
-import { DINNER_HEAD, DINNER_LEFT, DINNER_RIGHT, DINNER_CORRECT_PRIMO, DINNER_CORRECT_SECONDO } from './dinner';
-import { HAM_ROWS } from './ham';
-import { BOWIE_MARKS, BOWIE_ASPECT_RATIO } from './bowie';
-import { RUBEN_MENU, RUBEN_CORRECT_INDEXES } from './ruben';
-import { TRAVEL_MAP_URL, TRAVEL_MAP_ASPECT_RATIO, TRAVEL_LANDMARKS, TRAVEL_STOPS, TRAVEL_CORRECT_GROUPS } from './travel';
+import { BOWIE_ASPECT_RATIO, BOWIE_MARKS } from './bowie'
+import {
+  DINNER_CORRECT_PRIMO,
+  DINNER_CORRECT_SECONDO,
+  DINNER_HEAD,
+  DINNER_LEFT,
+  DINNER_RIGHT,
+} from './dinner'
+import { HAM_ROWS } from './ham'
+import { KARTING_LOSER_GROUP, KARTING_WINNER_GROUP } from './karting'
+import { texts } from './question-texts'
+import { RUBEN_CORRECT_INDEXES, RUBEN_MENU } from './ruben'
+import {
+  TRAVEL_CORRECT_GROUPS,
+  TRAVEL_LANDMARKS,
+  TRAVEL_MAP_ASPECT_RATIO,
+  TRAVEL_MAP_URL,
+  TRAVEL_STOPS,
+} from './travel'
+import { DistributiveOmit, Question } from './types'
 
 // Kept in the same order as Vragen.txt so the running order matches what's
 // planned there.
@@ -69,6 +81,14 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
     points: 1000,
   },
   {
+    type: 'multiple_choice',
+    ...texts('dogs'),
+    options: ['1.5', '2.5', '3.5', '4.5'],
+    correctIndex: 2,
+    timeLimitSec: 20,
+    points: 1000,
+  },
+  {
     type: 'podium_order',
     ...texts('karting'),
     correctOrder: [KARTING_WINNER_GROUP, KARTING_LOSER_GROUP],
@@ -79,7 +99,7 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
   {
     type: 'multiple_choice',
     ...texts('house'),
-    options: ['Degli Oddi Baglioni', 'Buonaccorsi di Montefalco', 'Di Serego Alighieri', 'Della Rovere Portinari'],
+    options: ['Degli Baglioni', 'Buonaccorsi di Montefalco', 'Di Serego Alighieri', 'Della Rovere Portinari'],
     correctIndex: 2,
     timeLimitSec: 20,
     points: 1000,
@@ -138,6 +158,15 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
     correctSecondo: DINNER_CORRECT_SECONDO,
     timeLimitSec: 90,
     points: 2000,
+  },
+  {
+    type: 'multiple_choice',
+    ...texts('wine'),
+    options: ['A lot', 'Two wheelbarrows', 'I forgot', 'Like really a lot'],
+    // Every answer is right.
+    correctIndex: [0, 1, 2, 3],
+    timeLimitSec: 20,
+    points: 1000,
   },
   {
     type: 'menu_order',

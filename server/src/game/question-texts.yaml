@@ -37,6 +37,11 @@ garage:
   host: Who had to bring who's car to the garage?
   player: Who had to bring who's car to the garage?
 
+dogs:
+  title: Dogs
+  host: How many dogs did we have in total?
+  player: How many dogs did we have in total?
+
 karting:
   title: Karting
   host: |-
@@ -75,6 +80,11 @@ dinner:
   title: Primo / Secondo
   host: At the final dinner, who had a primo, who had a secondo, and who had both?
   player: At the final dinner, who had a primo, who had a secondo, and who had both?
+
+wine:
+  title: Wine
+  host: How much wine?
+  player: How much wine?
 
 ruben:
   title: Senze glutine

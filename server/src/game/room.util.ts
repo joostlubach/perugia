@@ -76,6 +76,10 @@ export function countCorrectSelections(selected: number[], correctIndexes: numbe
   return count;
 }
 
+export function isCorrectOption(correctIndex: number | number[], option: number): boolean {
+  return Array.isArray(correctIndex) ? correctIndex.includes(option) : option === correctIndex;
+}
+
 // Counts the courses where exactly one dish was ordered and it's the right one.
 export function countCorrectMenuPicks(selected: number[], menu: MenuCourse[], correctIndexes: number[]): number {
   let start = 0;

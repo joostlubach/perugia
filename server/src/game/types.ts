@@ -15,7 +15,8 @@ interface QuestionBase {
 export interface MultipleChoiceQuestion extends QuestionBase {
   type: 'multiple_choice';
   options: string[];
-  correctIndex: number;
+  // Several indexes when more than one answer counts (players still pick one).
+  correctIndex: number | number[];
   // Optional photo shown above the options.
   imageUrl?: string;
 }
@@ -232,7 +233,7 @@ export interface Room {
 }
 
 export type HostQuestionView =
-  | (Omit<MultipleChoiceQuestion, 'correctIndex'> & { correctIndex?: number })
+  | (Omit<MultipleChoiceQuestion, 'correctIndex'> & { correctIndex?: number | number[] })
   | (Omit<DragCountQuestion, 'correctCount'> & { correctCount?: number })
   | (Omit<PodiumOrderQuestion, 'correctOrder'> & { groups: string[][]; correctOrder?: string[][] })
   | (Omit<PlateAssignmentQuestion, 'correctPrimo' | 'correctSecondo'> & {

@@ -7,6 +7,7 @@ import {
   countCorrectPlateMarks,
   countCorrectSelections,
   HamLine,
+  isCorrectOption,
   newJoinCode,
   newToken,
   PlateAnswer,
@@ -326,7 +327,7 @@ export class GameService {
       if (value < 0 || value >= question.options.length) {
         throw new ForbiddenException('Invalid option');
       }
-      correct = value === question.correctIndex;
+      correct = isCorrectOption(question.correctIndex, value);
       pointsAwarded = correct ? scoreForAnswer(question.points, question.timeLimitSec, elapsedMs) : 0;
     }
 
@@ -702,7 +703,9 @@ export class GameService {
 
     let correctValue: number | null = null;
     if (question && revealed) {
-      if (question.type === 'multiple_choice') correctValue = question.correctIndex;
+      if (question.type === 'multiple_choice') {
+        correctValue = Array.isArray(question.correctIndex) ? question.correctIndex[0] : question.correctIndex;
+      }
       else if (question.type === 'drag_count') correctValue = question.correctCount;
       else if (question.type === 'podium_order') correctValue = totalPlacements(question.correctOrder);
       else if (question.type === 'travel_map') correctValue = totalPlacements(question.correctGroups);

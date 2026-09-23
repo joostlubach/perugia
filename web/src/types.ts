@@ -5,7 +5,8 @@ export interface MultipleChoiceInput {
   title: string;
   text: string;
   options: string[];
-  correctIndex: number;
+  // Several indexes when more than one answer counts.
+  correctIndex: number | number[];
   imageUrl?: string;
   timeLimitSec: number;
   points: number;
@@ -194,7 +195,7 @@ export type HostQuestionView = (
       imageUrl?: string;
       timeLimitSec: number;
       points: number;
-      correctIndex?: number;
+      correctIndex?: number | number[];
     }
   | {
       id: string;

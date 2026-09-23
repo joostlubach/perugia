@@ -7,6 +7,7 @@ import {
   countCorrectPlacements,
   countCorrectPlateMarks,
   countCorrectSelections,
+  isCorrectOption,
   scoreCount,
   scoreForAnswer,
   scoreEstimate,
@@ -64,7 +65,7 @@ export function TestQuestion({
 
   const correctValue =
     question.type === 'multiple_choice'
-      ? question.correctIndex
+      ? [question.correctIndex].flat()[0]
       : question.type === 'drag_count'
       ? question.correctCount
       : question.type === 'plate_assignment'
@@ -132,6 +133,8 @@ export function TestQuestion({
         ? (value ?? 0) >= 95
         : question.type === 'trace_marks'
         ? (value ?? 0) >= 80
+        : question.type === 'multiple_choice'
+        ? value !== null && isCorrectOption(question.correctIndex, value)
         : value === correctValue;
     // Mirrors the server: podium_order/plate_assignment/ham_cut get partial credit.
     const points =
@@ -359,8 +362,8 @@ function ResultBanner({
   );
 }
 
-function optionClass(i: number, correctIndex: number, result: TestResult | null) {
+function optionClass(i: number, correctIndex: number | number[], result: TestResult | null) {
   const classes = ['shape-btn', `shape-${i}`];
-  if (result) classes.push(i === correctIndex ? 'correct' : 'dimmed');
+  if (result) classes.push(isCorrectOption(correctIndex, i) ? 'correct' : 'dimmed');
   return classes.join(' ');
 }

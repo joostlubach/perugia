@@ -63,6 +63,16 @@ to the final results.
 )
 
 (
+  How many dogs did we have in total?
+  - 1.5
+  - 2.5
+  - 3.5 [correct]
+  - 4.5
+
+  Scoring: 1000 pts, 20s. Multiple choice: all or nothing.
+)
+
+(
   Karting
 
   Winner group rankings:
@@ -89,7 +99,7 @@ to the final results.
 
 (
   What was the surname of the family that owned the house?
-  - Degli Oddi Baglioni
+  - Degli Baglioni
   - Buonaccorsi di Montefalco
   - Di Serego Alighieri [correct]
   - Della Rovere Portinari
@@ -163,6 +173,17 @@ to the final results.
 
   Scoring: 2000 pts, 90s. Per seat, a share for "had primo?" and one for "had secondo?"
   being right.
+)
+
+(
+  How much wine?
+  - A lot [correct]
+  - Two wheelbarrows [correct]
+  - I forgot [correct]
+  - Like really a lot [correct]
+
+  Scoring: 1000 pts, 20s. Every answer is correct, so everyone who answers scores
+  (faster is more).
 )
 
 (

@@ -55,6 +55,11 @@ export function countCorrectSelections(selected: number[], correctIndexes: numbe
   return count;
 }
 
+// Mirrors isCorrectOption in server/src/game/room.util.ts.
+export function isCorrectOption(correctIndex: number | number[], option: number): boolean {
+  return Array.isArray(correctIndex) ? correctIndex.includes(option) : option === correctIndex;
+}
+
 // Mirrors countCorrectMenuPicks in server/src/game/room.util.ts.
 export function countCorrectMenuPicks(selected: number[], menu: MenuCourse[], correctIndexes: number[]): number {
   let start = 0;

@@ -6,6 +6,7 @@ import { formatEuro, Vase } from '../../components/MoneyVase';
 import { PodiumStand } from '../../components/PodiumStand';
 import { Seat } from '../../components/PlateBoard';
 import { QuestionText } from '../../components/QuestionText';
+import { isCorrectOption } from '../../scoring';
 import { HostGradeBox } from './HostGradeBox';
 import { OpenAnswerSummary } from './OpenAnswerSummary';
 import { t } from '../../texts';
@@ -71,7 +72,7 @@ export function HostReveal({
               count={view.optionCounts[i] ?? 0}
               maxCount={maxCount}
               revealed
-              isCorrect={i === question.correctIndex}
+              isCorrect={question.correctIndex !== undefined && isCorrectOption(question.correctIndex, i)}
             />
           ))}
         </div>
