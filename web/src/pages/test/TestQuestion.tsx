@@ -123,6 +123,9 @@ export function TestQuestion({
         Question {index + 1} / {total} · {question.title} · {question.points} pts · {question.timeLimitSec}s
       </div>
       <h1 className="question-text">{('playerText' in question && question.playerText) || question.text}</h1>
+      {!result && question.type === 'multiple_choice' && question.imageUrl && (
+        <img className="question-image" src={question.imageUrl} alt="" />
+      )}
       {result ? (
         <ResultBanner result={result} correctValue={correctValue} partialCredit={partialCredit} isPercent={isPercent} />
       ) : question.type === 'multiple_choice' ? (

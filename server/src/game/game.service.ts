@@ -235,6 +235,7 @@ export class GameService {
           text: question.text,
           options: question.options,
           menu: question.menu,
+          imageUrl: question.imageUrl,
           timeLimitSec: question.timeLimitSec,
           points: question.points,
           ...(revealed ? { correctIndex: question.correctIndex } : {}),
@@ -353,6 +354,7 @@ export class GameService {
           text: question.playerText ?? question.text,
           options: question.options,
           menu: question.menu,
+          imageUrl: question.imageUrl,
           timeLimitSec: question.timeLimitSec,
           points: question.points,
         };

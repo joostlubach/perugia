@@ -18,6 +18,8 @@ export interface MultipleChoiceQuestion extends QuestionBase {
   // usual colored answer tiles. Dishes are numbered across all courses in
   // order and must line up one-to-one with `options`.
   menu?: MenuCourse[];
+  // Optional photo shown above the options.
+  imageUrl?: string;
 }
 
 export interface MenuCourse {

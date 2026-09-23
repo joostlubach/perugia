@@ -7,6 +7,7 @@ export interface MultipleChoiceInput {
   options: string[];
   correctIndex: number;
   menu?: MenuCourse[];
+  imageUrl?: string;
   timeLimitSec: number;
   points: number;
 }
@@ -125,6 +126,7 @@ export type HostQuestionView =
       text: string;
       options: string[];
       menu?: MenuCourse[];
+      imageUrl?: string;
       timeLimitSec: number;
       points: number;
       correctIndex?: number;
@@ -231,6 +233,7 @@ export type PlayerQuestionView =
       text: string;
       options: string[];
       menu?: MenuCourse[];
+      imageUrl?: string;
       timeLimitSec: number;
       points: number;
     }
