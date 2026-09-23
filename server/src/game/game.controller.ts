@@ -1,4 +1,4 @@
-import { Body, Controller, ForbiddenException, Get, Post, Query, Req } from '@nestjs/common';
+import { Body, Controller, ForbiddenException, Get, ParseIntPipe, Post, Query, Req } from '@nestjs/common';
 import { Request } from 'express';
 import { RoomStatus } from './types';
 import { isLocalHost } from './local-host';
@@ -49,6 +49,11 @@ export class GameController {
   @Post('advance')
   advance(@Query('token') token: string, @Query('from') from?: RoomStatus) {
     return this.game.advance(token, from);
+  }
+
+  @Post('goto')
+  goTo(@Query('token') token: string, @Query('index', ParseIntPipe) index: number) {
+    return this.game.goTo(token, index);
   }
 
   @Post('finish')

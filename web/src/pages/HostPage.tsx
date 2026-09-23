@@ -7,6 +7,7 @@ import { ReactionCallouts } from '../components/ReactionCallouts';
 import { HostSetup } from './host/HostSetup';
 import { HostLobby } from './host/HostLobby';
 import { HostIntro } from './host/HostIntro';
+import { HostJumpBox } from './host/HostJumpBox';
 import { HostQuestion } from './host/HostQuestion';
 import { HostReveal } from './host/HostReveal';
 import { HostLeaderboard } from './host/HostLeaderboard';
@@ -30,6 +31,7 @@ export function HostPage() {
     return raw && !restarting ? JSON.parse(raw) : null;
   });
   const lastStatus = useRef<string | null>(null);
+  const [jumping, setJumping] = useState(false);
 
   const fetchView = useCallback(() => {
     if (!session) return Promise.reject(new Error('no session'));
@@ -77,7 +79,8 @@ export function HostPage() {
   }, []);
 
   // Cmd+Shift+1 reloads into a fresh room (the flag tells the reloaded page
-  // to create it); Cmd+Shift+2 jumps straight to the final results.
+  // to create it), Cmd+Shift+2 asks for a question number to jump to, and
+  // Cmd+Shift+3 goes straight to the final results.
   const onShortcut = useRef<(e: KeyboardEvent) => void>(() => {});
   onShortcut.current = (e) => {
     if (!e.metaKey || !e.shiftKey) return;
@@ -87,6 +90,9 @@ export function HostPage() {
       localStorage.removeItem(STORAGE_KEY);
       window.location.reload();
     } else if (e.code === 'Digit2' && session) {
+      e.preventDefault();
+      setJumping(true);
+    } else if (e.code === 'Digit3' && session) {
       e.preventDefault();
       api.finish(session.hostToken);
     }
@@ -135,6 +141,13 @@ export function HostPage() {
           {view.status === 'leaderboard' && <HostLeaderboard view={view} onNext={advance} />}
           {view.status === 'ended' && <HostFinal view={view} />}
           <ReactionCallouts reactions={view.reactions ?? []} />
+          {jumping && session && (
+            <HostJumpBox
+              totalQuestions={view.totalQuestions}
+              onJump={(index) => api.goTo(session.hostToken, index)}
+              onClose={() => setJumping(false)}
+            />
+          )}
         </>
       )}
     </>

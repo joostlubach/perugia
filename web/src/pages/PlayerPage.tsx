@@ -2,6 +2,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { api, isStaleSession } from '../api';
 import { isLocalHost } from '../localHost';
+import { keepAudioUnlocked } from '../audioSequencer';
+import { preloadDragSounds } from '../components/DragCanvas';
 import { HamLine, MultiSelectAnswer, PlateAnswer, TraceAnswer } from '../types';
 import { usePolling } from '../hooks/usePolling';
 import { audio } from '../audio';
@@ -38,6 +40,11 @@ export function PlayerPage() {
   }, [session]);
 
   const { data: view, error } = usePolling(fetchView, 1000, Boolean(session));
+
+  useEffect(() => {
+    keepAudioUnlocked();
+    preloadDragSounds();
+  }, []);
 
   useEffect(() => {
     if (urlJoinCode || session || !isLocalHost(window.location.hostname)) return;

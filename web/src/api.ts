@@ -81,6 +81,10 @@ export const api = {
     return request<void>(`/room/advance?token=${encodeURIComponent(token)}&from=${from}`, { method: 'POST' });
   },
 
+  goTo(token: string, index: number) {
+    return request<void>(`/room/goto?token=${encodeURIComponent(token)}&index=${index}`, { method: 'POST' });
+  },
+
   finish(token: string) {
     return request<void>(`/room/finish?token=${encodeURIComponent(token)}`, { method: 'POST' });
   },

@@ -19,6 +19,30 @@ function loadBuffer(url: string): Promise<AudioBuffer> {
   return promise;
 }
 
+// Fetches and decodes a file ahead of time, so its first play is instant.
+export function preloadAudio(url: string) {
+  loadBuffer(url).catch(() => {});
+}
+
+// iOS only lets an AudioContext start inside certain gestures (touchend and
+// click, not pointerdown), and suspends it again when the phone locks or the
+// tab goes to the background. So on every such gesture, wake it if needed --
+// a drag's own touchend then also wakes it, playing the drop that was queued.
+export function keepAudioUnlocked() {
+  const unlock = () => {
+    const context = getContext();
+    if (context.state === 'running') return;
+    context.resume().catch(() => {});
+    const source = context.createBufferSource();
+    source.buffer = context.createBuffer(1, 1, 22050);
+    source.connect(context.destination);
+    source.start();
+  };
+  for (const type of ['touchend', 'click', 'keydown']) {
+    window.addEventListener(type, unlock, { capture: true });
+  }
+}
+
 export interface AudioSequencer {
   // Plays the next slice of the file (per `boundaries`), wrapping back to
   // the start after the last one. No-op (silently) if still preloading.
@@ -35,8 +59,11 @@ export interface AudioSequencer {
 export function createAudioSequencer(url: string, boundaries: number[]): AudioSequencer {
   getContext(); // start warming up the context as soon as we're constructed
   let buffer: AudioBuffer | null = null;
+  // Plays requested before the file finished loading, caught up once it has.
+  let pending = 0;
   loadBuffer(url).then((b) => {
     buffer = b;
+    for (; pending > 0; pending--) sequencer.playNext();
   });
   const segmentCount = boundaries.length - 1;
   let index = 0;
@@ -48,9 +75,13 @@ export function createAudioSequencer(url: string, boundaries: number[]): AudioSe
   let nextStartTime = 0;
   let sources: AudioBufferSourceNode[] = [];
 
-  return {
+  const sequencer: AudioSequencer = {
     playNext() {
-      if (!buffer || audio.isMuted() || segmentCount < 1) return;
+      if (audio.isMuted() || segmentCount < 1) return;
+      if (!buffer) {
+        pending++;
+        return;
+      }
       const context = getContext();
       if (context.state === 'suspended') context.resume();
 
@@ -74,7 +105,9 @@ export function createAudioSequencer(url: string, boundaries: number[]): AudioSe
     stop() {
       for (const source of sources) source.stop();
       sources = [];
+      pending = 0;
       nextStartTime = 0;
     },
   };
+  return sequencer;
 }

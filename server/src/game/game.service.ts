@@ -1,4 +1,4 @@
-import { ForbiddenException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { ROOM_STORE, RoomStore } from '../storage/store.interface';
 import {
   countCorrectGroupings,
@@ -109,6 +109,22 @@ export class GameService {
       if (room.currentQuestionIndex + 1 < room.questions.length) this.goToQuestion(room, room.currentQuestionIndex + 1);
       else room.status = 'ended';
     }
+    await this.store.set(room);
+  }
+
+  // Host shortcut: straight to a question (zero-based), shown as its intro.
+  // Earlier answers to it are wiped, points included, so it can be replayed.
+  async goTo(hostToken: string, index: number): Promise<void> {
+    const room = await this.requireHost(hostToken);
+    if (index < 0 || index >= room.questions.length) throw new BadRequestException('No such question');
+    const questionId = room.questions[index].id;
+    for (const player of Object.values(room.players)) {
+      const answer = player.answers[questionId];
+      if (!answer) continue;
+      player.score -= answer.pointsAwarded;
+      delete player.answers[questionId];
+    }
+    this.goToQuestion(room, index);
     await this.store.set(room);
   }
 

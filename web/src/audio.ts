@@ -12,6 +12,8 @@ export type SoundKey = keyof typeof SOUND_FILES;
 
 const elements = new Map<SoundKey, HTMLAudioElement>();
 let muted = localStorage.getItem('perugia_muted') === 'true';
+// Music that should be playing right now, so unmuting can pick it back up.
+const loops = new Set<SoundKey>();
 
 function getElement(key: SoundKey): HTMLAudioElement {
   let el = elements.get(key);
@@ -42,14 +44,15 @@ export const audio = {
 
   // Starts looping music, or keeps it going if it already is.
   loop(key: SoundKey, volume: number) {
-    if (muted) return;
+    loops.add(key);
     const el = getElement(key);
     el.loop = true;
     el.volume = volume;
-    el.play().catch(() => {});
+    if (!muted) el.play().catch(() => {});
   },
 
   stop(key: SoundKey) {
+    loops.delete(key);
     elements.get(key)?.pause();
   },
 
@@ -62,6 +65,8 @@ export const audio = {
     localStorage.setItem('perugia_muted', String(value));
     if (value) {
       elements.forEach((el) => el.pause());
+    } else {
+      loops.forEach((key) => getElement(key).play().catch(() => {}));
     }
   },
 

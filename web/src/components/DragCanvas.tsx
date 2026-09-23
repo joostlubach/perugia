@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { audio, SoundKey } from '../audio'
-import { createAudioSequencer } from '../audioSequencer'
+import { createAudioSequencer, preloadAudio } from '../audioSequencer'
 import { useCountdown } from './Countdown'
 
 interface Token {
@@ -157,6 +157,12 @@ const BULK_AMOUNT = 5;
 // slices -- tweak these by ear against the actual recording to line the
 // boundaries up with where each word really falls.
 const PEDRO_WORD_BOUNDARIES = [0, 0.4, 0.9, 1.5, 2.4, 3.033];
+const PEDRO_CHANT_URL = '/audio/pedrope.mp3';
+
+// Called when the player app opens, long before the Pedro question comes up.
+export function preloadDragSounds() {
+  preloadAudio(PEDRO_CHANT_URL);
+}
 
 // Shared by the real player view and the local test harness so both stay in
 // sync if this ever changes.
@@ -166,7 +172,7 @@ export function dragSoundPropsFor(dragLabel: string): {
 } {
   if (dragLabel.toLowerCase() !== 'pedro') return {};
   return {
-    dropSoundSequence: { url: '/audio/pedrope.mp3', boundaries: PEDRO_WORD_BOUNDARIES },
+    dropSoundSequence: { url: PEDRO_CHANT_URL, boundaries: PEDRO_WORD_BOUNDARIES },
     doneSound: 'fidatidime',
   };
 }
