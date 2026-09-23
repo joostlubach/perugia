@@ -17,7 +17,7 @@ export const TRAVEL_STOPS: MapPin[] = [
   { label: "Ruben's car", icon: '🚗', x: 0.409, y: 0.448, side: 'right' },
   { label: "Bas' car", icon: '🚗', x: 0.734, y: 0.595, side: 'right' },
   { label: "Izzie's car", icon: '🚗', x: 0.27, y: 0.35, side: 'left' },
-  { label: 'Milano', icon: '🚗', x: 0.534, y: 0.734, side: 'left' },
+  { label: "Sanne's car", icon: '🚗', x: 0.534, y: 0.734, side: 'left' },
   { label: 'Airplane', icon: '✈️', x: 0.712, y: 0.883, side: 'left' },
 ];
 

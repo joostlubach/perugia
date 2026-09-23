@@ -146,6 +146,6 @@
   Ruben's car (Strasbourg): Ruben, Jaro, Mark
   Bas' car (Brennerpass): Bas, Jasper, Riemer
   Izzie's car (Luxembourg): Ismail
-  Car 4 (Milano): Sally, Sanne
+  Sanne's car (Milano): Sally, Sanne
   Airplane (Firenze): Bowie, Roland, Milan, Dex, Gökhan
 )
