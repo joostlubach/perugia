@@ -143,9 +143,9 @@
   Drag each person to how they _arrived_ to Perugia
 
   Interrail (Zürich): Kyle, Joost
-  Ruben's car (Strasbourg): Ruben, Jaro, Mark
+  Ruben's car (Strasbourg): Ruben, Jaro, Mark, Dex
   Bas' car (Brennerpass): Bas, Jasper, Riemer
   Izzie's car (Luxembourg): Ismail
   Sanne's car (Milano): Sally, Sanne
-  Airplane (Firenze): Bowie, Roland, Milan, Dex, Gökhan
+  Airplane (Firenze): Bowie, Roland, Milan, Gökhan
 )
