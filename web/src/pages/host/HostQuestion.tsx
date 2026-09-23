@@ -3,6 +3,8 @@ import { HostRoomView } from '../../types';
 import { AnswerOption } from '../../components/AnswerOption';
 import { Countdown } from '../../components/Countdown';
 import { MenuCard } from '../../components/MenuCard';
+import { TravelMap } from '../../components/TravelMap';
+import { QuestionText } from '../../components/QuestionText';
 
 export function HostQuestion({ view, onExpire }: { view: HostRoomView; onExpire: () => void }) {
   const question = view.question!;
@@ -21,7 +23,7 @@ export function HostQuestion({ view, onExpire }: { view: HostRoomView; onExpire:
       <div className="hint">
         Question {view.currentQuestionIndex + 1} / {view.totalQuestions} · {question.title}
       </div>
-      <h1 className="question-text">{question.text}</h1>
+      <h1 className="question-text"><QuestionText text={question.text} /></h1>
       {question.type === 'multiple_choice' && question.imageUrl && (
         <img className="question-image" src={question.imageUrl} alt="" />
       )}
@@ -35,6 +37,14 @@ export function HostQuestion({ view, onExpire }: { view: HostRoomView; onExpire:
             <AnswerOption key={i} index={i} text={text} count={view.optionCounts[i] ?? 0} maxCount={maxCount} />
           ))}
         </div>
+      ) : question.type === 'travel_map' ? (
+        <TravelMap
+          mapUrl={question.mapUrl}
+          aspectRatio={question.aspectRatio}
+          landmarks={question.landmarks}
+          stops={question.stops}
+          large
+        />
       ) : question.type === 'podium_order' ? (
         <p className="subtitle">Put everyone on the podium in finishing order!</p>
       ) : question.type === 'plate_assignment' ? (

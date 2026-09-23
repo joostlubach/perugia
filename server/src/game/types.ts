@@ -93,8 +93,33 @@ export interface TraceMarksQuestion extends QuestionBase {
   marks: Point[][];
 }
 
+// A spot on a map image, in fractions of its width/height from the top left.
+export interface MapPin {
+  label: string;
+  icon: string;
+  x: number;
+  y: number;
+  // Which side of the pin its label (and, for stops, the dropped avatars) goes.
+  side?: 'left' | 'right';
+}
+
+// Player drags each person's avatar onto the map stop where they were.
+// Scored per person placed at the right stop.
+export interface TravelMapQuestion extends QuestionBase {
+  type: 'travel_map';
+  mapUrl: string;
+  // Map width / height.
+  aspectRatio: number;
+  // Decorative pins (start and destination), not drop targets.
+  landmarks: MapPin[];
+  stops: MapPin[];
+  // Avatar keys per stop, in the same order as `stops`.
+  correctGroups: string[][];
+}
+
 export type Question =
   | MultipleChoiceQuestion
+  | TravelMapQuestion
   | DragCountQuestion
   | PodiumOrderQuestion
   | PlateAssignmentQuestion
@@ -153,7 +178,8 @@ export type HostQuestionView =
     })
   | Omit<HamCutQuestion, 'rows'>
   | (Omit<MultiSelectQuestion, 'correctIndexes'> & { correctIndexes?: number[] })
-  | (Omit<TraceMarksQuestion, 'marks' | 'revealImageUrl'> & { revealImageUrl?: string });
+  | (Omit<TraceMarksQuestion, 'marks' | 'revealImageUrl'> & { revealImageUrl?: string })
+  | (Omit<TravelMapQuestion, 'correctGroups'> & { people: string[]; correctGroups?: string[][] });
 
 export interface HostGuess {
   playerId: string;
@@ -187,7 +213,9 @@ export type PlayerQuestionView =
   | Omit<PlateAssignmentQuestion, 'correctPrimo' | 'correctSecondo'>
   | Omit<HamCutQuestion, 'rows'>
   | Omit<MultiSelectQuestion, 'correctIndexes'>
-  | Omit<TraceMarksQuestion, 'marks' | 'revealImageUrl'>;
+  | Omit<TraceMarksQuestion, 'marks' | 'revealImageUrl'>
+  // People are sorted alphabetically so they don't leak the answer.
+  | (Omit<TravelMapQuestion, 'correctGroups'> & { people: string[] });
 
 export interface PlayerRoomView {
   status: RoomStatus;
