@@ -43,7 +43,7 @@ host:
     open_answer: "Type your answer on your phone!"
 
   reveal:
-    title: "Of course it was"
+    title: "The right answer"
     hamGoal: "The goal was a perfect 50/50 split by area."
     # Open question. The right answer is what {name} (Kyle) typed; the host only
     # types it in when he didn't answer.
@@ -180,8 +180,8 @@ reactions:
     label: "Nooo"
     callout: "Nooooo!"
   gibberish:
-    label: "Blabla"
-    callout: "Blablabla!"
+    label: "Beepedeboopedie"
+    callout: "Beepedeboopedie!"
   congratulations:
     label: "Bravo!"
     callout: "Congratulations!"
