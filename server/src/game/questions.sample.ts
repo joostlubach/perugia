@@ -104,7 +104,7 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
   {
     type: 'multiple_choice',
     ...texts('dogs'),
-    options: ['1.5', '2.5', '3.5', '4.5'],
+    options: ['2.5', '3.5', '4.5', '5.5'],
     correctIndex: 2,
     timeLimitSec: 20,
     points: 1000,
