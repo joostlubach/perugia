@@ -17,7 +17,8 @@ export class AnswerDto {
       a.multiSelect === undefined &&
       a.strokes === undefined &&
       a.text === undefined &&
-      a.texts === undefined,
+      a.texts === undefined &&
+      a.pin === undefined,
   )
   @IsInt()
   @Min(0)
@@ -53,6 +54,11 @@ export class AnswerDto {
   @IsOptional()
   @IsString()
   text?: string;
+
+  // Where the avatar was dropped -- map_pin only.
+  @IsOptional()
+  @IsObject()
+  pin?: { x: number; y: number };
 
   // One typed answer per box -- multi_text only.
   @IsOptional()

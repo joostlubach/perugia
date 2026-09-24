@@ -43,10 +43,12 @@ host:
     drag_count: "Drag as many \"{label}\" as you count, then lock it in!"
     open_answer: "Type your answer on your phone!"
     multi_text: "Type your answers on your phone!"
+    map_pin: "Drag yourself to the right spot on your phone!"
 
   reveal:
     title: "The right answer"
     hamGoal: "The goal was a perfect 50/50 split by area."
+    distanceKm: "{name}: {km} km"
     # Open question. The right answer is what {name} (Kyle) typed; the host only
     # types it in when he didn't answer.
     typeCorrectAnswer: "Type the correct answer"
@@ -93,6 +95,7 @@ player:
   lobby:
     title: "You're in! 🍕"
     subtitle: "Sit tight, the host will start soon..."
+    soundOn: "🔊 Turn the sound on your phone on for an optima esperanza!"
     playersInRoom: "{count} players in the room"
     playersInRoom_one: "{count} player in the room"
 
@@ -160,6 +163,9 @@ boards:
   podium:
     allPlaced: "Everyone's on the podium"
     done: "🏁 Lock it in"
+  mapPin:
+    moveHint: "Drag your pin around until it's spot on"
+    done: "📍 Lock it in"
   travelMap:
     allPlaced: "Everyone's on the map"
     done: "🗺️ Lock it in"

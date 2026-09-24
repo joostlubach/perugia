@@ -191,8 +191,25 @@ export interface MoneyVaseInput {
   points: number;
 }
 
+// Drag your own avatar to `answer` on the map; scored by distance in km.
+export interface MapPinInput {
+  type: 'map_pin';
+  title: string;
+  text: string;
+  playerText?: string;
+  mapUrl: string;
+  aspectRatio: number;
+  mapWidthKm: number;
+  answer: Point;
+  fullPointsKm: number;
+  zeroPointsKm: number;
+  timeLimitSec: number;
+  points: number;
+}
+
 export type QuestionInput =
   | MultipleChoiceInput
+  | MapPinInput
   | MoneyVaseInput
   | TravelMapInput
   | DragCountInput
@@ -228,6 +245,10 @@ export interface TextAnswer {
 
 export interface TextsAnswer {
   texts: string[];
+}
+
+export interface PinAnswer {
+  pin: Point;
 }
 
 export type HostQuestionView = (
@@ -364,6 +385,20 @@ export type HostQuestionView = (
       points: number;
       correctCents?: number;
     }
+  | {
+      id: string;
+      type: 'map_pin';
+      title: string;
+      text: string;
+      mapUrl: string;
+      aspectRatio: number;
+      mapWidthKm: number;
+      fullPointsKm: number;
+      zeroPointsKm: number;
+      timeLimitSec: number;
+      points: number;
+      answer?: Point;
+    }
 ) & {
   // The short text players see; the host shows it everywhere but the intro.
   playerText?: string;
@@ -376,6 +411,8 @@ export interface HostGuess {
   value: number;
   correct: boolean;
   text?: string;
+  // Where the avatar was dropped -- map_pin only.
+  point?: Point;
   pointsAwarded: number;
 }
 
@@ -533,6 +570,19 @@ export type PlayerQuestionView =
       denominations: number[];
       timeLimitSec: number;
       points: number;
+    }
+  | {
+      id: string;
+      type: 'map_pin';
+      title: string;
+      text: string;
+      mapUrl: string;
+      aspectRatio: number;
+      mapWidthKm: number;
+      fullPointsKm: number;
+      zeroPointsKm: number;
+      timeLimitSec: number;
+      points: number;
     };
 
 export interface PlayerLastResult {
@@ -551,6 +601,8 @@ export interface PlayerRoomView {
   hasAnswered: boolean;
   awaitingGrading: boolean;
   lastResult: PlayerLastResult | null;
+  // The player's own avatar key.
+  avatar: string;
   correctValue: number | null;
   score: number;
   rank: number;

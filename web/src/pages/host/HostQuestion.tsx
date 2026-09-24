@@ -5,6 +5,7 @@ import { MenuCard } from '../../components/MenuCard';
 import { TravelMap } from '../../components/TravelMap';
 import { SketchMap } from '../../components/SketchMap';
 import { Vase } from '../../components/MoneyVase';
+import { PinMap } from '../../components/PinMap';
 import { QuestionText } from '../../components/QuestionText';
 import { t } from '../../texts';
 
@@ -51,6 +52,11 @@ export function HostQuestion({ view }: { view: HostRoomView }) {
           stops={question.stops}
           large
         />
+      ) : question.type === 'map_pin' ? (
+        <>
+          <p className="subtitle">{t('host.question.map_pin')}</p>
+          <PinMap mapUrl={question.mapUrl} aspectRatio={question.aspectRatio} large />
+        </>
       ) : question.type === 'money_vase' ? (
         <>
           <Vase total={null} large />

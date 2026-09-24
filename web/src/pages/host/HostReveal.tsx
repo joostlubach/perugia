@@ -3,6 +3,7 @@ import { AnswerOption } from '../../components/AnswerOption';
 import { MenuCard } from '../../components/MenuCard';
 import { TravelMap } from '../../components/TravelMap';
 import { Vase } from '../../components/MoneyVase';
+import { PinMap } from '../../components/PinMap';
 import { PodiumStand } from '../../components/PodiumStand';
 import { SketchMap } from '../../components/SketchMap';
 import { TallyList } from '../../components/TallyList';
@@ -80,6 +81,29 @@ export function HostReveal({
             groups={question.correctGroups}
             large
           />
+          {correctTally}
+        </>
+      ) : question.type === 'map_pin' ? (
+        <>
+          <PinMap
+            mapUrl={question.mapUrl}
+            aspectRatio={question.aspectRatio}
+            pins={view.guesses.flatMap((g) =>
+              g.point ? [{ key: g.playerId, avatar: g.avatar, ...g.point, label: g.name }] : [],
+            )}
+            answer={question.answer}
+            large
+          />
+          <div className="pin-map-rankings">
+            {[...view.guesses]
+              .sort((a, b) => a.value - b.value)
+              .slice(0, 3)
+              .map((g, i) => (
+                <span key={g.playerId}>
+                  {['🥇', '🥈', '🥉'][i]} {t('host.reveal.distanceKm', { name: g.name, km: g.value })}
+                </span>
+              ))}
+          </div>
           {correctTally}
         </>
       ) : question.type === 'money_vase' ? (

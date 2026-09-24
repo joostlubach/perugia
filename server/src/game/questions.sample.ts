@@ -1,5 +1,6 @@
 import { BOWIE_ASPECT_RATIO, BOWIE_MARKS } from './bowie'
 import { HAM_ROWS } from './ham'
+import { ITALY_MAP_ASPECT_RATIO, ITALY_MAP_URL, ITALY_MAP_WIDTH_KM, PERUGIA } from './italy'
 import { KARTING_LOSER_GROUP, KARTING_WINNER_GROUP } from './karting'
 import {
   KARTING_CRASH_CORRECT_PLACEMENTS,
@@ -89,16 +90,15 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
     points: 1000,
   },
   {
-    type: 'multiple_choice',
-    ...texts('garage'),
-    options: [
-      'Ismail Ruben',
-      'Ruben Ismail',
-      'Ismail Ismail',
-      'Ruben Ruben',
-    ],
-    correctIndex: 1,
-    timeLimitSec: 20,
+    type: 'map_pin',
+    ...texts('wherePerugia'),
+    mapUrl: ITALY_MAP_URL,
+    aspectRatio: ITALY_MAP_ASPECT_RATIO,
+    mapWidthKm: ITALY_MAP_WIDTH_KM,
+    answer: PERUGIA,
+    fullPointsKm: 15,
+    zeroPointsKm: 250,
+    timeLimitSec: 30,
     points: 1000,
   },
   {

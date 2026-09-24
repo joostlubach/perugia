@@ -7,9 +7,11 @@ import {
   countCorrectSelections,
   HamLine,
   isCorrectOption,
+  mapDistanceKm,
   newJoinCode,
   newToken,
   scoreCount,
+  scoreDistance,
   scoreForAnswer,
   scoreEstimate,
   scoreHamCut,
@@ -211,7 +213,7 @@ export class GameService {
   async submitAnswer(
     playerId: string,
     playerToken: string,
-    answer: number | string | string[] | string[][] | SketchPlacement[] | HamLine | number[] | Point[][],
+    answer: number | string | string[] | string[][] | SketchPlacement[] | HamLine | number[] | Point[][] | Point,
   ): Promise<void> {
     const room = await this.requireRoom();
     const player = room.players[playerId];
@@ -232,6 +234,7 @@ export class GameService {
     let pointsAwarded: number;
     let selection: number[] | undefined;
     let text: string | undefined;
+    let point: Point | undefined;
 
     if (question.type === 'podium_order') {
       if (!Array.isArray(answer) || answer.some((group) => !Array.isArray(group))) {
@@ -275,6 +278,16 @@ export class GameService {
       correct = closeness >= MONEY_VASE_CORRECT;
       pointsAwarded =
         closeness > 0 ? scoreForAnswer(Math.round((question.points * closeness) / 100), question.timeLimitSec, elapsedMs) : 0;
+    } else if (question.type === 'map_pin') {
+      if (!isPoint(answer)) throw new ForbiddenException('Wrong answer shape for this question');
+      // Partial credit for how close to the right spot it was dropped.
+      point = { x: answer.x, y: answer.y };
+      const km = mapDistanceKm(point, question.answer, question.aspectRatio, question.mapWidthKm);
+      const share = scoreDistance(km, question.fullPointsKm, question.zeroPointsKm);
+      value = Math.round(km);
+      correct = km <= question.fullPointsKm;
+      pointsAwarded =
+        share > 0 ? scoreForAnswer(Math.round(question.points * share), question.timeLimitSec, elapsedMs) : 0;
     } else if (question.type === 'trace_marks') {
       if (!isStrokes(answer)) throw new ForbiddenException('Wrong answer shape for this question');
       // Partial credit for how closely the drawing matches the real marks.
@@ -349,6 +362,7 @@ export class GameService {
       pointsAwarded,
       ...(selection ? { selection } : {}),
       ...(text !== undefined ? { text } : {}),
+      ...(point ? { point } : {}),
     };
     player.score += pointsAwarded;
     if (Object.values(room.players).every((p) => p.answers[question.id])) {
@@ -436,6 +450,7 @@ export class GameService {
               value: p.answers[question.id].value,
               correct: p.answers[question.id].correct,
               text: p.answers[question.id].text,
+              point: p.answers[question.id].point,
               pointsAwarded: p.answers[question.id].pointsAwarded,
             }))
         : [];
@@ -561,6 +576,21 @@ export class GameService {
           timeLimitSec: question.timeLimitSec,
           points: question.points,
           ...(revealed ? { correctCents: question.correctCents } : {}),
+        };
+      } else if (question.type === 'map_pin') {
+        hostQuestion = {
+          id: question.id,
+          type: 'map_pin',
+          title: question.title,
+          text: question.text,
+          mapUrl: question.mapUrl,
+          aspectRatio: question.aspectRatio,
+          mapWidthKm: question.mapWidthKm,
+          fullPointsKm: question.fullPointsKm,
+          zeroPointsKm: question.zeroPointsKm,
+          timeLimitSec: question.timeLimitSec,
+          points: question.points,
+          ...(revealed ? { answer: question.answer } : {}),
         };
       } else if (question.type === 'multi_select') {
         hostQuestion = {
@@ -725,6 +755,20 @@ export class GameService {
           timeLimitSec: question.timeLimitSec,
           points: question.points,
         };
+      } else if (question.type === 'map_pin') {
+        playerQuestion = {
+          id: question.id,
+          type: 'map_pin',
+          title: question.title,
+          text: question.playerText ?? question.text,
+          mapUrl: question.mapUrl,
+          aspectRatio: question.aspectRatio,
+          mapWidthKm: question.mapWidthKm,
+          fullPointsKm: question.fullPointsKm,
+          zeroPointsKm: question.zeroPointsKm,
+          timeLimitSec: question.timeLimitSec,
+          points: question.points,
+        };
       } else if (question.type === 'multi_select') {
         playerQuestion = {
           id: question.id,
@@ -757,6 +801,7 @@ export class GameService {
       else if (question.type === 'podium_order') correctValue = totalPlacements(question.correctOrder);
       else if (question.type === 'travel_map') correctValue = totalPlacements(question.correctGroups);
       else if (question.type === 'money_vase') correctValue = question.correctCents;
+      else if (question.type === 'map_pin') correctValue = 0;
       else if (question.type === 'ham_cut' || question.type === 'trace_marks' || question.type === 'situation_sketch') {
         correctValue = 100;
       }
@@ -775,6 +820,7 @@ export class GameService {
       hasAnswered: question ? Boolean(player.answers[question.id]) : false,
       awaitingGrading: question?.type === 'open_answer' && revealed && question.correctAnswer === undefined,
       lastResult: question ? player.answers[question.id] ?? null : null,
+      avatar: player.avatar,
       correctValue,
       score: player.score,
       rank: rank || board.length,
@@ -853,6 +899,12 @@ const SITUATION_SKETCH_CORRECT = 80;
 const MONEY_VASE_CORRECT = 98;
 const TRACE_MARKS_MAX_POINTS = 5000;
 const SITUATION_SKETCH_MAX_PIECES = 50;
+
+function isPoint(answer: unknown): answer is Point {
+  if (!answer || typeof answer !== 'object' || Array.isArray(answer)) return false;
+  const { x, y } = answer as Point;
+  return Number.isFinite(x) && Number.isFinite(y);
+}
 
 function isStrokes(answer: unknown): answer is Point[][] {
   if (!Array.isArray(answer)) return false;

@@ -91,6 +91,16 @@ function fade(value: number, near: number, far: number): number {
   return Math.max(0, Math.min(1, (far - value) / (far - near)));
 }
 
+// Mirrors mapDistanceKm in server/src/game/room.util.ts.
+export function mapDistanceKm(guess: Point, answer: Point, aspectRatio: number, mapWidthKm: number): number {
+  return Math.hypot(guess.x - answer.x, (guess.y - answer.y) / aspectRatio) * mapWidthKm;
+}
+
+// Mirrors scoreDistance in server/src/game/room.util.ts.
+export function scoreDistance(km: number, fullPointsKm: number, zeroPointsKm: number): number {
+  return fade(km, fullPointsKm, zeroPointsKm);
+}
+
 const SKETCH_NEAR = 0.03;
 const SKETCH_FAR = 0.15;
 

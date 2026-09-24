@@ -9,7 +9,7 @@
 lake:
   title: The Lake
   host: |-
-    On Thursday, or Wednesday, honestly who can remember, we drove 1,5 hours to swim in an ice cold lake. Which famous story is inspired by the region around that lake?
+    On Thursday we drove 1,5 hours to swim in an ice cold lake. Which famous story is inspired by the region around that lake?
   player: |-
     Which story is inspired by the lake?
 
@@ -37,10 +37,10 @@ poolParty:
   player: |-
     How many liters of water did the pool lose after the first pool party?
 
-garage:
-  title: The garage
-  host: Who had to bring who's car to the garage?
-  player: Who had to bring who's car to the garage?
+wherePerugia:
+  title: Where were we?
+  host: We spent a week in Perugia. But where exactly is it? Drag yourself to Perugia on the map!
+  player: Drag yourself to Perugia on the map!
 
 dogs:
   title: Dogs

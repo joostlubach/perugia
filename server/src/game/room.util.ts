@@ -112,6 +112,17 @@ function fade(value: number, near: number, far: number): number {
 }
 
 // In heights of the area placed on.
+// Straight-line distance between two spots on a map, in km. Fine for a
+// Mercator crop the size of a country.
+export function mapDistanceKm(guess: Point, answer: Point, aspectRatio: number, mapWidthKm: number): number {
+  return Math.hypot(guess.x - answer.x, (guess.y - answer.y) / aspectRatio) * mapWidthKm;
+}
+
+// Share of the points (0-1) for a guess `km` away from the answer.
+export function scoreDistance(km: number, fullPointsKm: number, zeroPointsKm: number): number {
+  return fade(km, fullPointsKm, zeroPointsKm);
+}
+
 const SKETCH_NEAR = 0.03;
 const SKETCH_FAR = 0.15;
 

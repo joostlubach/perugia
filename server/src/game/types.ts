@@ -194,8 +194,22 @@ export interface MoneyVaseQuestion extends QuestionBase {
   correctCents: number;
 }
 
+// Player drags their own avatar onto the spot on the map where `answer` is.
+// Scored by distance: full points within `fullPointsKm`, none beyond `zeroPointsKm`.
+export interface MapPinQuestion extends QuestionBase {
+  type: 'map_pin';
+  mapUrl: string;
+  // Map width / height.
+  aspectRatio: number;
+  mapWidthKm: number;
+  answer: Point;
+  fullPointsKm: number;
+  zeroPointsKm: number;
+}
+
 export type Question =
   | MultipleChoiceQuestion
+  | MapPinQuestion
   | MoneyVaseQuestion
   | TravelMapQuestion
   | DragCountQuestion
@@ -218,8 +232,10 @@ export interface PlayerAnswer {
   pointsAwarded: number;
   // Meaning depends on the question type: option index for multiple_choice,
   // dragged-token count for drag_count, correct placements for podium_order,
-  // guessed amount in cents for money_vase.
+  // guessed amount in cents for money_vase, distance in km for map_pin.
   value: number;
+  // Where the avatar was dropped -- map_pin.
+  point?: Point;
   // The dish indexes ordered -- menu_order; options ticked -- multi_select;
   // indexes of the correct answers typed -- multi_text.
   selection?: number[];
@@ -284,7 +300,8 @@ export type HostQuestionView =
   | (Omit<MultiTextQuestion, 'correctAnswers'> & { correctAnswers?: string[] })
   | (Omit<TraceMarksQuestion, 'marks' | 'revealImageUrl'> & { revealImageUrl?: string })
   | (Omit<TravelMapQuestion, 'correctGroups'> & { people: string[]; correctGroups?: string[][] })
-  | (Omit<MoneyVaseQuestion, 'correctCents'> & { correctCents?: number });
+  | (Omit<MoneyVaseQuestion, 'correctCents'> & { correctCents?: number })
+  | (Omit<MapPinQuestion, 'answer'> & { answer?: Point });
 
 export interface HostGuess {
   playerId: string;
@@ -294,6 +311,8 @@ export interface HostGuess {
   correct: boolean;
   // What was typed -- open_answer and multi_text only.
   text?: string;
+  // Where the avatar was dropped -- map_pin only.
+  point?: Point;
   pointsAwarded: number;
 }
 
@@ -334,7 +353,8 @@ export type PlayerQuestionView =
   | Omit<TraceMarksQuestion, 'marks' | 'revealImageUrl'>
   // People are sorted alphabetically so they don't leak the answer.
   | (Omit<TravelMapQuestion, 'correctGroups'> & { people: string[] })
-  | Omit<MoneyVaseQuestion, 'correctCents'>;
+  | Omit<MoneyVaseQuestion, 'correctCents'>
+  | Omit<MapPinQuestion, 'answer'>;
 
 export interface PlayerRoomView {
   status: RoomStatus;
@@ -346,6 +366,8 @@ export interface PlayerRoomView {
   // An open_answer question that the host hasn't given the right answer for yet.
   awaitingGrading: boolean;
   lastResult: PlayerAnswer | null;
+  // The player's own avatar key.
+  avatar: string;
   // The correct option index, correct count or total placements, depending on question type.
   correctValue: number | null;
   score: number;

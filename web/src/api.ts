@@ -2,6 +2,7 @@ import {
   HamLine,
   HostRoomView,
   MultiSelectAnswer,
+  PinAnswer,
   TextsAnswer,
   PlayerRoomView,
   QuestionInput,
@@ -108,7 +109,7 @@ export const api = {
   submitAnswer(
     playerId: string,
     playerToken: string,
-    answer: number | string[][] | SketchAnswer | HamLine | MultiSelectAnswer | TraceAnswer | TextAnswer | TextsAnswer,
+    answer: number | string[][] | SketchAnswer | HamLine | MultiSelectAnswer | TraceAnswer | TextAnswer | TextsAnswer | PinAnswer,
   ) {
     let payload: object;
     if (Array.isArray(answer)) payload = { order: answer };
@@ -118,6 +119,7 @@ export const api = {
     else if ('strokes' in answer) payload = { strokes: answer.strokes };
     else if ('text' in answer) payload = { text: answer.text };
     else if ('texts' in answer) payload = { texts: answer.texts };
+    else if ('pin' in answer) payload = { pin: answer.pin };
     else payload = { placements: answer.placements };
     return request<void>('/room/answer', {
       method: 'POST',

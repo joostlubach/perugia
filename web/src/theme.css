@@ -1994,3 +1994,109 @@ textarea.json-editor {
   pointer-events: none;
   z-index: 900;
 }
+
+.sound-notice {
+  font-weight: 600;
+  text-align: center;
+}
+
+.pin-map {
+  position: relative;
+  background-size: 100% 100%;
+  border-radius: 16px;
+  border: 3px solid white;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  user-select: none;
+}
+
+.pin-map-pin,
+.pin-map-answer,
+.pin-drag-ghost {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+.pin-map-pin.draggable {
+  cursor: grab;
+  touch-action: none;
+}
+
+.pin-map-pin.dim {
+  opacity: 0.6;
+}
+
+.pin-map-pin .avatar-pin,
+.pin-drag-ghost .avatar-pin {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  transform: translateX(-50%);
+}
+
+.pin-drag-ghost {
+  position: fixed;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+.avatar-pin {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.avatar-pin-stick {
+  width: 3px;
+  height: 14px;
+  border-radius: 2px;
+  background: var(--choc-brown);
+}
+
+.avatar-pin-label {
+  padding: 0 4px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.9);
+  white-space: nowrap;
+}
+
+.pin-map.large .travel-avatar-face {
+  width: 40px;
+  height: 40px;
+}
+
+.pin-map.large .avatar-pin-label {
+  font-size: 0.9rem;
+}
+
+.pin-map-answer {
+  z-index: 2;
+}
+
+.pin-map-answer-dot {
+  position: absolute;
+  left: -8px;
+  top: -8px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--italy-red);
+  border: 3px solid white;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+.pin-map-answer-flag {
+  position: absolute;
+  left: -6px;
+  bottom: 2px;
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.pin-map-rankings {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 20px;
+  font-weight: 600;
+}

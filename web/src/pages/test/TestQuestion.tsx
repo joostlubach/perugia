@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { HamLine, MultiSelectAnswer, QuestionInput, SketchAnswer, TextAnswer, TextsAnswer, TraceAnswer } from '../../types';
+import { HamLine, MultiSelectAnswer, Point, QuestionInput, SketchAnswer, TextAnswer, TextsAnswer, PinAnswer, TraceAnswer } from '../../types';
 import { audio } from '../../audio';
 import {
   countCorrectGroupings,
@@ -7,7 +7,9 @@ import {
   countCorrectPlacements,
   countCorrectSelections,
   isCorrectOption,
+  mapDistanceKm,
   scoreCount,
+  scoreDistance,
   scoreForAnswer,
   scoreEstimate,
   scoreHamCut,
@@ -26,12 +28,14 @@ import { TraceMarksBoard } from '../../components/TraceMarksBoard';
 import { TravelMapBoard } from '../../components/TravelMapBoard';
 import { SketchBoard } from '../../components/SketchBoard';
 import { formatEuro, MoneyVaseBoard } from '../../components/MoneyVase';
+import { MapPinBoard } from '../../components/MapPinBoard';
+import { PinMap } from '../../components/PinMap';
 import { QuestionText } from '../../components/QuestionText';
 import { OpenAnswerBoard } from '../../components/OpenAnswerBoard';
 import { MultiTextBoard } from '../../components/MultiTextBoard';
 import { matchAnswers, scoreHitList } from '../../openAnswer';
 
-type Answer = number | string[][] | SketchAnswer | HamLine | MultiSelectAnswer | TraceAnswer | TextAnswer | TextsAnswer | null;
+type Answer = number | string[][] | SketchAnswer | HamLine | MultiSelectAnswer | TraceAnswer | TextAnswer | TextsAnswer | PinAnswer | null;
 
 export function TestQuestion({
   question,
@@ -55,6 +59,7 @@ export function TestQuestion({
     question.type === 'podium_order' ||
     question.type === 'travel_map' ||
     question.type === 'money_vase' ||
+    question.type === 'map_pin' ||
     question.type === 'situation_sketch' ||
     question.type === 'ham_cut' ||
     question.type === 'multi_select' ||
@@ -82,11 +87,14 @@ export function TestQuestion({
       ? totalPlacements(question.correctGroups)
       : question.type === 'money_vase'
       ? question.correctCents
+      : question.type === 'map_pin'
+      ? 0
       : totalPlacements(question.correctOrder);
 
   const [travelPeople] = useState(() =>
     question.type === 'travel_map' ? question.correctGroups.flat().sort() : [],
   );
+  const [pin, setPin] = useState<Point | null>(null);
   const [podiumGroups] = useState(() =>
     question.type === 'podium_order' ? question.correctOrder.map((group) => [...group].sort()) : [],
   );
@@ -119,6 +127,11 @@ export function TestQuestion({
         question.correctPlacements,
         (question.aspectRatio * question.zoom.width) / question.zoom.height,
       );
+    } else if (answer && !Array.isArray(answer) && typeof answer === 'object' && 'pin' in answer && question.type === 'map_pin') {
+      setPin(answer.pin);
+      const km = mapDistanceKm(answer.pin, question.answer, question.aspectRatio, question.mapWidthKm);
+      value = Math.round(km);
+      hitShare = scoreDistance(km, question.fullPointsKm, question.zeroPointsKm);
     } else {
       value = answer as number | null;
     }
@@ -132,7 +145,9 @@ export function TestQuestion({
         ? hitShare * 100
         : null;
     const correct =
-      question.type === 'drag_count' || question.type === 'multi_text'
+      question.type === 'map_pin'
+        ? value !== null && value <= question.fullPointsKm
+        : question.type === 'drag_count' || question.type === 'multi_text'
         ? value === correctValue
         : closeness !== null
         ? value !== null && closeness >= 98
@@ -185,6 +200,19 @@ export function TestQuestion({
           <div>
             <h2 className="title">“{typedAnswer || '…'}”</h2>
             <p className="subtitle">Open question: scored live when the host types the right answer.</p>
+          </div>
+        ) : question.type === 'map_pin' && result.value !== null ? (
+          <div className="travel-board">
+            <h2 className="title">{result.correct ? 'Perfetto! 🎉' : result.pointsAwarded > 0 ? 'Quasi! 👌' : 'Peccato! 😅'}</h2>
+            <p className="subtitle">
+              {result.value} km off · +{result.pointsAwarded} points
+            </p>
+            <PinMap
+              mapUrl={question.mapUrl}
+              aspectRatio={question.aspectRatio}
+              pins={pin ? [{ key: 'me', avatar: TEST_AVATAR, ...pin }] : []}
+              answer={question.answer}
+            />
           </div>
         ) : question.type === 'money_vase' && result.value !== null ? (
           <div>
@@ -274,6 +302,17 @@ export function TestQuestion({
         />
       )}
 
+      {!result && question.type === 'map_pin' && (
+        <MapPinBoard
+          mapUrl={question.mapUrl}
+          aspectRatio={question.aspectRatio}
+          avatar={TEST_AVATAR}
+          startedAt={startedAt}
+          timeLimitSec={question.timeLimitSec}
+          onSubmit={(pin) => finish({ pin })}
+        />
+      )}
+
       {!result && question.type === 'travel_map' && (
         <TravelMapBoard
           mapUrl={question.mapUrl}
@@ -335,6 +374,8 @@ export function TestQuestion({
     </div>
   );
 }
+
+const TEST_AVATAR = 'joost';
 
 export interface TestResult {
   value: number | null;
