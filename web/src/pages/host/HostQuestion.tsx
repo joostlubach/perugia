@@ -3,6 +3,7 @@ import { AnswerOption } from '../../components/AnswerOption';
 import { Countdown } from '../../components/Countdown';
 import { MenuCard } from '../../components/MenuCard';
 import { TravelMap } from '../../components/TravelMap';
+import { SketchMap } from '../../components/SketchMap';
 import { Vase } from '../../components/MoneyVase';
 import { QuestionText } from '../../components/QuestionText';
 import { t } from '../../texts';
@@ -58,8 +59,18 @@ export function HostQuestion({ view }: { view: HostRoomView }) {
         </>
       ) : question.type === 'podium_order' ? (
         <p className="subtitle">{t('host.question.podium_order')}</p>
-      ) : question.type === 'plate_assignment' ? (
-        <p className="subtitle">{t('host.question.plate_assignment')}</p>
+      ) : question.type === 'situation_sketch' ? (
+        <>
+          <p className="subtitle">{t('host.question.situation_sketch')}</p>
+          <SketchMap
+            mapUrl={question.mapUrl}
+            aspectRatio={question.aspectRatio}
+            zoom={question.zoom}
+            zoomIn
+            pieces={question.pieces}
+            large
+          />
+        </>
       ) : question.type === 'ham_cut' ? (
         <p className="subtitle">{t('host.question.ham_cut')}</p>
       ) : question.type === 'trace_marks' ? (

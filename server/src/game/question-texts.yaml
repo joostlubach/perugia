@@ -49,6 +49,13 @@ karting:
   player: |-
     Who finished where in karting? Put both groups in the right order.
 
+kartingCrash:
+  title: The incident
+  host: |-
+    Karting was not only fun, but some serious thing happened. Let's see if you were in too much shock to remember the details.
+  player: |-
+    Drag elements onto the map to create as much of an accurate situation sketch as possible.
+
 house:
   title: The house
   host: What was the surname of the family that owned the house?
@@ -75,11 +82,6 @@ ham:
     It was a good ham, but difficult to cut. Why don't you try it yourself?
   player: |-
     Why don't you cut the ham exactly in half? The closer you equally bisect the ham the better.
-
-dinner:
-  title: Primo / Secondo
-  host: At the final dinner, who had a primo, who had a secondo, and who had both?
-  player: At the final dinner, who had a primo, who had a secondo, and who had both?
 
 wine:
   title: Wine

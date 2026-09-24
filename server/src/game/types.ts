@@ -78,15 +78,44 @@ export interface PodiumOrderQuestion extends QuestionBase {
   groupLabels: string[];
 }
 
-// Player marks who had a primo/secondo course (or both, or neither) by
-// dragging course tokens onto each seat's plate at a fixed table layout.
-export interface PlateAssignmentQuestion extends QuestionBase {
-  type: 'plate_assignment';
-  head: string;
-  left: string[];
-  right: string[];
-  correctPrimo: string[];
-  correctSecondo: string[];
+// Player drags and rotates pieces (an avatar in a go-kart, or lying on the
+// ground) onto a map to sketch a situation. Scored per piece by how close it
+// is to where it really was; how it's turned doesn't count.
+export interface SituationSketchQuestion extends QuestionBase {
+  type: 'situation_sketch';
+  mapUrl: string;
+  // Map width / height.
+  aspectRatio: number;
+  // The part of the map that's sketched on, zoomed in on once answering opens.
+  zoom: MapArea;
+  pieces: SketchPiece[];
+  correctPlacements: SketchPlacement[];
+}
+
+export interface SketchPiece {
+  id: string;
+  kind: 'kart' | 'body';
+  // Whose face is on it, if anyone's.
+  avatar?: string;
+  // Shown in the tray instead of the avatar's name.
+  label?: string;
+}
+
+// In fractions of the map's width/height from the top left.
+export interface MapArea {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+// Where a piece's center is, in fractions of the zoomed area's width/height
+// from its top left, and how far it's turned clockwise, in degrees (only for show).
+export interface SketchPlacement {
+  id: string;
+  x: number;
+  y: number;
+  rotation: number;
 }
 
 // Like multiple_choice, but any number of options can be correct. Scored
@@ -162,7 +191,7 @@ export type Question =
   | TravelMapQuestion
   | DragCountQuestion
   | PodiumOrderQuestion
-  | PlateAssignmentQuestion
+  | SituationSketchQuestion
   | HamCutQuestion
   | MultiSelectQuestion
   | MenuOrderQuestion
@@ -236,10 +265,7 @@ export type HostQuestionView =
   | (Omit<MultipleChoiceQuestion, 'correctIndex'> & { correctIndex?: number | number[] })
   | (Omit<DragCountQuestion, 'correctCount'> & { correctCount?: number })
   | (Omit<PodiumOrderQuestion, 'correctOrder'> & { groups: string[][]; correctOrder?: string[][] })
-  | (Omit<PlateAssignmentQuestion, 'correctPrimo' | 'correctSecondo'> & {
-      correctPrimo?: string[];
-      correctSecondo?: string[];
-    })
+  | (Omit<SituationSketchQuestion, 'correctPlacements'> & { correctPlacements?: SketchPlacement[] })
   | Omit<HamCutQuestion, 'rows'>
   | (Omit<MultiSelectQuestion, 'correctIndexes'> & { correctIndexes?: number[] })
   | (Omit<MenuOrderQuestion, 'correctIndexes'> & { correctIndexes?: number[] })
@@ -287,7 +313,7 @@ export type PlayerQuestionView =
   | Omit<DragCountQuestion, 'correctCount'>
   // Groups are sorted alphabetically so they don't leak the answer.
   | (Omit<PodiumOrderQuestion, 'correctOrder'> & { groups: string[][] })
-  | Omit<PlateAssignmentQuestion, 'correctPrimo' | 'correctSecondo'>
+  | Omit<SituationSketchQuestion, 'correctPlacements'>
   | Omit<HamCutQuestion, 'rows'>
   | Omit<MultiSelectQuestion, 'correctIndexes'>
   | Omit<MenuOrderQuestion, 'correctIndexes'>

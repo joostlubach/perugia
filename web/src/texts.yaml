@@ -36,7 +36,7 @@ host:
     # Shown under the question while players answer, per question type.
     money_vase: "Drag the money into the vase. No refunds: bet money is bet!"
     podium_order: "Drag everyone on the podium in finishing order."
-    plate_assignment: "Drag the primo and secondo to the correct plates."
+    situation_sketch: "Sketch the situation on your phone!"
     ham_cut: "Find the line that cuts the ham exactly in half!"
     trace_marks: "Draw the scratch marks!"
     multi_select: "Select all that apply -- more than one answer may be correct!"
@@ -151,16 +151,16 @@ boards:
     done: "🏺 Bet it"
   multiSelect:
     done: "✅ Lock in answers"
-  plates:
-    primo: "🍝 Primo"
-    secondo: "🥩 Secondo"
-    done: "✅ Done"
   podium:
     allPlaced: "Everyone's on the podium"
     done: "🏁 Lock it in"
   travelMap:
     allPlaced: "Everyone's on the map"
     done: "🗺️ Lock it in"
+  sketch:
+    hint: "Tap a piece on the map to turn it with ↻. Drop it back here to remove it."
+    allPlaced: "Everything's on the map"
+    done: "🚨 Lock in the sketch"
   traceMarks:
     undo: "↩️ Undo"
     clear: "🗑️ Clear"

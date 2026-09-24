@@ -1,5 +1,5 @@
 import { customAlphabet } from 'nanoid';
-import { MenuCourse, NearMiss, Point } from './types';
+import { MenuCourse, NearMiss, Point, SketchPlacement } from './types';
 
 const TOKEN_ALPHABET = '23456789abcdefghjkmnpqrstuvwxyz';
 const generateToken = customAlphabet(TOKEN_ALPHABET, 24);
@@ -47,27 +47,8 @@ export function totalPlacements(correctOrder: string[][]): number {
   return correctOrder.reduce((sum, group) => sum + group.length, 0);
 }
 
-export interface PlateAnswer {
-  primo: string[];
-  secondo: string[];
-}
-
-// Counts correct yes/no marks (had primo? had secondo?) across all seats --
-// getting a "no" right (an empty plate, correctly guessed empty) counts too.
-export function countCorrectPlateMarks(
-  answer: PlateAnswer,
-  correct: { correctPrimo: string[]; correctSecondo: string[] },
-  seats: string[],
-): number {
-  return seats.reduce((sum, seat) => {
-    const primoRight = answer.primo.includes(seat) === correct.correctPrimo.includes(seat);
-    const secondoRight = answer.secondo.includes(seat) === correct.correctSecondo.includes(seat);
-    return sum + (primoRight ? 1 : 0) + (secondoRight ? 1 : 0);
-  }, 0);
-}
-
 // Counts correctly-set checkboxes across all options -- leaving a wrong
-// option unchecked counts as correct too, same spirit as countCorrectPlateMarks.
+// option unchecked counts as correct too.
 export function countCorrectSelections(selected: number[], correctIndexes: number[], optionCount: number): number {
   let count = 0;
   for (let i = 0; i < optionCount; i++) {
@@ -108,6 +89,31 @@ export function scoreEstimate(guess: number, correct: number): number {
   const error = Math.abs(guess - correct) / correct;
   return Math.round(Math.max(0, 1 - error * 2) * 100);
 }
+
+// Scores a situation sketch: 0 to 100, averaged over the pieces whose real
+// placement is known. A piece scores by how close it is to where it really
+// was; how it's turned doesn't count. `aspectRatio` (width / height of the
+// area placed on) makes distances count the same both ways.
+export function scoreSketch(placements: SketchPlacement[], correct: SketchPlacement[], aspectRatio: number): number {
+  if (correct.length === 0) return 0;
+  let sum = 0;
+  for (const target of correct) {
+    const placed = placements.find((p) => p.id === target.id);
+    if (!placed) continue;
+    const distance = Math.hypot((placed.x - target.x) * aspectRatio, placed.y - target.y);
+    sum += fade(distance, SKETCH_NEAR, SKETCH_FAR);
+  }
+  return Math.round((sum / correct.length) * 100);
+}
+
+// 1 up to `near`, falling linearly to 0 at `far`.
+function fade(value: number, near: number, far: number): number {
+  return Math.max(0, Math.min(1, (far - value) / (far - near)));
+}
+
+// In heights of the area placed on.
+const SKETCH_NEAR = 0.03;
+const SKETCH_FAR = 0.15;
 
 export interface HamLine {
   p1: Point;

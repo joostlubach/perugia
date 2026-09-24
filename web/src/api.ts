@@ -2,11 +2,11 @@ import {
   HamLine,
   HostRoomView,
   MultiSelectAnswer,
-  PlateAnswer,
   PlayerRoomView,
   QuestionInput,
   ReactionKind,
   RoomStatus,
+  SketchAnswer,
   TextAnswer,
   TraceAnswer,
 } from './types';
@@ -107,7 +107,7 @@ export const api = {
   submitAnswer(
     playerId: string,
     playerToken: string,
-    answer: number | string[][] | PlateAnswer | HamLine | MultiSelectAnswer | TraceAnswer | TextAnswer,
+    answer: number | string[][] | SketchAnswer | HamLine | MultiSelectAnswer | TraceAnswer | TextAnswer,
   ) {
     let payload: object;
     if (Array.isArray(answer)) payload = { order: answer };
@@ -116,7 +116,7 @@ export const api = {
     else if ('selected' in answer) payload = { multiSelect: answer.selected };
     else if ('strokes' in answer) payload = { strokes: answer.strokes };
     else if ('text' in answer) payload = { text: answer.text };
-    else payload = { plates: answer };
+    else payload = { placements: answer.placements };
     return request<void>('/room/answer', {
       method: 'POST',
       body: JSON.stringify({ playerId, playerToken, ...payload }),

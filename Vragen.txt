@@ -98,6 +98,25 @@ to the final results.
 )
 
 (
+  The incident (karting)
+
+  Drag and rotate the winner group onto the track part of the Arcobaleno map
+  (arcobaleno.jpeg): everyone in a go-kart, Bas lying on the ground, plus Bas' empty kart.
+
+  Correct situation (from the satellite photo), around the Le Cesi looping:
+  - Dex: top straight, just before the looping
+  - Sanne (?), Pietro, Leonardo (zoon van Pietro): outer side of the looping
+  - Bas: inner side of the looping
+  - Sally: straight after the looping
+  - Ruben: just below that straight
+  - Milan: top of the slalom hairpin
+  - Bas' kart: off the track, right of the straight after the looping, just above the slalom run
+
+  Scoring: 2000 pts, 90s. % per piece for how close it is to where it really was; how it's
+  turned doesn't matter. 80%+ counts as "correct".
+)
+
+(
   What was the surname of the family that owned the house?
   - Degli Baglioni
   - Buonaccorsi di Montefalco
@@ -141,38 +160,6 @@ to the final results.
 
   Scoring: 1500 pts, 45s. % for how close the cut is to a 50/50 split; 95%+ counts as
   "correct".
-)
-
-(
-  Primo / secondo final dinner
-
-          Bas
-        ------
- Ruben  |    | Bowie
- Kyle   |    | Sally
- Jasper |    | Sanne
- Joost  |    | Gökhan
- Ismail |    | Milan
- Dex    |    | Roland
-        ------
-
-
-  Bas: both
-  Ruben: primo
-  Bowie: ?
-  Kyle: ?
-  Sally: ?
-  Jasper: both
-  Sanne: both
-  Joost: both
-  Gökhan: primo
-  Ismail: ?
-  Milan: ?
-  Dex: both
-  Roland: ?
-
-  Scoring: 2000 pts, 90s. Per seat, a share for "had primo?" and one for "had secondo?"
-  being right.
 )
 
 (

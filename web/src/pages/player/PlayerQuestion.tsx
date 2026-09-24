@@ -1,14 +1,14 @@
-import { HamLine, MultiSelectAnswer, PlateAnswer, PlayerRoomView, TextAnswer, TraceAnswer } from '../../types';
+import { HamLine, MultiSelectAnswer, PlayerRoomView, SketchAnswer, TextAnswer, TraceAnswer } from '../../types';
 import { Countdown } from '../../components/Countdown';
 import { Shape } from '../../components/Shape';
 import { MenuOrderBoard } from '../../components/MenuOrderBoard';
 import { DragCanvas, dragSoundPropsFor } from '../../components/DragCanvas';
 import { PodiumOrder } from '../../components/PodiumOrder';
-import { PlateBoard } from '../../components/PlateBoard';
 import { HamCutBoard } from '../../components/HamCutBoard';
 import { MultiSelectBoard } from '../../components/MultiSelectBoard';
 import { TraceMarksBoard } from '../../components/TraceMarksBoard';
 import { TravelMapBoard } from '../../components/TravelMapBoard';
+import { SketchBoard } from '../../components/SketchBoard';
 import { MoneyVaseBoard } from '../../components/MoneyVase';
 import { QuestionText } from '../../components/QuestionText';
 import { OpenAnswerBoard } from '../../components/OpenAnswerBoard';
@@ -19,7 +19,7 @@ export function PlayerQuestion({
   onAnswer,
 }: {
   view: PlayerRoomView;
-  onAnswer: (value: number | string[][] | PlateAnswer | HamLine | MultiSelectAnswer | TraceAnswer | TextAnswer) => void;
+  onAnswer: (value: number | string[][] | SketchAnswer | HamLine | MultiSelectAnswer | TraceAnswer | TextAnswer) => void;
 }) {
   if (view.hasAnswered) {
     return (
@@ -121,14 +121,15 @@ export function PlayerQuestion({
         />
       )}
 
-      {question.type === 'plate_assignment' && (
-        <PlateBoard
-          head={question.head}
-          left={question.left}
-          right={question.right}
+      {question.type === 'situation_sketch' && (
+        <SketchBoard
+          mapUrl={question.mapUrl}
+          aspectRatio={question.aspectRatio}
+          zoom={question.zoom}
+          pieces={question.pieces}
           startedAt={startedAt}
           timeLimitSec={question.timeLimitSec}
-          onSubmit={onAnswer}
+          onSubmit={(placements) => onAnswer({ placements })}
         />
       )}
 

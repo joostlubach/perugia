@@ -4,7 +4,7 @@ import { MenuCard } from '../../components/MenuCard';
 import { TravelMap } from '../../components/TravelMap';
 import { formatEuro, Vase } from '../../components/MoneyVase';
 import { PodiumStand } from '../../components/PodiumStand';
-import { Seat } from '../../components/PlateBoard';
+import { SketchMap } from '../../components/SketchMap';
 import { QuestionText } from '../../components/QuestionText';
 import { isCorrectOption } from '../../scoring';
 import { HostGradeBox } from './HostGradeBox';
@@ -147,57 +147,25 @@ export function HostReveal({
               ))}
           </ol>
         </>
-      ) : question.type === 'plate_assignment' ? (
+      ) : question.type === 'situation_sketch' ? (
         <>
-          <div className="plate-board">
-            <Seat
-              seatKey={question.head}
-              side="head"
-              marks={{
-                primo: Boolean(question.correctPrimo?.includes(question.head)),
-                secondo: Boolean(question.correctSecondo?.includes(question.head)),
-              }}
-            />
-            <div className="dinner-table-body">
-              <div className="dinner-side">
-                {question.left.map((s) => (
-                  <Seat
-                    key={s}
-                    seatKey={s}
-                    side="left"
-                    marks={{
-                      primo: Boolean(question.correctPrimo?.includes(s)),
-                      secondo: Boolean(question.correctSecondo?.includes(s)),
-                    }}
-                  />
-                ))}
-              </div>
-              <div className="dinner-table-rect" />
-              <div className="dinner-side">
-                {question.right.map((s) => (
-                  <Seat
-                    key={s}
-                    seatKey={s}
-                    side="right"
-                    marks={{
-                      primo: Boolean(question.correctPrimo?.includes(s)),
-                      secondo: Boolean(question.correctSecondo?.includes(s)),
-                    }}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
+          <SketchMap
+            mapUrl={question.mapUrl}
+            aspectRatio={question.aspectRatio}
+            zoom={question.zoom}
+            pieces={question.pieces}
+            placements={question.correctPlacements}
+            large
+            showLabels
+          />
           <ol className="leaderboard-list">
             {view.guesses
               .slice()
               .sort((a, b) => b.value - a.value)
               .map((g) => (
                 <li key={g.playerId} style={{ background: g.correct ? 'var(--gold)' : 'white' }}>
-                  <span>{g.correct ? '✅' : '🍽️'} {g.name}</span>
-                  <span>
-                    {g.value} / {(question.left.length + question.right.length + 1) * 2}
-                  </span>
+                  <span>{g.correct ? '✅' : '🚨'} {g.name}</span>
+                  <span>{g.value}%</span>
                 </li>
               ))}
           </ol>

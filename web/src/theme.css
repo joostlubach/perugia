@@ -786,139 +786,6 @@ textarea.json-editor {
   z-index: 1000;
 }
 
-.plate-board {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-  max-width: 500px;
-}
-
-.dinner-table-body {
-  display: flex;
-  align-items: stretch;
-  justify-content: center;
-  gap: 10px;
-  width: 100%;
-}
-
-.dinner-side {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 10px;
-  flex: 1;
-}
-
-.dinner-table-rect {
-  width: 64px;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-}
-
-.dinner-seat {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.dinner-seat-left {
-  justify-content: flex-end;
-}
-
-.dinner-seat-right {
-  flex-direction: row-reverse;
-  justify-content: flex-end;
-}
-
-.dinner-seat-head {
-  flex-direction: column;
-  gap: 4px;
-}
-
-.dinner-seat-label {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-.dinner-seat-head .dinner-seat-label {
-  flex-direction: column;
-}
-
-.dinner-seat-label img,
-.dinner-seat-fallback {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.dinner-seat-fallback {
-  background: var(--choc-brown);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Fredoka', sans-serif;
-}
-
-.dinner-plate {
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  background: white;
-  border: 2px solid var(--choc-brown);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  flex-shrink: 0;
-}
-
-.plate-mark {
-  font-size: 1.2rem;
-  line-height: 1;
-}
-
-.course-source-row {
-  display: flex;
-  gap: 16px;
-}
-
-.course-source {
-  font-family: 'Fredoka', sans-serif;
-  font-weight: 700;
-  padding: 14px 20px;
-  border-radius: 999px;
-  color: white;
-  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.25);
-  touch-action: none;
-  user-select: none;
-  cursor: grab;
-}
-
-.course-source.primo {
-  background: var(--italy-red);
-}
-
-.course-source.secondo {
-  background: var(--italy-green);
-}
-
-.course-ghost {
-  position: fixed;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  z-index: 1000;
-  font-size: 1.8rem;
-}
-
 .ham-cut-wrap {
   display: flex;
   flex-direction: column;
@@ -1421,6 +1288,195 @@ textarea.json-editor {
   display: flex;
   align-items: center;
   gap: 16px;
+}
+
+.sketch-board {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+}
+
+.sketch-map {
+  position: relative;
+  max-width: 520px;
+  border-radius: 16px;
+  border: 3px solid white;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  user-select: none;
+}
+
+.sketch-map-clip {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 13px;
+}
+
+.sketch-map-image {
+  position: absolute;
+  background-size: 100% 100%;
+}
+
+.sketch-map.zoom-in .sketch-map-clip {
+  background: #4a3a2a;
+}
+
+.sketch-map.zoom-in .sketch-map-image {
+  transform-origin: 0 0;
+  transition: transform 1.4s ease-in-out;
+}
+
+.sketch-map.large {
+  max-width: none;
+}
+
+.sketch-piece {
+  position: absolute;
+  z-index: 1;
+}
+
+.sketch-piece.draggable {
+  cursor: grab;
+  touch-action: none;
+}
+
+.sketch-piece.selected {
+  z-index: 2;
+  filter: drop-shadow(0 0 4px white) drop-shadow(0 0 2px var(--gold));
+}
+
+.sketch-piece.dragging {
+  opacity: 0.8;
+}
+
+.sketch-piece-label {
+  position: absolute;
+  z-index: 3;
+  transform: translate(-50%, 4px);
+  padding: 1px 8px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  font-family: 'Fredoka', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.sketch-rotate-handle {
+  position: absolute;
+  z-index: 3;
+  width: 32px;
+  height: 32px;
+  transform: translate(-50%, calc(-100% - 4px));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--italy-red);
+  border: 3px solid white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  color: white;
+  font-weight: 700;
+  font-size: 1rem;
+  touch-action: none;
+  cursor: grab;
+}
+
+.sketch-figure {
+  position: relative;
+  width: 100%;
+}
+
+.sketch-figure-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.sketch-figure-face {
+  position: absolute;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  container-type: inline-size;
+  border-radius: 50%;
+  border: 2px solid white;
+  overflow: hidden;
+  background: var(--choc-brown);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.sketch-figure-face img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.sketch-figure-face span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: white;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 60cqw;
+}
+
+.sketch-tray {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 520px;
+  min-height: 72px;
+  padding: 10px;
+  border: 3px dashed rgba(74, 44, 29, 0.35);
+  border-radius: 16px;
+}
+
+.sketch-tray-piece {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-weight: 600;
+  font-size: 0.7rem;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.sketch-upright {
+  position: relative;
+}
+
+.sketch-upright > div {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+}
+
+.sketch-tray-piece.draggable {
+  cursor: grab;
+  touch-action: none;
+}
+
+.sketch-tray-piece.dragging {
+  opacity: 0.3;
+}
+
+.sketch-drag-ghost {
+  position: fixed;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 1000;
 }
 
 .money-board {

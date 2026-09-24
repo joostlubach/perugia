@@ -1,17 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
-import { HamLine, MultiSelectAnswer, PlateAnswer, QuestionInput, TextAnswer, TraceAnswer } from '../../types';
+import { HamLine, MultiSelectAnswer, QuestionInput, SketchAnswer, TextAnswer, TraceAnswer } from '../../types';
 import { audio } from '../../audio';
 import {
   countCorrectGroupings,
   countCorrectMenuPicks,
   countCorrectPlacements,
-  countCorrectPlateMarks,
   countCorrectSelections,
   isCorrectOption,
   scoreCount,
   scoreForAnswer,
   scoreEstimate,
   scoreHamCut,
+  scoreSketch,
   scoreTraceMarks,
   totalPlacements,
 } from '../../scoring';
@@ -20,16 +20,16 @@ import { Shape } from '../../components/Shape';
 import { MenuOrderBoard } from '../../components/MenuOrderBoard';
 import { DragCanvas, dragSoundPropsFor } from '../../components/DragCanvas';
 import { PodiumOrder } from '../../components/PodiumOrder';
-import { PlateBoard } from '../../components/PlateBoard';
 import { HamCutBoard } from '../../components/HamCutBoard';
 import { MultiSelectBoard } from '../../components/MultiSelectBoard';
 import { TraceMarksBoard } from '../../components/TraceMarksBoard';
 import { TravelMapBoard } from '../../components/TravelMapBoard';
+import { SketchBoard } from '../../components/SketchBoard';
 import { formatEuro, MoneyVaseBoard } from '../../components/MoneyVase';
 import { QuestionText } from '../../components/QuestionText';
 import { OpenAnswerBoard } from '../../components/OpenAnswerBoard';
 
-type Answer = number | string[][] | PlateAnswer | HamLine | MultiSelectAnswer | TraceAnswer | TextAnswer | null;
+type Answer = number | string[][] | SketchAnswer | HamLine | MultiSelectAnswer | TraceAnswer | TextAnswer | null;
 
 export function TestQuestion({
   question,
@@ -53,24 +53,19 @@ export function TestQuestion({
     question.type === 'podium_order' ||
     question.type === 'travel_map' ||
     question.type === 'money_vase' ||
-    question.type === 'plate_assignment' ||
+    question.type === 'situation_sketch' ||
     question.type === 'ham_cut' ||
     question.type === 'multi_select' ||
     question.type === 'menu_order' ||
     question.type === 'trace_marks';
-  const isPercent = question.type === 'ham_cut' || question.type === 'trace_marks';
-
-  const seats =
-    question.type === 'plate_assignment' ? [question.head, ...question.left, ...question.right] : [];
+  const isPercent = question.type === 'ham_cut' || question.type === 'trace_marks' || question.type === 'situation_sketch';
 
   const correctValue =
     question.type === 'multiple_choice'
       ? [question.correctIndex].flat()[0]
       : question.type === 'drag_count'
       ? question.correctCount
-      : question.type === 'plate_assignment'
-      ? seats.length * 2
-      : question.type === 'ham_cut' || question.type === 'trace_marks'
+      : question.type === 'ham_cut' || question.type === 'trace_marks' || question.type === 'situation_sketch'
       ? 100
       : question.type === 'multi_select'
       ? question.options.length
@@ -108,11 +103,11 @@ export function TestQuestion({
       value = countCorrectSelections(answer.selected, question.correctIndexes, question.options.length);
     } else if (answer && !Array.isArray(answer) && typeof answer === 'object' && 'selected' in answer && question.type === 'menu_order') {
       value = countCorrectMenuPicks(answer.selected, question.menu, question.correctIndexes);
-    } else if (answer && !Array.isArray(answer) && typeof answer === 'object' && question.type === 'plate_assignment') {
-      value = countCorrectPlateMarks(
-        answer as PlateAnswer,
-        { correctPrimo: question.correctPrimo, correctSecondo: question.correctSecondo },
-        seats,
+    } else if (answer && !Array.isArray(answer) && typeof answer === 'object' && 'placements' in answer && question.type === 'situation_sketch') {
+      value = scoreSketch(
+        answer.placements,
+        question.correctPlacements,
+        (question.aspectRatio * question.zoom.width) / question.zoom.height,
       );
     } else {
       value = answer as number | null;
@@ -131,12 +126,12 @@ export function TestQuestion({
         ? value !== null && closeness >= 98
         : question.type === 'ham_cut'
         ? (value ?? 0) >= 95
-        : question.type === 'trace_marks'
+        : question.type === 'trace_marks' || question.type === 'situation_sketch'
         ? (value ?? 0) >= 80
         : question.type === 'multiple_choice'
         ? value !== null && isCorrectOption(question.correctIndex, value)
         : value === correctValue;
-    // Mirrors the server: podium_order/plate_assignment/ham_cut get partial credit.
+    // Mirrors the server: podium_order/situation_sketch/ham_cut get partial credit.
     const points =
       closeness !== null
         ? Math.round((question.points * closeness) / 100)
@@ -271,14 +266,15 @@ export function TestQuestion({
         />
       )}
 
-      {!result && question.type === 'plate_assignment' && (
-        <PlateBoard
-          head={question.head}
-          left={question.left}
-          right={question.right}
+      {!result && question.type === 'situation_sketch' && (
+        <SketchBoard
+          mapUrl={question.mapUrl}
+          aspectRatio={question.aspectRatio}
+          zoom={question.zoom}
+          pieces={question.pieces}
           startedAt={startedAt}
           timeLimitSec={question.timeLimitSec}
-          onSubmit={finish}
+          onSubmit={(placements) => finish({ placements })}
         />
       )}
 

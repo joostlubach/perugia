@@ -63,17 +63,45 @@ export interface PodiumOrderInput {
   points: number;
 }
 
-export interface PlateAssignmentInput {
-  type: 'plate_assignment';
+// Drag and rotate pieces onto a map to sketch a situation.
+export interface SituationSketchInput {
+  type: 'situation_sketch';
   title: string;
   text: string;
-  head: string;
-  left: string[];
-  right: string[];
-  correctPrimo: string[];
-  correctSecondo: string[];
+  playerText?: string;
+  mapUrl: string;
+  aspectRatio: number;
+  zoom: MapArea;
+  pieces: SketchPiece[];
+  correctPlacements: SketchPlacement[];
   timeLimitSec: number;
   points: number;
+}
+
+export interface SketchPiece {
+  id: string;
+  kind: 'kart' | 'body';
+  // Whose face is on it, if anyone's.
+  avatar?: string;
+  // Shown in the tray instead of the avatar's name.
+  label?: string;
+}
+
+// In fractions of the map's width/height from the top left.
+export interface MapArea {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+// Center in fractions of the zoomed area's width/height. Rotation (clockwise,
+// in degrees) is only for show; it doesn't count for the score.
+export interface SketchPlacement {
+  id: string;
+  x: number;
+  y: number;
+  rotation: number;
 }
 
 export interface Point {
@@ -156,16 +184,15 @@ export type QuestionInput =
   | TravelMapInput
   | DragCountInput
   | PodiumOrderInput
-  | PlateAssignmentInput
+  | SituationSketchInput
   | HamCutInput
   | MultiSelectInput
   | MenuOrderInput
   | OpenAnswerInput
   | TraceMarksInput;
 
-export interface PlateAnswer {
-  primo: string[];
-  secondo: string[];
+export interface SketchAnswer {
+  placements: SketchPlacement[];
 }
 
 export interface HamLine {
@@ -244,16 +271,16 @@ export type HostQuestionView = (
     }
   | {
       id: string;
-      type: 'plate_assignment';
+      type: 'situation_sketch';
       title: string;
       text: string;
-      head: string;
-      left: string[];
-      right: string[];
+      mapUrl: string;
+      aspectRatio: number;
+      zoom: MapArea;
+      pieces: SketchPiece[];
       timeLimitSec: number;
       points: number;
-      correctPrimo?: string[];
-      correctSecondo?: string[];
+      correctPlacements?: SketchPlacement[];
     }
   | {
       id: string;
@@ -410,12 +437,13 @@ export type PlayerQuestionView =
     }
   | {
       id: string;
-      type: 'plate_assignment';
+      type: 'situation_sketch';
       title: string;
       text: string;
-      head: string;
-      left: string[];
-      right: string[];
+      mapUrl: string;
+      aspectRatio: number;
+      zoom: MapArea;
+      pieces: SketchPiece[];
       timeLimitSec: number;
       points: number;
     }

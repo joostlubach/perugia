@@ -12,7 +12,7 @@ export class AnswerDto {
   @ValidateIf(
     (a) =>
       a.order === undefined &&
-      a.plates === undefined &&
+      a.placements === undefined &&
       a.line === undefined &&
       a.multiSelect === undefined &&
       a.strokes === undefined &&
@@ -28,10 +28,10 @@ export class AnswerDto {
   @IsArray()
   order?: string[][];
 
-  // Seat keys marked as having each course -- plate_assignment only.
+  // Where each piece was put -- situation_sketch only.
   @IsOptional()
-  @IsObject()
-  plates?: { primo: string[]; secondo: string[] };
+  @IsArray()
+  placements?: { id: string; x: number; y: number; rotation: number }[];
 
   // Two control points defining the cutting line -- ham_cut only.
   @IsOptional()

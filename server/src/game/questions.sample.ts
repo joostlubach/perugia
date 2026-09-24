@@ -1,13 +1,13 @@
 import { BOWIE_ASPECT_RATIO, BOWIE_MARKS } from './bowie'
-import {
-  DINNER_CORRECT_PRIMO,
-  DINNER_CORRECT_SECONDO,
-  DINNER_HEAD,
-  DINNER_LEFT,
-  DINNER_RIGHT,
-} from './dinner'
 import { HAM_ROWS } from './ham'
 import { KARTING_LOSER_GROUP, KARTING_WINNER_GROUP } from './karting'
+import {
+  KARTING_CRASH_CORRECT_PLACEMENTS,
+  KARTING_CRASH_MAP_ASPECT_RATIO,
+  KARTING_CRASH_MAP_URL,
+  KARTING_CRASH_PIECES,
+  KARTING_CRASH_ZOOM,
+} from './karting-crash'
 import { texts } from './question-texts'
 import { RUBEN_CORRECT_INDEXES, RUBEN_MENU } from './ruben'
 import {
@@ -97,6 +97,17 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
     points: 2000,
   },
   {
+    type: 'situation_sketch',
+    ...texts('kartingCrash'),
+    mapUrl: KARTING_CRASH_MAP_URL,
+    aspectRatio: KARTING_CRASH_MAP_ASPECT_RATIO,
+    zoom: KARTING_CRASH_ZOOM,
+    pieces: KARTING_CRASH_PIECES,
+    correctPlacements: KARTING_CRASH_CORRECT_PLACEMENTS,
+    timeLimitSec: 90,
+    points: 2000,
+  },
+  {
     type: 'multiple_choice',
     ...texts('house'),
     options: ['Degli Baglioni', 'Buonaccorsi di Montefalco', 'Di Serego Alighieri', 'Della Rovere Portinari'],
@@ -147,17 +158,6 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
     rows: HAM_ROWS,
     timeLimitSec: 45,
     points: 1500,
-  },
-  {
-    type: 'plate_assignment',
-    ...texts('dinner'),
-    head: DINNER_HEAD,
-    left: DINNER_LEFT,
-    right: DINNER_RIGHT,
-    correctPrimo: DINNER_CORRECT_PRIMO,
-    correctSecondo: DINNER_CORRECT_SECONDO,
-    timeLimitSec: 90,
-    points: 2000,
   },
   {
     type: 'multiple_choice',

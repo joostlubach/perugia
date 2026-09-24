@@ -4,17 +4,16 @@ import {
   countCorrectGroupings,
   countCorrectMenuPicks,
   countCorrectPlacements,
-  countCorrectPlateMarks,
   countCorrectSelections,
   HamLine,
   isCorrectOption,
   newJoinCode,
   newToken,
-  PlateAnswer,
   scoreCount,
   scoreForAnswer,
   scoreEstimate,
   scoreHamCut,
+  scoreSketch,
   scoreTraceMarks,
   totalPlacements,
 } from './room.util';
@@ -34,6 +33,8 @@ import {
   OpenAnswerQuestion,
   Room,
   RoomStatus,
+  SituationSketchQuestion,
+  SketchPlacement,
 } from './types';
 
 @Injectable()
@@ -210,7 +211,7 @@ export class GameService {
   async submitAnswer(
     playerId: string,
     playerToken: string,
-    answer: number | string | string[][] | PlateAnswer | HamLine | number[] | Point[][],
+    answer: number | string | string[][] | SketchPlacement[] | HamLine | number[] | Point[][],
   ): Promise<void> {
     const room = await this.requireRoom();
     const player = room.players[playerId];
@@ -252,17 +253,12 @@ export class GameService {
       correct = value === total;
       pointsAwarded =
         value > 0 ? scoreForAnswer(Math.round((question.points * value) / total), question.timeLimitSec, elapsedMs) : 0;
-    } else if (question.type === 'plate_assignment') {
-      if (Array.isArray(answer) || typeof answer !== 'object' || !('primo' in answer)) {
-        throw new ForbiddenException('Wrong answer shape for this question');
-      }
-      // Partial credit per correct yes/no (had primo? had secondo?) per seat.
-      const seats = [question.head, ...question.left, ...question.right];
-      const total = seats.length * 2;
-      value = countCorrectPlateMarks(answer, question, seats);
-      correct = value === total;
-      pointsAwarded =
-        value > 0 ? scoreForAnswer(Math.round((question.points * value) / total), question.timeLimitSec, elapsedMs) : 0;
+    } else if (question.type === 'situation_sketch') {
+      if (!isPlacements(answer)) throw new ForbiddenException('Wrong answer shape for this question');
+      // Partial credit for how close each piece is to where it really was.
+      value = scoreSketch(answer, question.correctPlacements, zoomedAspectRatio(question));
+      correct = value >= SITUATION_SKETCH_CORRECT;
+      pointsAwarded = value > 0 ? scoreForAnswer(Math.round((question.points * value) / 100), question.timeLimitSec, elapsedMs) : 0;
     } else if (question.type === 'ham_cut') {
       if (Array.isArray(answer) || typeof answer !== 'object' || !('p1' in answer) || !('p2' in answer)) {
         throw new ForbiddenException('Wrong answer shape for this question');
@@ -465,18 +461,19 @@ export class GameService {
           points: question.points,
           ...(revealed ? { correctOrder: question.correctOrder } : {}),
         };
-      } else if (question.type === 'plate_assignment') {
+      } else if (question.type === 'situation_sketch') {
         hostQuestion = {
           id: question.id,
-          type: 'plate_assignment',
+          type: 'situation_sketch',
           title: question.title,
           text: question.text,
-          head: question.head,
-          left: question.left,
-          right: question.right,
+          mapUrl: question.mapUrl,
+          aspectRatio: question.aspectRatio,
+          zoom: question.zoom,
+          pieces: question.pieces,
           timeLimitSec: question.timeLimitSec,
           points: question.points,
-          ...(revealed ? { correctPrimo: question.correctPrimo, correctSecondo: question.correctSecondo } : {}),
+          ...(revealed ? { correctPlacements: question.correctPlacements } : {}),
         };
       } else if (question.type === 'ham_cut') {
         hostQuestion = {
@@ -621,15 +618,16 @@ export class GameService {
           timeLimitSec: question.timeLimitSec,
           points: question.points,
         };
-      } else if (question.type === 'plate_assignment') {
+      } else if (question.type === 'situation_sketch') {
         playerQuestion = {
           id: question.id,
-          type: 'plate_assignment',
+          type: 'situation_sketch',
           title: question.title,
           text: question.playerText ?? question.text,
-          head: question.head,
-          left: question.left,
-          right: question.right,
+          mapUrl: question.mapUrl,
+          aspectRatio: question.aspectRatio,
+          zoom: question.zoom,
+          pieces: question.pieces,
           timeLimitSec: question.timeLimitSec,
           points: question.points,
         };
@@ -710,11 +708,12 @@ export class GameService {
       else if (question.type === 'podium_order') correctValue = totalPlacements(question.correctOrder);
       else if (question.type === 'travel_map') correctValue = totalPlacements(question.correctGroups);
       else if (question.type === 'money_vase') correctValue = question.correctCents;
-      else if (question.type === 'ham_cut' || question.type === 'trace_marks') correctValue = 100;
+      else if (question.type === 'ham_cut' || question.type === 'trace_marks' || question.type === 'situation_sketch') {
+        correctValue = 100;
+      }
       else if (question.type === 'multi_select') correctValue = question.options.length;
       else if (question.type === 'menu_order') correctValue = question.menu.length;
-      else if (question.type === 'open_answer') correctValue = 1;
-      else correctValue = [question.head, ...question.left, ...question.right].length * 2;
+      else correctValue = 1;
     }
 
     return {
@@ -800,8 +799,10 @@ const LATE_ANSWER_GRACE_MS = 1500;
 // Reactions older than this aren't sent to the host anymore.
 const REACTION_WINDOW_MS = 10_000;
 const TRACE_MARKS_CORRECT = 80;
+const SITUATION_SKETCH_CORRECT = 80;
 const MONEY_VASE_CORRECT = 98;
 const TRACE_MARKS_MAX_POINTS = 5000;
+const SITUATION_SKETCH_MAX_PIECES = 50;
 
 function isStrokes(answer: unknown): answer is Point[][] {
   if (!Array.isArray(answer)) return false;
@@ -812,4 +813,23 @@ function isStrokes(answer: unknown): answer is Point[][] {
     if (!stroke.every((p) => p && typeof p.x === 'number' && typeof p.y === 'number')) return false;
   }
   return total <= TRACE_MARKS_MAX_POINTS;
+}
+
+function zoomedAspectRatio(question: SituationSketchQuestion): number {
+  return (question.aspectRatio * question.zoom.width) / question.zoom.height;
+}
+
+function isPlacements(answer: unknown): answer is SketchPlacement[] {
+  return (
+    Array.isArray(answer) &&
+    answer.length <= SITUATION_SKETCH_MAX_PIECES &&
+    answer.every(
+      (p) =>
+        p &&
+        typeof p.id === 'string' &&
+        typeof p.x === 'number' &&
+        typeof p.y === 'number' &&
+        typeof p.rotation === 'number',
+    )
+  );
 }

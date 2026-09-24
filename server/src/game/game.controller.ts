@@ -77,7 +77,7 @@ export class GameController {
     return this.game.submitAnswer(
       dto.playerId,
       dto.playerToken,
-      dto.order ?? dto.plates ?? dto.line ?? dto.multiSelect ?? dto.strokes ?? dto.text ?? dto.value!,
+      dto.order ?? dto.placements ?? dto.line ?? dto.multiSelect ?? dto.strokes ?? dto.text ?? dto.value!,
     );
   }
 }

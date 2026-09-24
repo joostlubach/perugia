@@ -1,4 +1,4 @@
-import { MenuCourse, Point } from './types';
+import { MenuCourse, Point, SketchPlacement } from './types';
 
 // Mirrors scoreForAnswer in server/src/game/room.util.ts.
 export function scoreForAnswer(points: number, timeLimitSec: number, elapsedMs: number): number {
@@ -31,19 +31,6 @@ export function countCorrectGroupings(groups: string[][], correctGroups: string[
 
 export function totalPlacements(correctOrder: string[][]): number {
   return correctOrder.reduce((sum, group) => sum + group.length, 0);
-}
-
-// Mirrors countCorrectPlateMarks in server/src/game/room.util.ts.
-export function countCorrectPlateMarks(
-  answer: { primo: string[]; secondo: string[] },
-  correct: { correctPrimo: string[]; correctSecondo: string[] },
-  seats: string[],
-): number {
-  return seats.reduce((sum, seat) => {
-    const primoRight = answer.primo.includes(seat) === correct.correctPrimo.includes(seat);
-    const secondoRight = answer.secondo.includes(seat) === correct.correctSecondo.includes(seat);
-    return sum + (primoRight ? 1 : 0) + (secondoRight ? 1 : 0);
-  }, 0);
 }
 
 // Mirrors countCorrectSelections in server/src/game/room.util.ts.
@@ -86,6 +73,26 @@ export function scoreEstimate(guess: number, correct: number): number {
   const error = Math.abs(guess - correct) / correct;
   return Math.round(Math.max(0, 1 - error * 2) * 100);
 }
+
+// Mirrors scoreSketch in server/src/game/room.util.ts.
+export function scoreSketch(placements: SketchPlacement[], correct: SketchPlacement[], aspectRatio: number): number {
+  if (correct.length === 0) return 0;
+  let sum = 0;
+  for (const target of correct) {
+    const placed = placements.find((p) => p.id === target.id);
+    if (!placed) continue;
+    const distance = Math.hypot((placed.x - target.x) * aspectRatio, placed.y - target.y);
+    sum += fade(distance, SKETCH_NEAR, SKETCH_FAR);
+  }
+  return Math.round((sum / correct.length) * 100);
+}
+
+function fade(value: number, near: number, far: number): number {
+  return Math.max(0, Math.min(1, (far - value) / (far - near)));
+}
+
+const SKETCH_NEAR = 0.03;
+const SKETCH_FAR = 0.15;
 
 // Mirrors scoreHamCut in server/src/game/room.util.ts.
 export function scoreHamCut(
