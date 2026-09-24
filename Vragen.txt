@@ -35,6 +35,28 @@ to the final results.
 )
 
 (
+  A famous singer died during our trip. Name two of her hit songs.
+  [two text boxes]
+
+  Correct answers: any two of Bonnie Tyler's hits, biggest first:
+   1. Total Eclipse of the Heart
+   2. Holding Out for a Hero
+   3. It's a Heartache
+   4. A Rockin' Good Way
+   5. Lost in France
+   6. More Than a Lover
+   7. Faster Than the Speed of Night
+   8. Have You Ever Seen the Rain
+   9. If You Were a Woman (And I Was a Man)
+  10. Bitterblue
+  11. Believe in Me
+
+  Scoring: 1500 pts, 45s. Each box is worth up to half the points: the full
+  half for #1, sliding down to a quarter for #11 (5% less per step). Typos,
+  missing words and capitals are forgiven ("total eclips" counts).
+)
+
+(
   Pedro
 
   Correct answer: 48 pedro's
@@ -104,7 +126,7 @@ to the final results.
   (arcobaleno.jpeg): everyone in a go-kart, Bas lying on the ground, plus Bas' empty kart.
 
   Correct situation (from the satellite photo), around the Le Cesi looping:
-  - Dex: top straight, just before the looping
+  - Dex: past the straight after the looping, in the bend down towards the slalom
   - Sanne (?), Pietro, Leonardo (zoon van Pietro): outer side of the looping
   - Bas: inner side of the looping
   - Sally: straight after the looping

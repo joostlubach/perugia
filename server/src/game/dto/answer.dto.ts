@@ -16,7 +16,8 @@ export class AnswerDto {
       a.line === undefined &&
       a.multiSelect === undefined &&
       a.strokes === undefined &&
-      a.text === undefined,
+      a.text === undefined &&
+      a.texts === undefined,
   )
   @IsInt()
   @Min(0)
@@ -52,4 +53,10 @@ export class AnswerDto {
   @IsOptional()
   @IsString()
   text?: string;
+
+  // One typed answer per box -- multi_text only.
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  texts?: string[];
 }

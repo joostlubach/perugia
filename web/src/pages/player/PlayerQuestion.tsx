@@ -1,4 +1,4 @@
-import { HamLine, MultiSelectAnswer, PlayerRoomView, SketchAnswer, TextAnswer, TraceAnswer } from '../../types';
+import { HamLine, MultiSelectAnswer, PlayerRoomView, SketchAnswer, TextAnswer, TextsAnswer, TraceAnswer } from '../../types';
 import { Countdown } from '../../components/Countdown';
 import { Shape } from '../../components/Shape';
 import { MenuOrderBoard } from '../../components/MenuOrderBoard';
@@ -12,6 +12,7 @@ import { SketchBoard } from '../../components/SketchBoard';
 import { MoneyVaseBoard } from '../../components/MoneyVase';
 import { QuestionText } from '../../components/QuestionText';
 import { OpenAnswerBoard } from '../../components/OpenAnswerBoard';
+import { MultiTextBoard } from '../../components/MultiTextBoard';
 import { t } from '../../texts';
 
 export function PlayerQuestion({
@@ -19,7 +20,7 @@ export function PlayerQuestion({
   onAnswer,
 }: {
   view: PlayerRoomView;
-  onAnswer: (value: number | string[][] | SketchAnswer | HamLine | MultiSelectAnswer | TraceAnswer | TextAnswer) => void;
+  onAnswer: (value: number | string[][] | SketchAnswer | HamLine | MultiSelectAnswer | TraceAnswer | TextAnswer | TextsAnswer) => void;
 }) {
   if (view.hasAnswered) {
     return (
@@ -67,6 +68,15 @@ export function PlayerQuestion({
           startedAt={startedAt}
           timeLimitSec={question.timeLimitSec}
           onSubmit={(text) => onAnswer({ text })}
+        />
+      )}
+
+      {question.type === 'multi_text' && (
+        <MultiTextBoard
+          boxes={question.boxes}
+          startedAt={startedAt}
+          timeLimitSec={question.timeLimitSec}
+          onSubmit={(texts) => onAnswer({ texts })}
         />
       )}
 

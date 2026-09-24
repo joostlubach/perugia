@@ -1,3 +1,5 @@
+// Mirrors server/src/game/open-answer.ts.
+
 // Whether a typed answer matches the correct one, forgiving what people
 // get wrong when typing fast on a phone: case, accents, punctuation, filler
 // words ("the", "some", "de"...), plurals, small typos, and extra words

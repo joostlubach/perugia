@@ -44,6 +44,15 @@ export interface OpenAnswerQuestion extends QuestionBase {
   showAnswersOf?: string[];
 }
 
+// Player types an answer in each of `boxes` boxes, scored right away against
+// a fixed list, which may hold more right answers than there are boxes. Each
+// right answer counts once.
+export interface MultiTextQuestion extends QuestionBase {
+  type: 'multi_text';
+  boxes: number;
+  correctAnswers: string[];
+}
+
 export interface MenuCourse {
   course: string;
   dishes: MenuDish[];
@@ -196,6 +205,7 @@ export type Question =
   | MultiSelectQuestion
   | MenuOrderQuestion
   | OpenAnswerQuestion
+  | MultiTextQuestion
   | TraceMarksQuestion;
 
 // Plain `Omit<Question, K>` doesn't distribute over the union and collapses
@@ -212,7 +222,7 @@ export interface PlayerAnswer {
   value: number;
   // The dish indexes ordered -- menu_order only.
   selection?: number[];
-  // What was typed -- open_answer only.
+  // What was typed -- open_answer; every box joined by " / " -- multi_text.
   text?: string;
 }
 
@@ -270,6 +280,7 @@ export type HostQuestionView =
   | (Omit<MultiSelectQuestion, 'correctIndexes'> & { correctIndexes?: number[] })
   | (Omit<MenuOrderQuestion, 'correctIndexes'> & { correctIndexes?: number[] })
   | OpenAnswerQuestion
+  | (Omit<MultiTextQuestion, 'correctAnswers'> & { correctAnswers?: string[] })
   | (Omit<TraceMarksQuestion, 'marks' | 'revealImageUrl'> & { revealImageUrl?: string })
   | (Omit<TravelMapQuestion, 'correctGroups'> & { people: string[]; correctGroups?: string[][] })
   | (Omit<MoneyVaseQuestion, 'correctCents'> & { correctCents?: number });
@@ -280,7 +291,7 @@ export interface HostGuess {
   avatar: string;
   value: number;
   correct: boolean;
-  // What was typed -- open_answer only.
+  // What was typed -- open_answer and multi_text only.
   text?: string;
   pointsAwarded: number;
 }
@@ -318,6 +329,7 @@ export type PlayerQuestionView =
   | Omit<MultiSelectQuestion, 'correctIndexes'>
   | Omit<MenuOrderQuestion, 'correctIndexes'>
   | Omit<OpenAnswerQuestion, 'correctAnswer'>
+  | Omit<MultiTextQuestion, 'correctAnswers'>
   | Omit<TraceMarksQuestion, 'marks' | 'revealImageUrl'>
   // People are sorted alphabetically so they don't leak the answer.
   | (Omit<TravelMapQuestion, 'correctGroups'> & { people: string[] })

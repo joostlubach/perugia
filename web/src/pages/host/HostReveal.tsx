@@ -201,6 +201,29 @@ export function HostReveal({
               ))}
           </ol>
         </>
+      ) : question.type === 'multi_text' ? (
+        <>
+          <ol className="leaderboard-list">
+            {question.correctAnswers?.map((text) => (
+              <li key={text}>
+                <span>🎵 {text}</span>
+              </li>
+            ))}
+          </ol>
+          <ol className="leaderboard-list">
+            {view.guesses
+              .slice()
+              .sort((a, b) => b.value - a.value)
+              .map((g) => (
+                <li key={g.playerId} style={{ background: g.correct ? 'var(--gold)' : 'white' }}>
+                  <span>{g.correct ? '✅' : g.value > 0 ? '👌' : '❌'} {g.name}: “{g.text || t('host.reveal.noAnswer')}”</span>
+                  <span>
+                    {g.value} / {question.boxes}
+                  </span>
+                </li>
+              ))}
+          </ol>
+        </>
       ) : question.type === 'multi_select' ? (
         <>
           <ol className="leaderboard-list">

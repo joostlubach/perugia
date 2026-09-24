@@ -110,7 +110,7 @@ export function SketchMap({
                 ↻
               </div>
             )}
-            {(isSelected || showLabels) && (
+            {(isSelected || showLabels) && piece.kind === 'kart' && (
               <div
                 className="sketch-piece-label"
                 style={{ left: `${placement.x * 100}%`, top: `${(placement.y + reach) * 100}%` }}

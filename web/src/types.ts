@@ -35,6 +35,19 @@ export interface OpenAnswerInput {
   points: number;
 }
 
+// A few free text answers, scored against a fixed list that may hold more
+// right answers than there are boxes.
+export interface MultiTextInput {
+  type: 'multi_text';
+  title: string;
+  text: string;
+  playerText?: string;
+  boxes: number;
+  correctAnswers: string[];
+  timeLimitSec: number;
+  points: number;
+}
+
 export interface MenuCourse {
   course: string;
   dishes: { name: string; description?: string }[];
@@ -189,6 +202,7 @@ export type QuestionInput =
   | MultiSelectInput
   | MenuOrderInput
   | OpenAnswerInput
+  | MultiTextInput
   | TraceMarksInput;
 
 export interface SketchAnswer {
@@ -210,6 +224,10 @@ export interface TraceAnswer {
 
 export interface TextAnswer {
   text: string;
+}
+
+export interface TextsAnswer {
+  texts: string[];
 }
 
 export type HostQuestionView = (
@@ -247,6 +265,16 @@ export type HostQuestionView = (
       answerFrom?: string;
       // Other players whose answers are shown on the big screen too.
       showAnswersOf?: string[];
+    }
+  | {
+      id: string;
+      type: 'multi_text';
+      title: string;
+      text: string;
+      boxes: number;
+      timeLimitSec: number;
+      points: number;
+      correctAnswers?: string[];
     }
   | {
       id: string;
@@ -413,6 +441,15 @@ export type PlayerQuestionView =
       type: 'open_answer';
       title: string;
       text: string;
+      timeLimitSec: number;
+      points: number;
+    }
+  | {
+      id: string;
+      type: 'multi_text';
+      title: string;
+      text: string;
+      boxes: number;
       timeLimitSec: number;
       points: number;
     }

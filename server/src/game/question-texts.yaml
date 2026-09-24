@@ -20,6 +20,11 @@ assisi:
   player: |-
     Which saint(s) do we associate with the town of Assisi? Select all that apply.
 
+singer:
+  title: Turn around
+  host: A famous singer died during our trip. Name two of her hit songs.
+  player: Name two hit songs of the singer who died during our trip.
+
 pedro:
   title: Pedro
   host: How many times does the word "Pedro" appear in Raffaella Carra's song "Pedro"?

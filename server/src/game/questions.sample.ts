@@ -47,6 +47,27 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
     points: 1500,
   },
   {
+    type: 'multi_text',
+    ...texts('singer'),
+    boxes: 2,
+    // Her best-known hits, biggest first: any two count, higher ones for more points.
+    correctAnswers: [
+      'Total Eclipse of the Heart',
+      'Holding Out for a Hero',
+      "It's a Heartache",
+      "A Rockin' Good Way",
+      'Lost in France',
+      'More Than a Lover',
+      'Faster Than the Speed of Night',
+      'Have You Ever Seen the Rain',
+      'If You Were a Woman (And I Was a Man)',
+      'Bitterblue',
+      'Believe in Me',
+    ],
+    timeLimitSec: 45,
+    points: 1500,
+  },
+  {
     type: 'drag_count',
     ...texts('pedro'),
     dragLabel: 'Pedro',

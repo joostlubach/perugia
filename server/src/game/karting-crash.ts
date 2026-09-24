@@ -22,7 +22,7 @@ export const KARTING_CRASH_PIECES: SketchPiece[] = [
 // are only for the reveal: karts face the way they were driving (0 = down,
 // clockwise), through the looping and back along the straight.
 export const KARTING_CRASH_CORRECT_PLACEMENTS: SketchPlacement[] = [
-  { id: 'dex', x: 0.678, y: 0.286, rotation: 270 },
+  { id: 'dex', x: 0.307, y: 0.654, rotation: 20 },
   { id: 'sanne', x: 0.784, y: 0.354, rotation: 315 },
   { id: 'pietro', x: 0.842, y: 0.361, rotation: 345 },
   { id: 'leonardo', x: 0.834, y: 0.427, rotation: 30 },

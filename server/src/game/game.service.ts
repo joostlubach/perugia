@@ -18,7 +18,7 @@ import {
   totalPlacements,
 } from './room.util';
 import { sampleQuestions } from './questions.sample';
-import { matchesOpenAnswer } from './open-answer';
+import { matchAnswers, matchesOpenAnswer, scoreHitList } from './open-answer';
 import {
   HostGuess,
   HostQuestionView,
@@ -211,7 +211,7 @@ export class GameService {
   async submitAnswer(
     playerId: string,
     playerToken: string,
-    answer: number | string | string[][] | SketchPlacement[] | HamLine | number[] | Point[][],
+    answer: number | string | string[] | string[][] | SketchPlacement[] | HamLine | number[] | Point[][],
   ): Promise<void> {
     const room = await this.requireRoom();
     const player = room.players[playerId];
@@ -288,6 +288,19 @@ export class GameService {
       value = 0;
       correct = false;
       pointsAwarded = 0;
+    } else if (question.type === 'multi_text') {
+      if (!Array.isArray(answer) || answer.some((v) => typeof v !== 'string')) {
+        throw new ForbiddenException('Wrong answer shape for this question');
+      }
+      // Partial credit per right answer typed, more for ones higher up the list.
+      const texts = (answer as string[]).map((t) => t.trim().slice(0, OPEN_ANSWER_MAX_LENGTH));
+      text = texts.filter(Boolean).join(' / ');
+      const matched = matchAnswers(texts.slice(0, question.boxes), question.correctAnswers);
+      const share = scoreHitList(matched, question.correctAnswers.length, question.boxes);
+      value = matched.length;
+      correct = value === question.boxes;
+      pointsAwarded =
+        share > 0 ? scoreForAnswer(Math.round(question.points * share), question.timeLimitSec, elapsedMs) : 0;
     } else if (question.type === 'menu_order') {
       if (!Array.isArray(answer) || answer.some((v) => typeof v !== 'number')) {
         throw new ForbiddenException('Wrong answer shape for this question');
@@ -437,6 +450,17 @@ export class GameService {
           correctAnswer: question.correctAnswer,
           answerFrom: question.answerFrom,
           showAnswersOf: question.showAnswersOf,
+        };
+      } else if (question.type === 'multi_text') {
+        hostQuestion = {
+          id: question.id,
+          type: 'multi_text',
+          title: question.title,
+          text: question.text,
+          boxes: question.boxes,
+          timeLimitSec: question.timeLimitSec,
+          points: question.points,
+          ...(revealed ? { correctAnswers: question.correctAnswers } : {}),
         };
       } else if (question.type === 'menu_order') {
         hostQuestion = {
@@ -608,6 +632,16 @@ export class GameService {
           timeLimitSec: question.timeLimitSec,
           points: question.points,
         };
+      } else if (question.type === 'multi_text') {
+        playerQuestion = {
+          id: question.id,
+          type: 'multi_text',
+          title: question.title,
+          text: question.playerText ?? question.text,
+          boxes: question.boxes,
+          timeLimitSec: question.timeLimitSec,
+          points: question.points,
+        };
       } else if (question.type === 'menu_order') {
         playerQuestion = {
           id: question.id,
@@ -713,6 +747,7 @@ export class GameService {
       }
       else if (question.type === 'multi_select') correctValue = question.options.length;
       else if (question.type === 'menu_order') correctValue = question.menu.length;
+      else if (question.type === 'multi_text') correctValue = question.boxes;
       else correctValue = 1;
     }
 

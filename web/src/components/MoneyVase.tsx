@@ -1,5 +1,5 @@
 import { PointerEvent as ReactPointerEvent, useEffect, useRef, useState } from 'react';
-import { audio } from '../audio';
+import { audio, audioContext } from '../audio';
 import { useCountdown } from './Countdown';
 import { t } from '../texts';
 
@@ -34,6 +34,7 @@ export function MoneyVaseBoard({
     onSubmit(totalRef.current);
   };
   useCountdown(startedAt, timeLimitSec, submit);
+  useEffect(() => audio.preload('coin'), []);
 
   const drop = (cents: number, clientX: number, clientY: number) => {
     const vase = vaseRef.current;
@@ -222,8 +223,6 @@ export function formatEuro(cents: number): string {
 }
 
 // Coins get the Mario coin sound; bills a synthesized crinkly paper rustle.
-let context: AudioContext | null = null;
-
 function playDropSound(cents: number) {
   if (audio.isMuted()) return;
   if (!isBill(cents)) {
@@ -231,8 +230,7 @@ function playDropSound(cents: number) {
     return;
   }
   try {
-    context ??= new AudioContext();
-    playRustle(context);
+    playRustle(audioContext());
   } catch {
     // No Web Audio -- stay silent.
   }

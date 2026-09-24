@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { HamLine, MultiSelectAnswer, QuestionInput, SketchAnswer, TextAnswer, TraceAnswer } from '../../types';
+import { HamLine, MultiSelectAnswer, QuestionInput, SketchAnswer, TextAnswer, TextsAnswer, TraceAnswer } from '../../types';
 import { audio } from '../../audio';
 import {
   countCorrectGroupings,
@@ -28,8 +28,10 @@ import { SketchBoard } from '../../components/SketchBoard';
 import { formatEuro, MoneyVaseBoard } from '../../components/MoneyVase';
 import { QuestionText } from '../../components/QuestionText';
 import { OpenAnswerBoard } from '../../components/OpenAnswerBoard';
+import { MultiTextBoard } from '../../components/MultiTextBoard';
+import { matchAnswers, scoreHitList } from '../../openAnswer';
 
-type Answer = number | string[][] | SketchAnswer | HamLine | MultiSelectAnswer | TraceAnswer | TextAnswer | null;
+type Answer = number | string[][] | SketchAnswer | HamLine | MultiSelectAnswer | TraceAnswer | TextAnswer | TextsAnswer | null;
 
 export function TestQuestion({
   question,
@@ -57,6 +59,7 @@ export function TestQuestion({
     question.type === 'ham_cut' ||
     question.type === 'multi_select' ||
     question.type === 'menu_order' ||
+    question.type === 'multi_text' ||
     question.type === 'trace_marks';
   const isPercent = question.type === 'ham_cut' || question.type === 'trace_marks' || question.type === 'situation_sketch';
 
@@ -73,6 +76,8 @@ export function TestQuestion({
       ? question.menu.length
       : question.type === 'open_answer'
       ? 1
+      : question.type === 'multi_text'
+      ? question.boxes
       : question.type === 'travel_map'
       ? totalPlacements(question.correctGroups)
       : question.type === 'money_vase'
@@ -91,6 +96,7 @@ export function TestQuestion({
     if (answer && typeof answer === 'object' && 'text' in answer) setTypedAnswer(answer.text);
     const elapsedMs = Date.now() - startedAt;
     let value: number | null;
+    let hitShare: number | null = null;
     if (Array.isArray(answer) && question.type === 'podium_order') {
       value = countCorrectPlacements(answer, question.correctOrder);
     } else if (Array.isArray(answer) && question.type === 'travel_map') {
@@ -103,6 +109,10 @@ export function TestQuestion({
       value = countCorrectSelections(answer.selected, question.correctIndexes, question.options.length);
     } else if (answer && !Array.isArray(answer) && typeof answer === 'object' && 'selected' in answer && question.type === 'menu_order') {
       value = countCorrectMenuPicks(answer.selected, question.menu, question.correctIndexes);
+    } else if (answer && !Array.isArray(answer) && typeof answer === 'object' && 'texts' in answer && question.type === 'multi_text') {
+      const matched = matchAnswers(answer.texts.slice(0, question.boxes), question.correctAnswers);
+      value = matched.length;
+      hitShare = scoreHitList(matched, question.correctAnswers.length, question.boxes);
     } else if (answer && !Array.isArray(answer) && typeof answer === 'object' && 'placements' in answer && question.type === 'situation_sketch') {
       value = scoreSketch(
         answer.placements,
@@ -118,9 +128,11 @@ export function TestQuestion({
         ? scoreEstimate(value ?? 0, question.correctCents)
         : question.type === 'drag_count' && value !== null
         ? scoreCount(value, question.correctCount, question.nearMisses) * 100
+        : hitShare !== null
+        ? hitShare * 100
         : null;
     const correct =
-      question.type === 'drag_count'
+      question.type === 'drag_count' || question.type === 'multi_text'
         ? value === correctValue
         : closeness !== null
         ? value !== null && closeness >= 98
@@ -196,6 +208,15 @@ export function TestQuestion({
 
       {!result && question.type === 'open_answer' && (
         <OpenAnswerBoard startedAt={startedAt} timeLimitSec={question.timeLimitSec} onSubmit={(text) => finish({ text })} />
+      )}
+
+      {!result && question.type === 'multi_text' && (
+        <MultiTextBoard
+          boxes={question.boxes}
+          startedAt={startedAt}
+          timeLimitSec={question.timeLimitSec}
+          onSubmit={(texts) => finish({ texts })}
+        />
       )}
 
       {!result && question.type === 'menu_order' && (

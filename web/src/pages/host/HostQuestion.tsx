@@ -79,6 +79,8 @@ export function HostQuestion({ view }: { view: HostRoomView }) {
         <p className="subtitle">{t('host.question.open_answer')}</p>
       ) : question.type === 'multi_select' ? (
         <p className="subtitle">{t('host.question.multi_select')}</p>
+      ) : question.type === 'multi_text' ? (
+        <p className="subtitle">{t('host.question.multi_text')}</p>
       ) : (
         <p className="subtitle">{t('host.question.drag_count', { label: question.dragLabel })}</p>
       )}

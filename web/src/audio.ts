@@ -11,6 +11,8 @@ const SOUND_FILES = {
 export type SoundKey = keyof typeof SOUND_FILES;
 
 const elements = new Map<SoundKey, HTMLAudioElement>();
+const buffers = new Map<SoundKey, Promise<AudioBuffer>>();
+let context: AudioContext | null = null;
 let muted = localStorage.getItem('perugia_muted') === 'true';
 // Music that should be playing right now, so unmuting can pick it back up.
 const loops = new Set<SoundKey>();
@@ -37,9 +39,31 @@ export const audio = {
 
   // Fires a fresh, independent instance so rapid repeats (e.g. dragging many
   // tokens in quick succession) overlap instead of cutting each other off.
+  // Goes through Web Audio: mobile browsers often refuse fresh <audio> elements.
   playOverlapping(key: SoundKey) {
     if (muted) return;
-    new Audio(SOUND_FILES[key]).play().catch(() => {});
+    try {
+      const ctx = audioContext();
+      loadBuffer(key)
+        .then((buffer) => {
+          const source = ctx.createBufferSource();
+          source.buffer = buffer;
+          source.connect(ctx.destination);
+          source.start();
+        })
+        .catch(() => {});
+    } catch {
+      // No Web Audio -- stay silent.
+    }
+  },
+
+  // Fetches and decodes a sound ahead of time, so its first play isn't late.
+  preload(key: SoundKey) {
+    try {
+      loadBuffer(key).catch(() => {});
+    } catch {
+      // No Web Audio.
+    }
   },
 
   // Starts looping music, or keeps it going if it already is.
@@ -75,3 +99,24 @@ export const audio = {
     return muted;
   },
 };
+
+// Shared Web Audio context. Resuming only works during a user gesture, so
+// callers from gesture handlers unlock it for everyone.
+export function audioContext(): AudioContext {
+  context ??= new AudioContext();
+  if (context.state === 'suspended') context.resume().catch(() => {});
+  return context;
+}
+
+function loadBuffer(key: SoundKey): Promise<AudioBuffer> {
+  let buffer = buffers.get(key);
+  if (!buffer) {
+    const ctx = audioContext();
+    buffer = fetch(SOUND_FILES[key])
+      .then((response) => response.arrayBuffer())
+      .then((data) => ctx.decodeAudioData(data));
+    buffer.catch(() => buffers.delete(key));
+    buffers.set(key, buffer);
+  }
+  return buffer;
+}
