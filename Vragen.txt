@@ -86,10 +86,10 @@ to the final results.
 
 (
   How many dogs did we have in total?
-  - 1.5
   - 2.5
-  - 3.5 [correct]
-  - 4.5
+  - 3.5
+  - 4.5 [correct]
+  - 5.5
 
   Scoring: 1000 pts, 20s. Multiple choice: all or nothing.
 )
@@ -286,7 +286,7 @@ to the final results.
 
 (
   What famous artist does the Di Serego family descend from?
-  - Leonardo da Vinci
+  - Donatello
   - Dante [correct]
   - Michelangelo
   - Giotto

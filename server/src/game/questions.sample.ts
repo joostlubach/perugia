@@ -250,7 +250,7 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
   {
     type: 'multiple_choice',
     ...texts('ancestor'),
-    options: ['Leonardo da Vinci', 'Dante', 'Michelangelo', 'Giotto'],
+    options: ['Donatello', 'Dante', 'Michelangelo', 'Giotto'],
     correctIndex: 1,
     timeLimitSec: 20,
     points: 1000,
