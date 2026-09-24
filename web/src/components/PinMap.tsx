@@ -3,7 +3,7 @@ import { Point } from '../types';
 import { TravelAvatar } from './TravelMap';
 
 // A map with avatars pinned on it, each pin's tip exactly on its spot, and
-// optionally the right answer marked with a flag.
+// optionally the right answer marked with a dot.
 export function PinMap({
   mapUrl,
   aspectRatio,
@@ -41,7 +41,6 @@ export function PinMap({
       ))}
       {answer && (
         <div className="pin-map-answer" style={{ left: `${answer.x * 100}%`, top: `${answer.y * 100}%` }}>
-          <span className="pin-map-answer-flag">🏁</span>
           <span className="pin-map-answer-dot" />
         </div>
       )}

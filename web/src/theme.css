@@ -2086,14 +2086,6 @@ textarea.json-editor {
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 }
 
-.pin-map-answer-flag {
-  position: absolute;
-  left: -6px;
-  bottom: 2px;
-  font-size: 2rem;
-  line-height: 1;
-}
-
 .pin-map-rankings {
   display: flex;
   flex-wrap: wrap;
