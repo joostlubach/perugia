@@ -33,9 +33,10 @@ export function matchAnswers(guesses: string[], correct: string[]): number[] {
 }
 
 // Share of the points (0-1) for the matched answers of a ranked list, spread
-// over the boxes: the first answer is worth a full box, the last half a box.
+// over the boxes: the top answers (one per box) are worth a full box, the
+// ones below slide down to half a box for the last.
 export function scoreHitList(matched: number[], answerCount: number, boxes: number): number {
-  const worth = (i: number) => (answerCount > 1 ? 1 - (LAST_HIT_WORTH * i) / (answerCount - 1) : 1);
+  const worth = (i: number) => (i < boxes ? 1 : 1 - (LAST_HIT_WORTH * (i - boxes + 1)) / (answerCount - boxes));
   return matched.reduce((sum, i) => sum + worth(i), 0) / boxes;
 }
 

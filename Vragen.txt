@@ -52,7 +52,7 @@ to the final results.
   11. Believe in Me
 
   Scoring: 1500 pts, 45s. Each box is worth up to half the points: the full
-  half for #1, sliding down to a quarter for #11 (5% less per step). Typos,
+  half for #1 and #2, then sliding down to a quarter for #11. Typos,
   missing words and capitals are forgiven ("total eclips" counts).
 )
 
