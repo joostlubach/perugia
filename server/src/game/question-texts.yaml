@@ -42,6 +42,11 @@ wherePerugia:
   host: We spent a week in Perugia. But where exactly is it? Drag yourself to Perugia on the map!
   player: Drag yourself to Perugia on the map!
 
+travel:
+  title: On the way
+  host: Drag each person to how they _arrived_ to Perugia
+  player: Drag each person to how they _arrived_ to Perugia
+
 dogs:
   title: Dogs
   host: How many dogs did we have in total?
@@ -68,7 +73,8 @@ house:
 
 bowie:
   title: Bowie's scratches
-  host: Everyone fell into the pool at the pool party. Everyone? No, one friend was able to resist any attempt. But he paid dearly. Draw as best as you can the marks on Bowie's side from the pool party
+  host: |-
+    Everyone fell into the pool at the pool party. But not everyone without serious injury. Draw as best as you can the marks on Bowie's side from the pool party
   player: Draw the scratches as best as you can
 
 cigarettes:
@@ -78,7 +84,8 @@ cigarettes:
 
 jumprope:
   title: Jumprope
-  host: How many jumprope jumps did Sanne do in total?
+  host: |-
+    While most of us were being lazy ass bitches at the pool, not Sanne! How many jumprope jumps did Sanne do in total?
   player: How many jumprope jumps did Sanne do in total?
 
 ham:
@@ -118,11 +125,6 @@ pool:
   title: The swimming pool
   host: What was the reason the swimming pool was where it was?
   player: What was the reason the swimming pool was where it was?
-
-travel:
-  title: On the way
-  host: Drag each person to how they _arrived_ to Perugia
-  player: Drag each person to how they _arrived_ to Perugia
 
 perugia:
   title: Perugia

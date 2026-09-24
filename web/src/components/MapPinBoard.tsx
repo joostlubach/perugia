@@ -93,7 +93,7 @@ export function MapPinBoard({
             {pin || drag ? (
               <span className="hint">{t('boards.mapPin.moveHint')}</span>
             ) : (
-              <div className="travel-avatar draggable" onPointerDown={(e) => startDrag(e, { x: 0, y: -AIM_OFFSET })}>
+              <div className="pin-source" onPointerDown={(e) => startDrag(e, { x: 0, y: -AIM_OFFSET })}>
                 <AvatarPin avatar={avatar} />
               </div>
             )}

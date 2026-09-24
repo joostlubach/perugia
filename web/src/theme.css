@@ -2017,6 +2017,7 @@ textarea.json-editor {
   height: 0;
 }
 
+.pin-source,
 .pin-map-pin.draggable {
   cursor: grab;
   touch-action: none;
