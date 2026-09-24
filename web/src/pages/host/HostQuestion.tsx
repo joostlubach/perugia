@@ -9,10 +9,9 @@ import { QuestionText } from '../../components/QuestionText';
 import { t } from '../../texts';
 
 // Answering is open; the server moves on to the reveal once time is up or everyone has answered.
+// No tallies here: they'd give slower players hints.
 export function HostQuestion({ view }: { view: HostRoomView }) {
   const question = view.question!;
-
-  const maxCount = Math.max(1, ...view.optionCounts);
 
   return (
     <div className="page">
@@ -37,11 +36,11 @@ export function HostQuestion({ view }: { view: HostRoomView }) {
         </div>
       </div>
       {question.type === 'menu_order' ? (
-        <MenuCard menu={question.menu} counts={view.optionCounts} wide />
+        <MenuCard menu={question.menu} wide />
       ) : question.type === 'multiple_choice' ? (
         <div className="option-grid">
           {question.options.map((text, i) => (
-            <AnswerOption key={i} index={i} text={text} count={view.optionCounts[i] ?? 0} maxCount={maxCount} />
+            <AnswerOption key={i} index={i} text={text} />
           ))}
         </div>
       ) : question.type === 'travel_map' ? (

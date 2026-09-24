@@ -2,13 +2,15 @@ import { HostRoomView } from '../../types';
 import { AnswerOption } from '../../components/AnswerOption';
 import { MenuCard } from '../../components/MenuCard';
 import { TravelMap } from '../../components/TravelMap';
-import { formatEuro, Vase } from '../../components/MoneyVase';
+import { Vase } from '../../components/MoneyVase';
 import { PodiumStand } from '../../components/PodiumStand';
 import { SketchMap } from '../../components/SketchMap';
+import { TallyList } from '../../components/TallyList';
 import { QuestionText } from '../../components/QuestionText';
 import { isCorrectOption } from '../../scoring';
 import { HostGradeBox } from './HostGradeBox';
 import { OpenAnswerSummary } from './OpenAnswerSummary';
+import { CorrectTally } from './CorrectTally';
 import { t } from '../../texts';
 
 export function HostReveal({
@@ -22,6 +24,7 @@ export function HostReveal({
 }) {
   const question = view.question!;
   const maxCount = Math.max(1, ...view.optionCounts);
+  const correctTally = <CorrectTally guesses={view.guesses} partialCredit={question.type !== 'multiple_choice'} />;
 
   return (
     <div className="page">
@@ -48,34 +51,25 @@ export function HostReveal({
       ) : question.type === 'menu_order' ? (
         <>
           <MenuCard menu={question.menu} counts={view.optionCounts} correctIndexes={question.correctIndexes} wide />
-          <ol className="leaderboard-list">
-            {view.guesses
-              .slice()
-              .sort((a, b) => b.value - a.value)
-              .map((g) => (
-                <li key={g.playerId} style={{ background: g.correct ? 'var(--gold)' : 'white' }}>
-                  <span>{g.correct ? '✅' : '🌾'} {g.name}</span>
-                  <span>
-                    {g.value} / {question.menu.length}
-                  </span>
-                </li>
-              ))}
-          </ol>
+          {correctTally}
         </>
       ) : question.type === 'multiple_choice' ? (
-        <div className="option-grid">
-          {question.options.map((text, i) => (
-            <AnswerOption
-              key={i}
-              index={i}
-              text={text}
-              count={view.optionCounts[i] ?? 0}
-              maxCount={maxCount}
-              revealed
-              isCorrect={question.correctIndex !== undefined && isCorrectOption(question.correctIndex, i)}
-            />
-          ))}
-        </div>
+        <>
+          <div className="option-grid">
+            {question.options.map((text, i) => (
+              <AnswerOption
+                key={i}
+                index={i}
+                text={text}
+                count={view.optionCounts[i] ?? 0}
+                maxCount={maxCount}
+                revealed
+                isCorrect={question.correctIndex !== undefined && isCorrectOption(question.correctIndex, i)}
+              />
+            ))}
+          </div>
+          {correctTally}
+        </>
       ) : question.type === 'travel_map' ? (
         <>
           <TravelMap
@@ -86,42 +80,12 @@ export function HostReveal({
             groups={question.correctGroups}
             large
           />
-          <ol className="leaderboard-list">
-            {view.guesses
-              .slice()
-              .sort((a, b) => b.value - a.value)
-              .map((g) => (
-                <li key={g.playerId} style={{ background: g.correct ? 'var(--gold)' : 'white' }}>
-                  <span>{g.correct ? '✅' : '🗺️'} {g.name}</span>
-                  <span>
-                    {g.value} / {question.people.length}
-                  </span>
-                </li>
-              ))}
-          </ol>
+          {correctTally}
         </>
       ) : question.type === 'money_vase' ? (
         <>
           <Vase total={question.correctCents ?? 0} large />
-          <ol className="leaderboard-list">
-            {view.guesses
-              .slice()
-              .sort((a, b) => Math.abs(a.value - (question.correctCents ?? 0)) - Math.abs(b.value - (question.correctCents ?? 0)))
-              .map((g) => {
-                const diff = g.value - (question.correctCents ?? 0);
-                return (
-                  <li key={g.playerId} style={{ background: g.correct ? 'var(--gold)' : 'white' }}>
-                    <span>
-                      {g.correct ? '✅' : '💰'} {g.name}
-                    </span>
-                    <span>
-                      {formatEuro(g.value)} ({diff >= 0 ? '+' : '−'}
-                      {formatEuro(Math.abs(diff))})
-                    </span>
-                  </li>
-                );
-              })}
-          </ol>
+          {correctTally}
         </>
       ) : question.type === 'podium_order' ? (
         <>
@@ -133,19 +97,7 @@ export function HostReveal({
               </div>
             ))}
           </div>
-          <ol className="leaderboard-list">
-            {view.guesses
-              .slice()
-              .sort((a, b) => b.value - a.value)
-              .map((g) => (
-                <li key={g.playerId} style={{ background: g.correct ? 'var(--gold)' : 'white' }}>
-                  <span>{g.correct ? '✅' : '🏎️'} {g.name}</span>
-                  <span>
-                    {g.value} / {question.groups.flat().length}
-                  </span>
-                </li>
-              ))}
-          </ol>
+          {correctTally}
         </>
       ) : question.type === 'situation_sketch' ? (
         <>
@@ -158,111 +110,47 @@ export function HostReveal({
             large
             showLabels
           />
-          <ol className="leaderboard-list">
-            {view.guesses
-              .slice()
-              .sort((a, b) => b.value - a.value)
-              .map((g) => (
-                <li key={g.playerId} style={{ background: g.correct ? 'var(--gold)' : 'white' }}>
-                  <span>{g.correct ? '✅' : '🚨'} {g.name}</span>
-                  <span>{g.value}%</span>
-                </li>
-              ))}
-          </ol>
+          {correctTally}
         </>
       ) : question.type === 'ham_cut' ? (
         <>
           <img src={question.imageUrl} alt="" style={{ maxWidth: 200, borderRadius: 16 }} />
           <p className="subtitle">{t('host.reveal.hamGoal')}</p>
-          <ol className="leaderboard-list">
-            {view.guesses
-              .slice()
-              .sort((a, b) => b.value - a.value)
-              .map((g) => (
-                <li key={g.playerId} style={{ background: g.correct ? 'var(--gold)' : 'white' }}>
-                  <span>{g.correct ? '✅' : '🔪'} {g.name}</span>
-                  <span>{g.value}%</span>
-                </li>
-              ))}
-          </ol>
+          {correctTally}
         </>
       ) : question.type === 'trace_marks' ? (
         <>
           <img src={question.revealImageUrl} alt="" style={{ maxWidth: 260, borderRadius: 16 }} />
-          <ol className="leaderboard-list">
-            {view.guesses
-              .slice()
-              .sort((a, b) => b.value - a.value)
-              .map((g) => (
-                <li key={g.playerId} style={{ background: g.correct ? 'var(--gold)' : 'white' }}>
-                  <span>{g.correct ? '✅' : '🖍️'} {g.name}</span>
-                  <span>{g.value}%</span>
-                </li>
-              ))}
-          </ol>
+          {correctTally}
         </>
       ) : question.type === 'multi_text' ? (
         <>
-          <ol className="leaderboard-list">
-            {question.correctAnswers?.map((text) => (
-              <li key={text}>
-                <span>🎵 {text}</span>
-              </li>
-            ))}
-          </ol>
-          <ol className="leaderboard-list">
-            {view.guesses
-              .slice()
-              .sort((a, b) => b.value - a.value)
-              .map((g) => (
-                <li key={g.playerId} style={{ background: g.correct ? 'var(--gold)' : 'white' }}>
-                  <span>{g.correct ? '✅' : g.value > 0 ? '👌' : '❌'} {g.name}: “{g.text || t('host.reveal.noAnswer')}”</span>
-                  <span>
-                    {g.value} / {question.boxes}
-                  </span>
-                </li>
-              ))}
-          </ol>
+          <TallyList items={question.correctAnswers ?? []} counts={view.optionCounts} />
+          {correctTally}
         </>
       ) : question.type === 'multi_select' ? (
         <>
-          <ol className="leaderboard-list">
-            {question.options.map((text, i) => (
-              <li key={i} style={{ background: question.correctIndexes?.includes(i) ? 'var(--gold)' : 'white' }}>
-                <span>{question.correctIndexes?.includes(i) ? '✅' : '❌'} {text}</span>
-              </li>
-            ))}
-          </ol>
-          <ol className="leaderboard-list">
-            {view.guesses
-              .slice()
-              .sort((a, b) => b.value - a.value)
-              .map((g) => (
-                <li key={g.playerId} style={{ background: g.correct ? 'var(--gold)' : 'white' }}>
-                  <span>{g.correct ? '✅' : '❌'} {g.name}</span>
-                  <span>
-                    {g.value} / {question.options.length}
-                  </span>
-                </li>
-              ))}
-          </ol>
+          <TallyList
+            items={question.options}
+            counts={view.optionCounts}
+            isCorrect={(i) => !!question.correctIndexes?.includes(i)}
+          />
+          {correctTally}
         </>
       ) : (
         <>
-          <div className="countdown" style={{ borderRadius: 16, width: 'auto', height: 'auto', padding: '12px 28px' }}>
+          <div
+            className="countdown"
+            style={{
+              borderRadius: 16,
+              width: 'auto',
+              height: 'auto',
+              padding: '12px 28px',
+            }}
+          >
             {question.correctCount}
           </div>
-          <ol className="leaderboard-list">
-            {view.guesses
-              .slice()
-              .sort((a, b) => a.value - b.value)
-              .map((g) => (
-                <li key={g.playerId} style={{ background: g.correct ? 'var(--gold)' : 'white' }}>
-                  <span>{g.correct ? '✅' : '❌'} {g.name}</span>
-                  <span>{g.value}</span>
-                </li>
-              ))}
-          </ol>
+          {correctTally}
         </>
       )}
 
@@ -274,8 +162,8 @@ export function HostReveal({
         {view.afterReveal === 'leaderboard'
           ? t('host.reveal.toLeaderboard')
           : view.afterReveal === 'finale'
-          ? t('host.reveal.toFinale')
-          : t('host.reveal.toNextQuestion')}
+            ? t('host.reveal.toFinale')
+            : t('host.reveal.toNextQuestion')}
       </button>
     </div>
   );

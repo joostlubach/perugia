@@ -166,10 +166,10 @@ export class GameService {
     await this.store.set(room);
   }
 
-  // Host shortcut: straight to the final results, from wherever the game is.
+  // Host shortcut: straight to the finale, from wherever the game is.
   async finish(hostToken: string): Promise<void> {
     const room = await this.requireHost(hostToken);
-    room.status = 'ended';
+    room.status = 'finale';
     await this.store.set(room);
   }
 
@@ -297,6 +297,7 @@ export class GameService {
       text = texts.filter(Boolean).join(' / ');
       const matched = matchAnswers(texts.slice(0, question.boxes), question.correctAnswers);
       const share = scoreHitList(matched, question.correctAnswers.length, question.boxes);
+      selection = matched;
       value = matched.length;
       correct = value === question.boxes;
       pointsAwarded =
@@ -317,8 +318,9 @@ export class GameService {
         throw new ForbiddenException('Wrong answer shape for this question');
       }
       // Partial credit per correctly-set checkbox (leaving a wrong one unchecked counts too).
+      selection = answer as number[];
       const total = question.options.length;
-      value = countCorrectSelections(answer as number[], question.correctIndexes, total);
+      value = countCorrectSelections(selection, question.correctIndexes, total);
       correct = value === total;
       pointsAwarded =
         value > 0 ? scoreForAnswer(Math.round((question.points * value) / total), question.timeLimitSec, elapsedMs) : 0;
@@ -397,12 +399,25 @@ export class GameService {
     const answeredCount = question
       ? Object.values(room.players).filter((p) => p.answers[question.id]).length
       : 0;
+    // Only after the reveal, so the tallies give no hints to slower players.
     const optionCounts =
-      question && question.type === 'multiple_choice'
+      !question || !revealed
+        ? []
+        : question.type === 'multiple_choice'
         ? question.options.map(
             (_, i) => Object.values(room.players).filter((p) => p.answers[question.id]?.value === i).length,
           )
-        : question && question.type === 'menu_order'
+        : question.type === 'multi_text'
+        ? question.correctAnswers.map(
+            (_, i) =>
+              Object.values(room.players).filter((p) => p.answers[question.id]?.selection?.includes(i)).length,
+          )
+        : question.type === 'multi_select'
+        ? question.options.map(
+            (_, i) =>
+              Object.values(room.players).filter((p) => p.answers[question.id]?.selection?.includes(i)).length,
+          )
+        : question.type === 'menu_order'
         ? question.menu
             .flatMap((course) => course.dishes)
             .map(
@@ -411,7 +426,7 @@ export class GameService {
             )
         : [];
     const guesses: HostGuess[] =
-      question && question.type !== 'multiple_choice' && revealed
+      question && revealed
         ? Object.values(room.players)
             .filter((p) => p.answers[question.id])
             .map((p) => ({

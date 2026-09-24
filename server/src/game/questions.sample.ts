@@ -64,7 +64,7 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
       'Bitterblue',
       'Believe in Me',
     ],
-    timeLimitSec: 45,
+    timeLimitSec: 90,
     points: 1500,
   },
   {
@@ -108,25 +108,6 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
     correctIndex: 2,
     timeLimitSec: 20,
     points: 1000,
-  },
-  {
-    type: 'podium_order',
-    ...texts('karting'),
-    correctOrder: [KARTING_WINNER_GROUP, KARTING_LOSER_GROUP],
-    groupLabels: ['Winner group', 'Loser group'],
-    timeLimitSec: 90,
-    points: 2000,
-  },
-  {
-    type: 'situation_sketch',
-    ...texts('kartingCrash'),
-    mapUrl: KARTING_CRASH_MAP_URL,
-    aspectRatio: KARTING_CRASH_MAP_ASPECT_RATIO,
-    zoom: KARTING_CRASH_ZOOM,
-    pieces: KARTING_CRASH_PIECES,
-    correctPlacements: KARTING_CRASH_CORRECT_PLACEMENTS,
-    timeLimitSec: 90,
-    points: 2000,
   },
   {
     type: 'multiple_choice',
@@ -248,6 +229,25 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
     points: 1000,
   },
   {
+    type: 'podium_order',
+    ...texts('karting'),
+    correctOrder: [KARTING_WINNER_GROUP, KARTING_LOSER_GROUP],
+    groupLabels: ['Winner group', 'Loser group'],
+    timeLimitSec: 90,
+    points: 2000,
+  },
+  {
+    type: 'situation_sketch',
+    ...texts('kartingCrash'),
+    mapUrl: KARTING_CRASH_MAP_URL,
+    aspectRatio: KARTING_CRASH_MAP_ASPECT_RATIO,
+    zoom: KARTING_CRASH_ZOOM,
+    pieces: KARTING_CRASH_PIECES,
+    correctPlacements: KARTING_CRASH_CORRECT_PLACEMENTS,
+    timeLimitSec: 90,
+    points: 2000,
+  },
+  {
     type: 'multiple_choice',
     ...texts('ancestor'),
     options: ['Leonardo da Vinci', 'Dante', 'Michelangelo', 'Giotto'],
@@ -271,8 +271,8 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
   {
     type: 'money_vase',
     ...texts('splitser'),
-    // €1000 (not a real bill, but it speeds things up), €500 and €200 bills, and every euro coin.
-    denominations: [100000, 50000, 20000, 200, 100, 50, 20, 10, 5, 2, 1],
+    // €1000 (not a real bill, but it speeds things up), €500, €100, €20, €10 and €5 bills, and every euro coin.
+    denominations: [100000, 50000, 10000, 2000, 1000, 500, 200, 100, 50, 20, 10, 5, 2, 1],
     correctCents: 881903,
     timeLimitSec: 60,
     points: 1500,

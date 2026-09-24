@@ -385,6 +385,44 @@ input[type='text'] {
   background: rgba(255, 255, 255, 0.9);
 }
 
+.tally-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  max-width: 560px;
+  text-align: left;
+}
+
+.tally-list li {
+  padding: 10px 16px;
+  background: white;
+  border-radius: 12px;
+  margin-bottom: 8px;
+}
+
+.tally-list li.correct {
+  outline: 4px solid var(--gold);
+}
+
+.tally-list li.dimmed {
+  opacity: 0.5;
+}
+
+.tally-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.tally-list .count-bar-track {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.tally-list .count-bar-fill {
+  background: var(--gold);
+}
+
 .countdown {
   font-family: 'Fredoka', sans-serif;
   font-size: clamp(2rem, 5vw, 3.2rem);
@@ -1611,8 +1649,20 @@ textarea.json-editor {
   background: linear-gradient(135deg, #9a7fbf, #6b4f94 60%, #8a6fb2);
 }
 
-.money-bill.bill-200 {
-  background: linear-gradient(135deg, #e6c56a, #b88a2a 60%, #d9b453);
+.money-bill.bill-100 {
+  background: linear-gradient(135deg, #9cc46a, #4f8a2e 60%, #86b456);
+}
+
+.money-bill.bill-20 {
+  background: linear-gradient(135deg, #7fa8e0, #3a64a8 60%, #6a94d0);
+}
+
+.money-bill.bill-10 {
+  background: linear-gradient(135deg, #e88a8a, #b03a3a 60%, #d86a6a);
+}
+
+.money-bill.bill-5 {
+  background: linear-gradient(135deg, #b8bcc2, #6e747c 60%, #9aa0a8);
 }
 
 .money-bill-value {
@@ -1934,4 +1984,13 @@ textarea.json-editor {
   font-family: 'Fredoka', sans-serif;
   font-size: clamp(1.4rem, 3.4vw, 2.2rem);
   font-weight: 700;
+}
+
+.celebration {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 900;
 }

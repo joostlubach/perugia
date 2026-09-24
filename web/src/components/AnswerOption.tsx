@@ -10,24 +10,26 @@ export function AnswerOption({
 }: {
   index: number;
   text: string;
-  count: number;
-  maxCount: number;
+  count?: number;
+  maxCount?: number;
   isCorrect?: boolean;
   revealed?: boolean;
 }) {
   const dimmed = revealed && !isCorrect;
-  const pct = maxCount > 0 ? Math.round((count / maxCount) * 100) : 0;
+  const pct = count !== undefined && maxCount ? Math.round((count / maxCount) * 100) : 0;
 
   return (
     <div className={`shape-btn shape-${index} ${dimmed ? 'dimmed' : ''} ${revealed && isCorrect ? 'correct' : ''}`}>
       <Shape index={index} />
       <div style={{ flex: 1, textAlign: 'left' }}>
         <div>{text}</div>
-        <div className="count-bar-track">
-          <div className="count-bar-fill" style={{ width: `${pct}%` }} />
-        </div>
+        {count !== undefined && (
+          <div className="count-bar-track">
+            <div className="count-bar-fill" style={{ width: `${pct}%` }} />
+          </div>
+        )}
       </div>
-      <div>{count}</div>
+      {count !== undefined && <div>{count}</div>}
     </div>
   );
 }

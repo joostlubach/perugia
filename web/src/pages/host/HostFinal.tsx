@@ -1,5 +1,6 @@
 import { HostRoomView } from '../../types';
 import { Podium } from '../../components/Podium';
+import { Celebration } from '../../components/Celebration';
 import { t } from '../../texts';
 
 export function HostFinal({ view }: { view: HostRoomView }) {
@@ -16,6 +17,7 @@ export function HostFinal({ view }: { view: HostRoomView }) {
           </li>
         ))}
       </ol>
+      <Celebration />
     </div>
   );
 }

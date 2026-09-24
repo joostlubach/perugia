@@ -6,7 +6,8 @@ import { t } from '../../texts';
 // The question on its own while the host reads it out; phones say "look at the screen".
 export function HostIntro({ view, onStart }: { view: HostRoomView; onStart: () => void }) {
   const question = view.question!;
-  const imageUrl = 'imageUrl' in question ? question.imageUrl : undefined;
+  // The trace_marks photo is for drawing on, on the phones.
+  const imageUrl = 'imageUrl' in question && question.type !== 'trace_marks' ? question.imageUrl : undefined;
 
   return (
     <div className="page">

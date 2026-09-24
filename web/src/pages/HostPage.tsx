@@ -1,19 +1,19 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { api, isStaleSession } from '../api';
-import { usePolling } from '../hooks/usePolling';
-import { audio } from '../audio';
-import { MuteToggle } from '../components/MuteToggle';
-import { ReactionCallouts } from '../components/ReactionCallouts';
-import { HostSetup } from './host/HostSetup';
-import { HostLobby } from './host/HostLobby';
-import { HostIntro } from './host/HostIntro';
-import { HostJumpBox } from './host/HostJumpBox';
-import { HostQuestion } from './host/HostQuestion';
-import { HostReveal } from './host/HostReveal';
-import { HostLeaderboard } from './host/HostLeaderboard';
-import { HostFinal } from './host/HostFinal';
-import { HostFinale } from './host/HostFinale';
-import { t } from '../texts';
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { api, isStaleSession } from '../api'
+import { audio } from '../audio'
+import { MuteToggle } from '../components/MuteToggle'
+import { ReactionCallouts } from '../components/ReactionCallouts'
+import { usePolling } from '../hooks/usePolling'
+import { t } from '../texts'
+import { HostFinal } from './host/HostFinal'
+import { HostFinale } from './host/HostFinale'
+import { HostIntro } from './host/HostIntro'
+import { HostJumpBox } from './host/HostJumpBox'
+import { HostLeaderboard } from './host/HostLeaderboard'
+import { HostLobby } from './host/HostLobby'
+import { HostQuestion } from './host/HostQuestion'
+import { HostReveal } from './host/HostReveal'
+import { HostSetup } from './host/HostSetup'
 
 interface Session {
   hostToken: string;
@@ -52,9 +52,9 @@ export function HostPage() {
   useEffect(() => {
     if (!view || view.status === lastStatus.current) return;
     lastStatus.current = view.status;
-    if (view.status === 'lobby') audio.loop('background', 0.5);
+    if (view.status === 'lobby') audio.loop('background', 1);
     else audio.stop('background');
-    if (view.status !== 'lobby' && view.status !== 'finale' && view.status !== 'ended') {
+    if (view.status !== 'lobby' && view.status !== 'ended') {
       audio.loop('quizMusic', QUIZ_MUSIC_VOLUME);
     }
     else audio.stop('quizMusic');
@@ -84,7 +84,7 @@ export function HostPage() {
 
   // Cmd+Shift+1 reloads into a fresh room (the flag tells the reloaded page
   // to create it), Cmd+Shift+2 asks for a question number to jump to, and
-  // Cmd+Shift+3 goes straight to the final results.
+  // Cmd+Shift+9 goes straight to the finale (macOS keeps 3-5 for screenshots).
   const onShortcut = useRef<(e: KeyboardEvent) => void>(() => {});
   onShortcut.current = (e) => {
     if (!e.metaKey || !e.shiftKey) return;
@@ -96,7 +96,7 @@ export function HostPage() {
     } else if (e.code === 'Digit2' && session) {
       e.preventDefault();
       setJumping(true);
-    } else if (e.code === 'Digit3' && session) {
+    } else if (e.code === 'Digit9' && session) {
       e.preventDefault();
       api.finish(session.hostToken);
     }

@@ -56,6 +56,8 @@ host:
     # {keeper} is the player whose answer is the right one (Kyle), {name} the one shown (Ruben).
     playerAnswer: "By the way, Kyle DID tell {name}, and {name} answered"
     correctCount: "{count} of {total} got it right"
+    # Questions with partial credit; "close" is what the phones call "Cosi cosa".
+    spotOnCount: "{count} of {total} spot on, {close} close"
     toLeaderboard: "📊 Show Leaderboard"
     toFinale: "🏁 Finish"
     toNextQuestion: "➡️ Next Question"

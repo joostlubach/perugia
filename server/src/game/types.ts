@@ -220,7 +220,8 @@ export interface PlayerAnswer {
   // dragged-token count for drag_count, correct placements for podium_order,
   // guessed amount in cents for money_vase.
   value: number;
-  // The dish indexes ordered -- menu_order only.
+  // The dish indexes ordered -- menu_order; options ticked -- multi_select;
+  // indexes of the correct answers typed -- multi_text.
   selection?: number[];
   // What was typed -- open_answer; every box joined by " / " -- multi_text.
   text?: string;

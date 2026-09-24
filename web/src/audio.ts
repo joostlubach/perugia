@@ -77,7 +77,11 @@ export const audio = {
 
   stop(key: SoundKey) {
     loops.delete(key);
-    elements.get(key)?.pause();
+    const el = elements.get(key);
+    if (!el) return;
+    el.pause();
+    // Music that comes back later should start over, not resume.
+    el.currentTime = 0;
   },
 
   isMuted() {
