@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { api } from '../api';
+import { useTextInputFocused } from '../hooks/useTextInputFocused';
 import { ReactionPhase, REACTIONS } from '../reactions';
 import { ReactionKind } from '../types';
 
@@ -16,6 +17,7 @@ export function ReactionBar({
   phase: ReactionPhase;
 }) {
   const [coolingDown, setCoolingDown] = useState(false);
+  const keyboardShown = useTextInputFocused();
 
   const react = (kind: ReactionKind) => {
     if (coolingDown) return;
@@ -23,6 +25,8 @@ export function ReactionBar({
     setTimeout(() => setCoolingDown(false), COOLDOWN_MS);
     api.react(playerId, playerToken, kind).catch(() => {});
   };
+
+  if (keyboardShown) return null;
 
   return (
     <div className="reaction-bar">
