@@ -43,8 +43,8 @@ export function JoinQrCorner({ joinCode }: { joinCode: string }) {
   if (!qr) return null;
   return (
     <div className="join-qr-corner">
-      <img src={qr} alt={t('host.lateJoin')} width={96} height={96} />
-      <div>{t('host.lateJoin')}</div>
+      <img src={qr} alt={t('host.lobby.scanToJoin')} width={96} height={96} />
+      <div className="join-qr-corner-code">{joinCode}</div>
     </div>
   );
 }

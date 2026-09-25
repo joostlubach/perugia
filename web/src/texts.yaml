@@ -23,9 +23,6 @@ host:
   # Badge on every screen of a runthrough, where everyone missing is played by an NPC.
   runthrough: "🧪 Runthrough"
 
-  # Under the small QR code in the corner during the game, for latecomers.
-  lateJoin: "Late? Scan to join"
-
   lobby:
     title: "🇮🇹 Ciao tutti 🇮🇹"
     scanToJoin: "Scan to join on your phone"
