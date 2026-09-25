@@ -90,6 +90,16 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
     points: 1000,
   },
   {
+    type: 'multi_select',
+    ...texts('aircoFixed'),
+    category: 'stay',
+    options: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+    // It never was.
+    correctIndexes: [],
+    timeLimitSec: 20,
+    points: 1000,
+  },
+  {
     type: 'multiple_choice',
     ...texts('poolParty'),
     category: 'house',
