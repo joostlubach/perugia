@@ -154,10 +154,10 @@ export function DragCanvas({
 const BULK_AMOUNT = 4;
 
 // Timestamps (seconds) marking where each word starts/ends in pedrope.mp3
-// ("pedro pedro pedro pedro PE", ~3.03s total). Currently just 5 equal
-// slices -- tweak these by ear against the actual recording to line the
-// boundaries up with where each word really falls.
-const PEDRO_WORD_BOUNDARIES = [0, 0.4, 0.9, 1.5, 2.4, 3.033];
+// ("pedro pedro pedro pedro PE", ~3.03s total). Four slices: the fourth
+// "pedro" and the "PE" share one, so every fourth drop finishes the chant.
+// Tweak these by ear to line them up with where each word really falls.
+const PEDRO_WORD_BOUNDARIES = [0, 0.4, 0.9, 1.5, 3.033];
 const PEDRO_CHANT_URL = '/audio/pedrope.mp3';
 
 // Called when the player app opens, long before the Pedro question comes up.
