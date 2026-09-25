@@ -268,6 +268,8 @@ export interface Player {
   score: number;
   joinedAt: number;
   answers: Record<string, PlayerAnswer>;
+  // Stand-in for everyone who didn't join a runthrough; answers randomly.
+  npc?: boolean;
 }
 
 export const REACTION_KINDS = ['mammamia', 'mario', 'losing', 'gibberish', 'congratulations', 'letsgo', 'luigi'] as const;
@@ -303,6 +305,8 @@ export interface Room {
   allAnsweredAt: number | null;
   players: Record<string, Player>;
   createdAt: number;
+  // A rehearsal: starting fills every free avatar with an NPC.
+  runthrough?: boolean;
 }
 
 // The category shows on its own splash screen instead.
@@ -344,6 +348,9 @@ export interface HostRoomView {
   questionStartedAt: number | null;
   question: HostQuestionView | null;
   category: CategoryView | null;
+  runthrough: boolean;
+  // A runthrough nobody joined: questions reveal themselves, without a countdown.
+  npcsOnly: boolean;
   answeredCount: number;
   // Only populated for multiple_choice and menu_order questions.
   optionCounts: number[];

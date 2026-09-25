@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { api } from '../../api';
 import { t } from '../../texts';
 
-export function HostSetup({ onCreated }: { onCreated: (hostToken: string) => void }) {
+export function HostSetup({ runthrough, onCreated }: { runthrough: boolean; onCreated: (hostToken: string) => void }) {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -10,7 +10,7 @@ export function HostSetup({ onCreated }: { onCreated: (hostToken: string) => voi
     setLoading(true);
     setError(null);
     try {
-      const { hostToken } = await api.createRoom();
+      const { hostToken } = await api.createRoom(runthrough);
       onCreated(hostToken);
     } catch (err) {
       setError((err as Error).message);
@@ -24,7 +24,7 @@ export function HostSetup({ onCreated }: { onCreated: (hostToken: string) => voi
       <h1 className="title">{t('host.setup.title')}</h1>
       <div className="card">
         <button className="btn btn-primary btn-lg" disabled={loading} onClick={create}>
-          {t('host.setup.createRoom')}
+          {t(runthrough ? 'host.setup.createRunthrough' : 'host.setup.createRoom')}
         </button>
         {error && <p className="error-text">{error}</p>}
       </div>

@@ -15,8 +15,8 @@ export class GameController {
   constructor(private readonly game: GameService) {}
 
   @Post()
-  createRoom() {
-    return this.game.createRoom();
+  createRoom(@Query('runthrough') runthrough?: string) {
+    return this.game.createRoom(runthrough === '1');
   }
 
   @Get('host')

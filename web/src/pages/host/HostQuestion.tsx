@@ -28,7 +28,7 @@ export function HostQuestion({ view }: { view: HostRoomView }) {
         <img className="question-image" src={question.imageUrl} alt="" />
       )}
       <div className="answer-status">
-        <Countdown startedAt={view.questionStartedAt} timeLimitSec={question.timeLimitSec} />
+        {!view.npcsOnly && <Countdown startedAt={view.questionStartedAt} timeLimitSec={question.timeLimitSec} />}
         <div className="answer-tally">
           <span className="answer-tally-count">
             {view.answeredCount} / {view.playerCount}

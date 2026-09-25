@@ -49,8 +49,8 @@ export const api = {
     return request<string[]>('/avatars');
   },
 
-  createRoom() {
-    return request<{ hostToken: string }>('/room', { method: 'POST' });
+  createRoom(runthrough = false) {
+    return request<{ hostToken: string }>(`/room${runthrough ? '?runthrough=1' : ''}`, { method: 'POST' });
   },
 
   // Only answered on localhost.

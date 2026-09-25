@@ -34,7 +34,7 @@ travel:
     Drag each person to their means of transport for _arriving_ to Perugia!
 
 poolParty:
-  title: Pool Party
+  title: Pool party
   host: |-
     We made it a bit bont the second night in the pool. Not as bont as the third night, but still. Due to jumping off of the wall, the pool lost a wee bit of water. How many liters?
   player: |-
@@ -85,8 +85,10 @@ ruben:
 
 perugia:
   title: Perugia
-  host: What people used to live in Perugia before Octavian burnt their terracotta asses?
-  player: What people used to live in Perugia before Octavian burnt their terracotta asses?
+  host: |-
+    Some of us _did_ go to Perugia to learn something about the history of the region. What people used to live in Perugia before Octavian burnt their terracotta asses?
+  player: |-
+    What people used to live in Perugia before Octavian burnt their terracotta asses?
 
 pool:
   title: The swimming pool

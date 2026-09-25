@@ -22,7 +22,7 @@ export function HostLobby({ view, onStart }: { view: HostRoomView; onStart: () =
       </div>
       <button
         className="btn btn-primary btn-lg"
-        disabled={view.playerCount === 0}
+        disabled={view.playerCount === 0 && !view.runthrough}
         onClick={() => {
           audio.stop('background');
           onStart();

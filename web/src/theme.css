@@ -2136,3 +2136,18 @@ textarea.json-editor {
     transform: scale(0.6);
   }
 }
+
+.runthrough-badge {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 950;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--gold);
+  color: var(--ink);
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  pointer-events: none;
+}

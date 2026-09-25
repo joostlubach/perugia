@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { api, isStaleSession } from '../api'
 import { audio } from '../audio'
 import { MuteToggle } from '../components/MuteToggle'
@@ -28,6 +29,8 @@ const FINAL_LAP_QUESTIONS = 1;
 const QUIZ_MUSIC_VOLUME = 0.2;
 
 export function HostPage() {
+  // Only matters when creating a room (here or with Cmd+Shift+1).
+  const runthrough = useSearchParams()[0].get('runthrough') === '1';
   const [restarting, setRestarting] = useState(() => sessionStorage.getItem(RESTART_KEY) !== null);
   const [session, setSession] = useState<Session | null>(() => {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -81,7 +84,7 @@ export function HostPage() {
     // effect run doesn't create two rooms.
     if (sessionStorage.getItem(RESTART_KEY) === null) return;
     sessionStorage.removeItem(RESTART_KEY);
-    api.createRoom().then(
+    api.createRoom(runthrough).then(
       ({ hostToken }) => handleCreated(hostToken),
       () => {},
     ).finally(() => setRestarting(false));
@@ -120,7 +123,7 @@ export function HostPage() {
   onSpace.current = () => {
     if (!view) return;
     if (view.status === 'lobby') {
-      if (view.playerCount > 0) start();
+      if (view.playerCount > 0 || view.runthrough) start();
     } else if (view.status !== 'ended') {
       advance();
     }
@@ -141,9 +144,10 @@ export function HostPage() {
       {restarting || (session && !view) ? (
         <div className="page">{t('common.loading')}</div>
       ) : !session || !view ? (
-        <HostSetup onCreated={handleCreated} />
+        <HostSetup runthrough={runthrough} onCreated={handleCreated} />
       ) : (
         <>
+          {view.runthrough && <div className="runthrough-badge">{t('host.runthrough')}</div>}
           {view.status === 'lobby' && <HostLobby view={view} onStart={start} />}
           {view.status === 'category' && <HostCategory view={view} onNext={advance} />}
           {view.status === 'intro' && <HostIntro view={view} onStart={advance} />}

@@ -21,6 +21,7 @@ import {
 } from './room.util';
 import { sampleQuestions } from './questions.sample';
 import { CATEGORIES } from './categories';
+import { addNpcs, answerForNpcs } from './npc';
 import { matchAnswers, matchesOpenAnswer, scoreHitList } from './open-answer';
 import {
   CategoryView,
@@ -45,7 +46,7 @@ import {
 export class GameService {
   constructor(@Inject(ROOM_STORE) private readonly store: RoomStore) {}
 
-  async createRoom(): Promise<{ hostToken: string }> {
+  async createRoom(runthrough = false): Promise<{ hostToken: string }> {
     const questions: Question[] = sampleQuestions.map((q, i) => ({ ...q, id: `q${i}` }));
 
     const room: Room = {
@@ -58,6 +59,7 @@ export class GameService {
       allAnsweredAt: null,
       players: {},
       createdAt: Date.now(),
+      runthrough,
     };
     await this.store.set(room);
     return { hostToken: room.hostToken };
@@ -94,6 +96,7 @@ export class GameService {
   async startGame(hostToken: string): Promise<void> {
     const room = await this.requireHost(hostToken);
     if (room.status !== 'lobby') return;
+    if (room.runthrough) addNpcs(room);
     this.goToQuestion(room, 0);
     await this.store.set(room);
   }
@@ -109,7 +112,8 @@ export class GameService {
     } else if (room.status === 'intro') {
       room.status = 'question';
       room.questionStartedAt = Date.now();
-      room.allAnsweredAt = null;
+      // With only NPCs there's nobody to wait for: reveal after the usual short pause.
+      room.allAnsweredAt = npcsOnly(room) ? Date.now() : null;
     } else if (room.status === 'question') {
       this.reveal(room);
     } else if (room.status === 'reveal') {
@@ -142,7 +146,8 @@ export class GameService {
     question.correctAnswer = correctAnswer.trim();
     for (const player of Object.values(room.players)) {
       const answer = player.answers[question.id];
-      if (!answer) continue;
+      // NPCs' made-up scores stand; they never typed anything to check.
+      if (!answer || player.npc) continue;
       player.score -= answer.pointsAwarded;
       answer.correct = matchesOpenAnswer(answer.text ?? '', question.correctAnswer);
       answer.value = answer.correct ? 1 : 0;
@@ -205,6 +210,7 @@ export class GameService {
     room.status = 'reveal';
     const question = room.questions[room.currentQuestionIndex];
     if (question.type === 'open_answer') this.gradeByAnswerKey(room, question);
+    answerForNpcs(room, question);
   }
 
   // An open question with `answerFrom` is scored against that player's own
@@ -371,7 +377,7 @@ export class GameService {
       ...(point ? { point } : {}),
     };
     player.score += pointsAwarded;
-    if (Object.values(room.players).every((p) => p.answers[question.id])) {
+    if (Object.values(room.players).every((p) => p.npc || p.answers[question.id])) {
       room.allAnsweredAt = Date.now();
     }
     await this.store.set(room);
@@ -633,6 +639,8 @@ export class GameService {
       questionStartedAt: room.questionStartedAt,
       question: hostQuestion,
       category: categoryView(room),
+      runthrough: Boolean(room.runthrough),
+      npcsOnly: npcsOnly(room),
       answeredCount,
       optionCounts,
       guesses,
@@ -877,6 +885,11 @@ export class GameService {
 
 function sortLeaderboard(entries: LeaderboardEntry[]): LeaderboardEntry[] {
   return entries.sort((a, b) => b.score - a.score || a.name.localeCompare(b.name));
+}
+
+function npcsOnly(room: Room): boolean {
+  const players = Object.values(room.players);
+  return players.length > 0 && players.every((p) => p.npc);
 }
 
 function categoryView(room: Room): CategoryView | null {

@@ -19,6 +19,10 @@ host:
   setup:
     title: "Host Setup"
     createRoom: "🎉 Create Room"
+    createRunthrough: "🧪 Create runthrough"
+
+  # Badge on every screen of a runthrough, where everyone missing is played by an NPC.
+  runthrough: "🧪 Runthrough"
 
   lobby:
     title: "🇮🇹 Ciao tutti 🇮🇹"
