@@ -71,6 +71,16 @@ host:
     checkAnswers: "✅ Check answers"
     noAnswer: "(nothing)"
     featuredAnswer: "{name} says it's..."
+    # Open question with a rival (Kyle's secret ingredient, with Ruben as the rival).
+    refusedToAnswer: "{name} refused to answer"
+    # Also when {name} typed something that isn't a word, as phones hand in whatever was typed.
+    penalty: "{name} didn't give a real answer, so that's {points} points 😈"
+    revealRival: "But {keeper} did tell {rival}, so what did {rival} answer?"
+    rivalAnswered: "{rival} answered"
+    whichCounts: "Which answer counts?"
+    pickAnswer: "✅ {name}'s answer"
+    pickNobody: "🚫 Nobody gets points"
+    nobodyScores: "Nobody gets points! 🤷"
     # {keeper} is the player whose answer is the right one (Kyle), {name} the one shown (Ruben).
     playerAnswer: "By the way, Kyle DID tell {name}, and {name} answered"
     correctCount: "{count} of {total} got it right"
@@ -140,6 +150,7 @@ player:
     awaitingGradingTitle: "Hmm... 🤔"
     awaitingGradingSubtitle: "The host is checking the answers. Look at the screen!"
     points: "+{points} points"
+    penalty: "{points} points for not giving a real answer 😈"
     noPoints: "Mehp"
     totalScore: "Total score: {score}"
 

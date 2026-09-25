@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { HostPlayerAnswer, HostRoomView } from '../../types';
+import { HostPlayerAnswer, HostRoomView, RulingPick } from '../../types';
 import { AnswerOption } from '../../components/AnswerOption';
 import { MenuCard } from '../../components/MenuCard';
 import { TravelMap } from '../../components/TravelMap';
@@ -12,6 +12,7 @@ import { QuestionText } from '../../components/QuestionText';
 import { isCorrectOption } from '../../scoring';
 import { HostGradeBox } from './HostGradeBox';
 import { OpenAnswerSummary } from './OpenAnswerSummary';
+import { RivalAnswerReveal } from './RivalAnswerReveal';
 import { CorrectTally } from './CorrectTally';
 import { PlayerAnswerView } from './PlayerAnswerView';
 import { PlayerPicker } from './PlayerPicker';
@@ -21,11 +22,13 @@ export function HostReveal({
   view,
   onNext,
   onGrade,
+  onRule,
   loadAnswer,
 }: {
   view: HostRoomView;
   onNext: () => void;
   onGrade: (correctAnswer: string) => void;
+  onRule: (pick: RulingPick) => void;
   loadAnswer: (playerId: string) => Promise<HostPlayerAnswer>;
 }) {
   const question = view.question!;
@@ -63,6 +66,16 @@ export function HostReveal({
 
       {selectedId ? (
         shown?.playerId === selectedId && <PlayerAnswerView question={question} player={shown} />
+      ) : question.type === 'open_answer' && question.answerFrom && question.rivalAnswerFrom ? (
+        <RivalAnswerReveal
+          guesses={view.guesses}
+          answerFrom={question.answerFrom}
+          rivalAnswerFrom={question.rivalAnswerFrom}
+          correctAnswer={question.correctAnswer}
+          rivalRevealed={view.rivalRevealed}
+          onRevealRival={onNext}
+          onRule={onRule}
+        />
       ) : question.type === 'open_answer' ? (
         <>
           {question.correctAnswer === undefined ? (
@@ -71,7 +84,7 @@ export function HostReveal({
           ) : (
             <OpenAnswerSummary
               guesses={view.guesses}
-              correctAnswer={question.correctAnswer}
+              correctAnswer={question.correctAnswer ?? ''}
               answerFrom={question.answerFrom}
               showAnswersOf={question.showAnswersOf ?? []}
             />
@@ -206,17 +219,20 @@ export function HostReveal({
         </>
       )}
 
-      <button
-        className="btn btn-primary btn-lg"
-        disabled={question.type === 'open_answer' && question.correctAnswer === undefined}
-        onClick={onNext}
-      >
-        {view.afterReveal === 'leaderboard'
-          ? t('host.reveal.toLeaderboard')
-          : view.afterReveal === 'finale'
-            ? t('host.reveal.toFinale')
-            : t('host.reveal.toNextQuestion')}
-      </button>
+      {/* With a rival, the reveal has its own buttons until the host has ruled. */}
+      {!(question.type === 'open_answer' && question.rivalAnswerFrom && question.correctAnswer === undefined) && (
+        <button
+          className="btn btn-primary btn-lg"
+          disabled={question.type === 'open_answer' && question.correctAnswer === undefined}
+          onClick={onNext}
+        >
+          {view.afterReveal === 'leaderboard'
+            ? t('host.reveal.toLeaderboard')
+            : view.afterReveal === 'finale'
+              ? t('host.reveal.toFinale')
+              : t('host.reveal.toNextQuestion')}
+        </button>
+      )}
     </div>
   );
 }

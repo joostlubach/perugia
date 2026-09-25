@@ -146,9 +146,10 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
     type: 'open_answer',
     ...texts('kyle'),
     category: 'food',
-    // Whatever Kyle types is the right answer.
+    // Kyle told Ruben the secret too; the host picks whose answer counts.
     answerFrom: 'kyle',
-    showAnswersOf: ['ruben'],
+    rivalAnswerFrom: 'ruben',
+    noAnswerPenalty: 500,
     timeLimitSec: 45,
     points: 1500,
   },

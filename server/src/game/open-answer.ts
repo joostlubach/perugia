@@ -38,6 +38,12 @@ export function scoreHitList(matched: number[], answerCount: number, boxes: numb
   return matched.reduce((sum, i) => sum + worth(i), 0) / boxes;
 }
 
+// Whether something was really answered: at least one word of two letters or digits.
+// Phones hand in whatever was typed when time runs out, so "" or "." can come in.
+export function isRealAnswer(text: string | undefined): boolean {
+  return !!text && /[\p{L}\p{N}]{2,}/u.test(text);
+}
+
 const LAST_HIT_WORTH = 0.5;
 
 function matchesLoosely(guess: string, correct: string): boolean {

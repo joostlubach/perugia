@@ -23,7 +23,7 @@ import {
 import { sampleQuestions } from './questions.sample';
 import { CATEGORIES } from './categories';
 import { addNpcs, answerForNpcs, planNpcAnswers } from './npc';
-import { matchAnswers, matchesOpenAnswer, scoreHitList } from './open-answer';
+import { isRealAnswer, matchAnswers, matchesOpenAnswer, scoreHitList } from './open-answer';
 import {
   AnswerDetail,
   CategoryView,
@@ -33,6 +33,7 @@ import {
   HostRoomView,
   LeaderboardEntry,
   Player,
+  PlayerAnswer,
   PlayerQuestionView,
   PlayerRoomView,
   Point,
@@ -41,6 +42,7 @@ import {
   OpenAnswerQuestion,
   Room,
   RoomStatus,
+  RulingPick,
   SituationSketchQuestion,
   SketchPlacement,
 } from './types';
@@ -117,6 +119,16 @@ export class GameService {
     } else if (room.status === 'question') {
       await this.reveal(room);
     } else if (room.status === 'reveal') {
+      const question = room.questions[room.currentQuestionIndex];
+      if (question.type === 'open_answer' && question.rivalAnswerFrom) {
+        if (!room.rivalRevealed) {
+          room.rivalRevealed = true;
+          await this.store.set(room);
+          return;
+        }
+        // The host has to rule first (see rule).
+        if (question.correctAnswer === undefined) return;
+      }
       const next = afterReveal(room);
       if (next === 'intro') this.goToQuestion(room, room.currentQuestionIndex + 1);
       else room.status = next;
@@ -136,32 +148,53 @@ export class GameService {
     const question = room.questions[room.currentQuestionIndex];
     if (!question || question.type !== 'open_answer') throw new BadRequestException('Not an open question');
     if (room.status !== 'reveal') throw new BadRequestException('Answers can only be checked at the reveal');
-    await this.store.setAnswers(this.gradeOpenAnswers(room, question, correctAnswer, null));
+    const keeper = playerWithAvatar(room, question.answerFrom);
+    await this.store.setAnswers(this.gradeOpenAnswers(room, question, correctAnswer, keeper ? [keeper.id] : []));
     await this.store.set(room);
   }
 
-  // (Re)scores every typed answer against `correctAnswer`. The player who
-  // supplied the answer (if any) gets no points for it -- they knew it.
+  // At the reveal of an open question with a rival, once the rival's answer
+  // is shown: the host picks whose answer counts, or that nobody scores.
+  // Can be redone.
+  async rule(hostToken: string, pick: RulingPick): Promise<void> {
+    const room = await this.requireHost(hostToken);
+    const question = room.questions[room.currentQuestionIndex];
+    if (question?.type !== 'open_answer' || !question.rivalAnswerFrom) throw new BadRequestException('Nothing to rule on');
+    if (room.status !== 'reveal' || !room.rivalRevealed) throw new BadRequestException('Reveal both answers first');
+    const keeper = playerWithAvatar(room, question.answerFrom);
+    const rival = playerWithAvatar(room, question.rivalAnswerFrom);
+    const source = pick === 'answerFrom' ? keeper : pick === 'rival' ? rival : undefined;
+    const text = source?.answers[question.id]?.text;
+    if (pick !== 'nobody' && !isRealAnswer(text)) throw new BadRequestException('They did not answer');
+    const sourceIds = [keeper, rival].flatMap((p) => (p ? [p.id] : []));
+    await this.store.setAnswers(this.gradeOpenAnswers(room, question, pick === 'nobody' ? null : text!, sourceIds));
+    await this.store.set(room);
+  }
+
+  // (Re)scores every typed answer against `correctAnswer`, or none of them
+  // when it's null. The players who supplied an answer keep what they had
+  // (nothing, or a penalty for not answering) -- they knew it.
   // Returns the rescored answers, to be saved.
   private gradeOpenAnswers(
     room: Room,
     question: OpenAnswerQuestion,
-    correctAnswer: string,
-    keeperId: string | null,
+    correctAnswer: string | null,
+    sourceIds: string[],
   ): AnswerEntry[] {
-    question.correctAnswer = correctAnswer.trim();
+    question.correctAnswer = correctAnswer?.trim() ?? null;
     const entries: AnswerEntry[] = [];
     for (const player of Object.values(room.players)) {
       const answer = player.answers[question.id];
       // NPCs' made-up scores stand; they never typed anything to check.
       if (!answer || player.npc) continue;
       player.score -= answer.pointsAwarded;
-      answer.correct = matchesOpenAnswer(answer.text ?? '', question.correctAnswer);
+      answer.correct = question.correctAnswer !== null && matchesOpenAnswer(answer.text ?? '', question.correctAnswer);
       answer.value = answer.correct ? 1 : 0;
-      answer.pointsAwarded =
-        answer.correct && player.id !== keeperId
+      if (!sourceIds.includes(player.id)) {
+        answer.pointsAwarded = answer.correct
           ? scoreForAnswer(question.points, question.timeLimitSec, answer.answeredAtMs)
           : 0;
+      }
       player.score += answer.pointsAwarded;
       entries.push({ playerId: player.id, questionId: question.id, answer });
     }
@@ -207,6 +240,7 @@ export class GameService {
     room.currentQuestionIndex = index;
     room.questionStartedAt = null;
     delete room.npcAnswers;
+    delete room.rivalRevealed;
   }
 
   // Hands in the NPC answers that are due, and closes answering once time is
@@ -229,17 +263,36 @@ export class GameService {
   private async reveal(room: Room) {
     room.status = 'reveal';
     const question = room.questions[room.currentQuestionIndex];
-    if (question.type === 'open_answer') await this.store.setAnswers(this.gradeByAnswerKey(room, question));
+    if (question.type === 'open_answer') {
+      await this.store.setAnswers([
+        ...this.penalizeNoAnswer(room, question),
+        // With a rival, the host rules on the answer instead (see rule).
+        ...(question.rivalAnswerFrom ? [] : this.gradeByAnswerKey(room, question)),
+      ]);
+    }
     await Promise.all(answerForNpcs(room, question).map((entry) => this.store.addAnswer(entry)));
   }
 
   // An open question with `answerFrom` is scored against that player's own
   // answer. If they didn't answer, the host types the answer in instead.
   private gradeByAnswerKey(room: Room, question: OpenAnswerQuestion): AnswerEntry[] {
-    if (!question.answerFrom) return [];
-    const keeper = Object.values(room.players).find((p) => p.avatar === question.answerFrom);
+    const keeper = playerWithAvatar(room, question.answerFrom);
     const text = keeper?.answers[question.id]?.text;
-    return keeper && text ? this.gradeOpenAnswers(room, question, text, keeper.id) : [];
+    return keeper && isRealAnswer(text) ? this.gradeOpenAnswers(room, question, text!, [keeper.id]) : [];
+  }
+
+  // The answer key player loses `noAnswerPenalty` points if they're playing
+  // but didn't really answer. Kept on their answer, so replaying the question undoes it.
+  private penalizeNoAnswer(room: Room, question: OpenAnswerQuestion): AnswerEntry[] {
+    const keeper = playerWithAvatar(room, question.answerFrom);
+    if (!keeper || !question.noAnswerPenalty || isRealAnswer(keeper.answers[question.id]?.text)) return [];
+    const answer: PlayerAnswer = {
+      ...(keeper.answers[question.id] ?? { answeredAtMs: question.timeLimitSec * 1000, value: 0, correct: false }),
+      pointsAwarded: -question.noAnswerPenalty,
+    };
+    keeper.score += answer.pointsAwarded - (keeper.answers[question.id]?.pointsAwarded ?? 0);
+    keeper.answers[question.id] = answer;
+    return [{ playerId: keeper.id, questionId: question.id, answer }];
   }
 
   async submitAnswer(
@@ -530,6 +583,7 @@ export class GameService {
           points: question.points,
           correctAnswer: question.correctAnswer,
           answerFrom: question.answerFrom,
+          rivalAnswerFrom: question.rivalAnswerFrom,
           showAnswersOf: question.showAnswersOf,
         };
       } else if (question.type === 'multi_text') {
@@ -683,6 +737,7 @@ export class GameService {
       optionCounts,
       guesses,
       afterReveal: afterReveal(room),
+      rivalRevealed: Boolean(room.rivalRevealed),
       playerCount: Object.keys(room.players).length,
       players: Object.values(room.players).map((p) => ({ id: p.id, name: p.name, avatar: p.avatar, score: p.score })),
       leaderboard: this.leaderboard(room),
@@ -937,6 +992,10 @@ function allAnsweredAt(room: Room): number | null {
     last = Math.max(last, answer.answeredAtMs);
   }
   return room.questionStartedAt + last;
+}
+
+function playerWithAvatar(room: Room, avatar: string | undefined): Player | undefined {
+  return avatar ? Object.values(room.players).find((p) => p.avatar === avatar) : undefined;
 }
 
 function categoryView(room: Room): CategoryView | null {

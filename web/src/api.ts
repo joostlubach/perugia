@@ -9,6 +9,7 @@ import {
   QuestionInput,
   ReactionKind,
   RoomStatus,
+  RulingPick,
   SketchAnswer,
   TextAnswer,
   TraceAnswer,
@@ -100,6 +101,13 @@ export const api = {
     return request<void>(`/room/grade?token=${encodeURIComponent(token)}`, {
       method: 'POST',
       body: JSON.stringify({ correctAnswer }),
+    });
+  },
+
+  rule(token: string, pick: RulingPick) {
+    return request<void>(`/room/rule?token=${encodeURIComponent(token)}`, {
+      method: 'POST',
+      body: JSON.stringify({ pick }),
     });
   },
 

@@ -130,16 +130,18 @@ to the final results.
 (
   What is the secret ingredient in Kyle's Red Wine Spaghetti?
 
-  Open question: everyone types an answer, Kyle too. Whatever Kyle typed is the
-  right answer; it's shown on the big screen at the reveal ("Kyle says it's..."),
-  with Ruben's answer and how many got it right. Other answers stay private.
-  Everyone, Ruben included, is scored against Kyle's answer.
-  If Kyle didn't answer, the host types in the answer instead.
+  Open question: everyone types an answer, Kyle and Ruben too. The reveal first
+  shows only Kyle's answer ("Kyle says it's...", or "Kyle refused to answer").
+  On space or the button, Ruben's answer follows ("Kyle told Ruben...").
+  The host then picks which one counts: Kyle's, Ruben's (only the ones that were
+  given), or "Nobody gets points". Then how many got it right shows. Other
+  answers stay private.
 
-  Scoring: 1500 pts, 45s. Full points when the answer matches Kyle's, allowing for
-  case, accents, punctuation, plurals, small typos, filler words ("the", "some", ...)
-  and extra words around it ("I think it's cinnamon"). No partial points.
-  Kyle himself gets no points for this one.
+  Scoring: 1500 pts, 45s. Full points when the answer matches the picked one,
+  allowing for case, accents, punctuation, plurals, small typos, filler words
+  ("the", "some", ...) and extra words around it ("I think it's cinnamon").
+  No partial points. Kyle and Ruben get no points for this one, and Kyle loses
+  500 if he's playing but didn't answer.
 )
 
 (

@@ -7,6 +7,7 @@ import { JoinRoomDto } from './dto/join-room.dto';
 import { AnswerDto } from './dto/answer.dto';
 import { ReactDto } from './dto/react.dto';
 import { GradeDto } from './dto/grade.dto';
+import { RuleDto } from './dto/rule.dto';
 
 // There's only one room -- a single reunion, played once -- so none of
 // these routes take a room identifier.
@@ -65,6 +66,11 @@ export class GameController {
   @Post('grade')
   grade(@Query('token') token: string, @Body() dto: GradeDto) {
     return this.game.grade(token, dto.correctAnswer);
+  }
+
+  @Post('rule')
+  rule(@Query('token') token: string, @Body() dto: RuleDto) {
+    return this.game.rule(token, dto.pick);
   }
 
   @Post('resume')

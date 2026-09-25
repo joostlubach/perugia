@@ -24,7 +24,11 @@ export function PlayerReveal({ view }: { view: PlayerRoomView }) {
               ? t('player.reveal.partlyCorrect')
               : t('player.reveal.wrong')}</h1>
           <p className="subtitle">
-            {points > 0 ? t('player.reveal.points', { points }) : t('player.reveal.noPoints')}
+            {points > 0
+              ? t('player.reveal.points', { points })
+              : points < 0
+                ? t('player.reveal.penalty', { points })
+                : t('player.reveal.noPoints')}
           </p>
         </>
       ) : (

@@ -164,6 +164,7 @@ export function HostPage() {
               view={view}
               onNext={advance}
               onGrade={(correctAnswer) => session && api.grade(session.hostToken, correctAnswer)}
+              onRule={(pick) => session && api.rule(session.hostToken, pick)}
               loadAnswer={(playerId) => api.getPlayerAnswer(session!.hostToken, playerId)}
             />
           )}

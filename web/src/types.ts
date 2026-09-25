@@ -280,10 +280,12 @@ export type HostQuestionView = (
       text: string;
       timeLimitSec: number;
       points: number;
-      // Typed in by the host at the reveal.
-      correctAnswer?: string;
+      // Typed in by the host at the reveal; null when the host ruled that nobody gets points.
+      correctAnswer?: string | null;
       // Avatar key of the player whose answer is the right one.
       answerFrom?: string;
+      // Avatar key of a player who also claims to know it; the host picks whose answer counts.
+      rivalAnswerFrom?: string;
       // Other players whose answers are shown on the big screen too.
       showAnswersOf?: string[];
     }
@@ -442,6 +444,9 @@ export interface CategoryView {
   videoUrl?: string;
 }
 
+// Whose answer the host rules correct, for an open question with a rival.
+export type RulingPick = 'answerFrom' | 'rival' | 'nobody';
+
 export interface HostRoomView {
   status: RoomStatus;
   joinCode: string;
@@ -456,6 +461,8 @@ export interface HostRoomView {
   optionCounts: number[];
   guesses: HostGuess[];
   afterReveal: 'leaderboard' | 'intro' | 'finale';
+  // At the reveal of an open question with a rival: the rival's answer is shown.
+  rivalRevealed: boolean;
   playerCount: number;
   players: LeaderboardEntry[];
   leaderboard: LeaderboardEntry[];

@@ -46,17 +46,27 @@ export interface MenuOrderQuestion extends QuestionBase {
 
 // Player types a free answer. Nobody knows the right one beforehand: it's
 // whatever the `answerFrom` player typed, or else what the host types in at
-// the reveal. Answers are only scored then.
+// the reveal. With a `rivalAnswerFrom`, the host instead picks between the
+// two players' answers. Answers are only scored then.
 export interface OpenAnswerQuestion extends QuestionBase {
   type: 'open_answer';
-  // Set at the reveal.
-  correctAnswer?: string;
+  // Set at the reveal; null when the host ruled that nobody gets points.
+  correctAnswer?: string | null;
   // Avatar key of the player whose answer is the right one (e.g. the cook).
   answerFrom?: string;
+  // Avatar key of a player who also claims to know the answer. Revealed after
+  // the `answerFrom` one, then the host picks which counts (see RulingPick).
+  rivalAnswerFrom?: string;
+  // Taken off the `answerFrom` player's score when they don't answer.
+  noAnswerPenalty?: number;
   // Other players whose answers are shown on the big screen too. Everyone
   // else's stays private.
   showAnswersOf?: string[];
 }
+
+// Whose answer the host rules correct, for an open question with a rival.
+export const RULING_PICKS = ['answerFrom', 'rival', 'nobody'] as const;
+export type RulingPick = (typeof RULING_PICKS)[number];
 
 // Player types an answer in each of `boxes` boxes, scored right away against
 // a fixed list, which may hold more right answers than there are boxes. Each
@@ -323,6 +333,8 @@ export interface Room {
   // Each NPC's answer to the current question by player id, handed in once
   // its `answeredAtMs` has passed.
   npcAnswers?: Record<string, PlayerAnswer>;
+  // At the reveal of an open question with a rival: the rival's answer is shown.
+  rivalRevealed?: boolean;
 }
 
 // The category shows on its own splash screen instead.
@@ -372,6 +384,7 @@ export interface HostRoomView {
   guesses: HostGuess[];
   // Where advancing from the reveal goes.
   afterReveal: 'leaderboard' | 'intro' | 'finale';
+  rivalRevealed: boolean;
   playerCount: number;
   players: LeaderboardEntry[];
   leaderboard: LeaderboardEntry[];
