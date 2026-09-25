@@ -706,7 +706,7 @@ export class GameService {
           options: question.options,
           timeLimitSec: question.timeLimitSec,
           points: question.points,
-          ...(revealed ? { correctIndexes: question.correctIndexes } : {}),
+          ...(revealed ? { correctIndexes: question.correctIndexes, revealOrder: question.revealOrder } : {}),
         };
       } else {
         hostQuestion = {

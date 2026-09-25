@@ -9,6 +9,8 @@ export interface Category {
   imageUrl?: string;
   // Played with sound instead of the image; the quiz music pauses for it.
   videoUrl?: string;
+  // Decoration floating behind the big screen for the whole category.
+  backdrop?: 'music';
 }
 
 // The current question's category.
@@ -157,6 +159,9 @@ export interface MultiSelectQuestion extends QuestionBase {
   type: 'multi_select';
   options: string[];
   correctIndexes: number[];
+  // Option indexes in the order the reveal lists them (correct ones, then
+  // wrong ones, each in this order). Defaults to the options' own order.
+  revealOrder?: number[];
 }
 
 export interface Point {

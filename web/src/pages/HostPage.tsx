@@ -4,6 +4,7 @@ import { audio } from '../audio'
 import { preloadReactionSounds } from '../reactions'
 import { MuteToggle } from '../components/MuteToggle'
 import { JoinQrCorner } from '../components/JoinQrCode'
+import { MusicNotes } from '../components/MusicNotes'
 import { ReactionCallouts } from '../components/ReactionCallouts'
 import { usePolling } from '../hooks/usePolling'
 import { t } from '../texts'
@@ -29,6 +30,8 @@ const RUNTHROUGH = 'runthrough';
 const FINAL_LAP_QUESTIONS = 1;
 // Kept well under the lobby tarantella so it stays in the background.
 const QUIZ_MUSIC_VOLUME = 0.2;
+// The screens that belong to the current question's category (for its backdrop).
+const IN_CATEGORY: string[] = ['category', 'intro', 'question', 'reveal'];
 
 export function HostPage() {
   const [restarting, setRestarting] = useState(() => sessionStorage.getItem(RESTART_KEY) !== null);
@@ -155,6 +158,7 @@ export function HostPage() {
         <HostSetup onCreated={handleCreated} />
       ) : (
         <>
+          {view.category?.backdrop === 'music' && IN_CATEGORY.includes(view.status) && <MusicNotes />}
           {view.runthrough && <div className="runthrough-badge">{t('host.runthrough')}</div>}
           {view.status === 'lobby' && <HostLobby view={view} onStart={start} />}
           {view.status === 'category' && <HostCategory view={view} onNext={advance} />}

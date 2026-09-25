@@ -2222,6 +2222,44 @@ textarea.json-editor {
   color: var(--choc-brown);
 }
 
+.music-notes {
+  position: fixed;
+  inset: 0;
+  /* Behind the page's content, in front of the body's gradient. */
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.music-notes span {
+  position: absolute;
+  bottom: -4rem;
+  color: white;
+  opacity: 0;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  animation: music-note-float linear infinite;
+}
+
+@keyframes music-note-float {
+  0% {
+    transform: translate(0, 0) rotate(-12deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.55;
+  }
+  50% {
+    transform: translate(var(--drift), -55vh) rotate(12deg);
+  }
+  90% {
+    opacity: 0.55;
+  }
+  100% {
+    transform: translate(0, -115vh) rotate(-12deg);
+    opacity: 0;
+  }
+}
+
 .runthrough-badge {
   position: fixed;
   top: 12px;

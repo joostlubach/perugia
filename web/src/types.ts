@@ -351,6 +351,7 @@ export type HostQuestionView = (
       timeLimitSec: number;
       points: number;
       correctIndexes?: number[];
+      revealOrder?: number[];
     }
   | {
       id: string;
@@ -442,6 +443,7 @@ export interface CategoryView {
   emoji: string;
   imageUrl?: string;
   videoUrl?: string;
+  backdrop?: 'music';
 }
 
 // Whose answer the host rules correct, for an open question with a rival.
