@@ -195,10 +195,11 @@ export function HostReveal({
         </>
       ) : question.type === 'multi_select' ? (
         <>
-          <TallyList
-            items={question.options}
+          <MultiSelectTally
+            options={question.options}
             counts={view.optionCounts}
-            isCorrect={(i) => !!question.correctIndexes?.includes(i)}
+            correctIndexes={question.correctIndexes ?? []}
+            order={question.revealOrder}
           />
           {correctTally}
         </>
@@ -234,5 +235,38 @@ export function HostReveal({
         </button>
       )}
     </div>
+  );
+}
+
+// The correct options in one list, the wrong ones in a second list below it.
+function MultiSelectTally({
+  options,
+  counts,
+  correctIndexes,
+  order = options.map((_, i) => i),
+}: {
+  options: string[];
+  counts: number[];
+  correctIndexes: number[];
+  order?: number[];
+}) {
+  const maxCount = Math.max(1, ...counts);
+  const list = (correct: boolean) => {
+    const indexes = order.filter((i) => correctIndexes.includes(i) === correct);
+    if (indexes.length === 0) return null;
+    return (
+      <TallyList
+        items={indexes.map((i) => options[i])}
+        counts={indexes.map((i) => counts[i] ?? 0)}
+        isCorrect={() => correct}
+        maxCount={maxCount}
+      />
+    );
+  };
+  return (
+    <>
+      {list(true)}
+      {list(false)}
+    </>
   );
 }

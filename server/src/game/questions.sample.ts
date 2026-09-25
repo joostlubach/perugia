@@ -249,6 +249,8 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
       '’k Heb geen oog dichtgedaan',
     ],
     correctIndexes: [1, 2, 3, 5, 8],
+    // The lines as they were sung, then the fake ones.
+    revealOrder: [5, 2, 8, 1, 3, 9, 7, 4, 0, 6],
     timeLimitSec: 45,
     points: 1500,
   },

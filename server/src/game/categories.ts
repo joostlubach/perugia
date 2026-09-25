@@ -7,7 +7,7 @@ export const CATEGORIES = {
   house: { title: 'Activities at the house', emoji: '🤸', imageUrl: '/images/pool.jpg' },
   food: { title: 'Food & drink', emoji: '🍝', imageUrl: '/images/wine.jpg' },
   trivia: { title: 'General trivia', emoji: '🧠', imageUrl: '/images/italy.jpg' },
-  music: { title: 'Music round', emoji: '🎶', videoUrl: '/images/dance.mp4' },
+  music: { title: 'Music round', emoji: '🎶', videoUrl: '/images/dance.mp4', backdrop: 'music' },
   trips: { title: 'Day trips & activities', emoji: '🚗', imageUrl: '/images/karten.jpg' },
   finances: { title: 'Finances', emoji: '💶' },
 } satisfies Record<string, Category>;

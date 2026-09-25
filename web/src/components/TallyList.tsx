@@ -3,13 +3,14 @@ export function TallyList({
   items,
   counts,
   isCorrect,
+  maxCount = Math.max(1, ...counts),
 }: {
   items: string[];
   counts: number[];
   isCorrect?: (index: number) => boolean;
+  // To scale the bars the same as a list shown next to this one.
+  maxCount?: number;
 }) {
-  const maxCount = Math.max(1, ...counts);
-
   return (
     <ol className="tally-list">
       {items.map((text, i) => {
