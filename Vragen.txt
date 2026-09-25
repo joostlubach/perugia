@@ -68,9 +68,9 @@ to the final results.
 
 (
   What was the problem?
-  - All of the above
   - The dishwasher broke
   - The airco was not working in apartment 4 [correct]
+  - All of the above
   - None of the above
 
   Scoring: 1000 pts, 20s. Multiple choice: all or nothing.
