@@ -33,6 +33,11 @@ travel:
   player: |-
     Drag each person to their means of transport for _arriving_ to Perugia!
 
+problem:
+  title: The problem
+  host: What was the problem?
+  player: What was the problem?
+
 poolParty:
   title: Pool party
   host: |-

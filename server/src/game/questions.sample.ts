@@ -77,6 +77,20 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
   },
   {
     type: 'multiple_choice',
+    ...texts('problem'),
+    category: 'stay',
+    options: [
+      'All of the above',
+      'The dishwasher broke',
+      'The airco was not working in apartment 4',
+      'None of the above',
+    ],
+    correctIndex: 2,
+    timeLimitSec: 20,
+    points: 1000,
+  },
+  {
+    type: 'multiple_choice',
     ...texts('poolParty'),
     category: 'house',
     options: ['30 liters', '300 liters', '3000 liters', '30.000 liters'],

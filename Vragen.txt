@@ -66,6 +66,16 @@ to the final results.
   Scoring: 2000 pts, 120s. A share per person at the right stop.
 )
 
+(
+  What was the problem?
+  - All of the above
+  - The dishwasher broke
+  - The airco was not working in apartment 4 [correct]
+  - None of the above
+
+  Scoring: 1000 pts, 20s. Multiple choice: all or nothing.
+)
+
 === Activities at the house ===
 
 (
