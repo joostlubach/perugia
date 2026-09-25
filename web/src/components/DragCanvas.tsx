@@ -10,7 +10,7 @@ interface Token {
 }
 
 // A "how many times does X happen" question: the player drags a labeled chip
-// onto the canvas once per guessed occurrence, or a ×5 chip to add five at
+// onto the canvas once per guessed occurrence, or a ×4 chip to add four at
 // once. There's no counter shown -- it's just a pile of chips, same as
 // tallying by hand.
 export function DragCanvas({
@@ -75,7 +75,7 @@ export function DragCanvas({
     if (amount > 1) sequencerRef.current?.stop();
     const added: Token[] = [];
     for (let i = 0; i < amount; i++) {
-      // The sequencer queues slices back to back, so ×5 chants five words in a row.
+      // The sequencer queues slices back to back, so ×4 chants four words in a row.
       if (sequencerRef.current) sequencerRef.current.playNext();
       nextId.current += 1;
       added.push({ id: nextId.current, rot: Math.random() * 16 - 8 });
@@ -151,7 +151,7 @@ export function DragCanvas({
   );
 }
 
-const BULK_AMOUNT = 5;
+const BULK_AMOUNT = 4;
 
 // Timestamps (seconds) marking where each word starts/ends in pedrope.mp3
 // ("pedro pedro pedro pedro PE", ~3.03s total). Currently just 5 equal
