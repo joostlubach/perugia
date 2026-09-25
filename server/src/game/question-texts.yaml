@@ -119,6 +119,11 @@ dogs:
   host: How many dogs did we have in total?
   player: How many dogs did we have in total?
 
+apkSong:
+  title: The APK song
+  host: The first night, we riffed up a song about Ismail's APK problems. Which of the following lines were in there?
+  player: Which lines were in the song about Ismail's APK problems? Select all that apply.
+
 singer:
   title: She dead
   host: A famous singer died during our trip. Name two of her hit songs.
