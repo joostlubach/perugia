@@ -1,5 +1,6 @@
 import {
   HamLine,
+  HostPlayerAnswer,
   HostRoomView,
   MultiSelectAnswer,
   PinAnswer,
@@ -63,6 +64,12 @@ export const api = {
       method: 'POST',
       body: JSON.stringify({ joinCode, name, avatar }),
     });
+  },
+
+  getPlayerAnswer(token: string, playerId: string) {
+    return request<HostPlayerAnswer>(
+      `/room/answer?token=${encodeURIComponent(token)}&playerId=${encodeURIComponent(playerId)}`,
+    );
   },
 
   getHostView(token: string) {

@@ -600,6 +600,34 @@ export type PlayerQuestionView =
       points: number;
     };
 
+// One player's answer to the current question, for the host to show at the reveal.
+export interface HostPlayerAnswer {
+  playerId: string;
+  name: string;
+  avatar: string;
+  answer: HostAnswer | null;
+}
+
+export interface HostAnswer {
+  value: number;
+  correct: boolean;
+  pointsAwarded: number;
+  // Dish indexes -- menu_order; options ticked -- multi_select.
+  selection?: number[];
+  // What was typed -- open_answer and multi_text.
+  text?: string;
+  // Where the avatar was dropped -- map_pin.
+  point?: Point;
+  // The answer as given. Missing for NPCs, which only make up a score.
+  detail?: {
+    // Avatar keys per group -- podium_order; per stop -- travel_map.
+    order?: string[][];
+    placements?: SketchPlacement[];
+    line?: HamLine;
+    strokes?: Point[][];
+  };
+}
+
 export interface PlayerLastResult {
   value: number;
   answeredAtMs: number;

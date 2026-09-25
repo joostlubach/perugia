@@ -71,8 +71,10 @@ wine:
 
 kyle:
   title: Kyle's secret ingredient
-  host: What is the secret ingredient in Kyle's Red Wine Spaghetti?
-  player: What is the secret ingredient in Kyle's Red Wine Spaghetti?
+  host: |-
+    Kyle made a red wine spaghetti with a secret ingredient. But what was the secret ingredient?
+  player: |-
+    What is the secret ingredient in Kyle's Red Wine Spaghetti?
 
 ruben:
   title: Senze glutine
@@ -92,8 +94,10 @@ perugia:
 
 pool:
   title: The swimming pool
-  host: What was the reason the swimming pool was where it was?
-  player: What was the reason the swimming pool was where it was?
+  host: |-
+    What was the reason the swimming pool was where it was?
+  player: |-
+    What was the reason the swimming pool was where it was?
 
 serverRoom:
   title: Server room
@@ -106,7 +110,7 @@ dogs:
   player: How many dogs did we have in total?
 
 singer:
-  title: Turn around
+  title: She dead
   host: A famous singer died during our trip. Name two of her hit songs.
   player: Name two hit songs of the singer who died during our trip.
 

@@ -57,6 +57,15 @@ host:
     title: "The right answer"
     hamGoal: "The goal was a perfect 50/50 split by area."
     distanceKm: "{name}: {km} km"
+    # Showing one player's answer (picked with the button in the top right).
+    pickPlayer: "👤 Show one answer"
+    showAll: "👥 Show all answers"
+    answerOf: "{name}'s answer"
+    noAnswerFrom: "{name} didn't answer"
+    pointsEarned: "+{points} points"
+    correctWas: "Correct: {answer}"
+    kmOff: "{km} km off"
+    scorePercent: "Score: {score}%"
     # Open question. The right answer is what {name} (Kyle) typed; the host only
     # types it in when he didn't answer.
     typeCorrectAnswer: "Type the correct answer"

@@ -7,6 +7,7 @@ export function AnswerOption({
   maxCount,
   isCorrect,
   revealed,
+  picked,
 }: {
   index: number;
   text: string;
@@ -14,12 +15,14 @@ export function AnswerOption({
   maxCount?: number;
   isCorrect?: boolean;
   revealed?: boolean;
+  // The one option a single player picked, when showing their answer.
+  picked?: boolean;
 }) {
-  const dimmed = revealed && !isCorrect;
+  const dimmed = revealed && !isCorrect && !picked;
   const pct = count !== undefined && maxCount ? Math.round((count / maxCount) * 100) : 0;
 
   return (
-    <div className={`shape-btn shape-${index} ${dimmed ? 'dimmed' : ''} ${revealed && isCorrect ? 'correct' : ''}`}>
+    <div className={`shape-btn shape-${index} ${dimmed ? 'dimmed' : ''} ${revealed && isCorrect ? 'correct' : ''} ${picked ? 'picked' : ''}`}>
       <Shape index={index} />
       <div style={{ flex: 1, textAlign: 'left' }}>
         <div>{text}</div>
@@ -30,6 +33,7 @@ export function AnswerOption({
         )}
       </div>
       {count !== undefined && <div>{count}</div>}
+      {picked && <div>👈</div>}
     </div>
   );
 }

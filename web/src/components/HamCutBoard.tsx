@@ -111,7 +111,7 @@ export function HamCutBoard({
 
 // Clips the infinite line through p1/p2 to the [0,1]x[0,1] square, so it's
 // drawn all the way across the canvas rather than just between the handles.
-function clipLineToUnitSquare(p1: Point, p2: Point): [Point, Point] | null {
+export function clipLineToUnitSquare(p1: Point, p2: Point): [Point, Point] | null {
   const dx = p2.x - p1.x;
   const dy = p2.y - p1.y;
   if (Math.abs(dx) < 1e-9 && Math.abs(dy) < 1e-9) return null;

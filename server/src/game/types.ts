@@ -258,6 +258,24 @@ export interface PlayerAnswer {
   selection?: number[];
   // What was typed -- open_answer; every box joined by " / " -- multi_text.
   text?: string;
+  // The answer as given, to show one player's answer at the reveal.
+  detail?: AnswerDetail;
+}
+
+export interface AnswerDetail {
+  // Avatar keys per group -- podium_order; per stop -- travel_map.
+  order?: string[][];
+  placements?: SketchPlacement[];
+  line?: { p1: Point; p2: Point };
+  strokes?: Point[][];
+}
+
+// One player's answer to the current question, for the host to show at the reveal.
+export interface HostPlayerAnswer {
+  playerId: string;
+  name: string;
+  avatar: string;
+  answer: PlayerAnswer | null;
 }
 
 export interface Player {

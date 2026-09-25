@@ -157,6 +157,7 @@ export function HostPage() {
               view={view}
               onNext={advance}
               onGrade={(correctAnswer) => session && api.grade(session.hostToken, correctAnswer)}
+              loadAnswer={(playerId) => api.getPlayerAnswer(session!.hostToken, playerId)}
             />
           )}
           {view.status === 'leaderboard' && <HostLeaderboard view={view} onNext={advance} />}

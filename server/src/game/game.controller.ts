@@ -37,6 +37,11 @@ export class GameController {
     return this.game.joinRoom(dto.joinCode, dto.name, dto.avatar);
   }
 
+  @Get('answer')
+  getPlayerAnswer(@Query('token') token: string, @Query('playerId') playerId: string) {
+    return this.game.getPlayerAnswer(token, playerId);
+  }
+
   @Get('state')
   getPlayerView(@Query('playerId') playerId: string, @Query('token') token: string) {
     return this.game.getPlayerView(playerId, token);

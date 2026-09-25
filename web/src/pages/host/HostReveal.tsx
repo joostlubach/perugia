@@ -1,4 +1,5 @@
-import { HostRoomView } from '../../types';
+import { useEffect, useState } from 'react';
+import { HostPlayerAnswer, HostRoomView } from '../../types';
 import { AnswerOption } from '../../components/AnswerOption';
 import { MenuCard } from '../../components/MenuCard';
 import { TravelMap } from '../../components/TravelMap';
@@ -12,30 +13,57 @@ import { isCorrectOption } from '../../scoring';
 import { HostGradeBox } from './HostGradeBox';
 import { OpenAnswerSummary } from './OpenAnswerSummary';
 import { CorrectTally } from './CorrectTally';
+import { PlayerAnswerView } from './PlayerAnswerView';
+import { PlayerPicker } from './PlayerPicker';
 import { t } from '../../texts';
 
 export function HostReveal({
   view,
   onNext,
   onGrade,
+  loadAnswer,
 }: {
   view: HostRoomView;
   onNext: () => void;
   onGrade: (correctAnswer: string) => void;
+  loadAnswer: (playerId: string) => Promise<HostPlayerAnswer>;
 }) {
   const question = view.question!;
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [shown, setShown] = useState<HostPlayerAnswer | null>(null);
+  // Refetched when their points change, e.g. once an open question is graded.
+  const selectedPoints = view.guesses.find((g) => g.playerId === selectedId)?.pointsAwarded;
+
+  useEffect(() => {
+    if (!selectedId) {
+      setShown(null);
+      return;
+    }
+    let cancelled = false;
+    loadAnswer(selectedId).then(
+      (answer) => !cancelled && setShown(answer),
+      () => {},
+    );
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedId, selectedPoints]);
   const maxCount = Math.max(1, ...view.optionCounts);
   const correctTally = <CorrectTally guesses={view.guesses} partialCredit={question.type !== 'multiple_choice'} />;
 
   return (
     <div className="page">
+      <PlayerPicker players={view.players} selectedId={selectedId} onSelect={setSelectedId} />
       <h1 className="title">{t('host.reveal.title')}</h1>
       <h2 className="question-text"><QuestionText text={question.playerText ?? question.text} /></h2>
       {question.type === 'multiple_choice' && question.imageUrl && (
         <img className="question-image" src={question.imageUrl} alt="" />
       )}
 
-      {question.type === 'open_answer' ? (
+      {selectedId ? (
+        shown?.playerId === selectedId && <PlayerAnswerView question={question} player={shown} />
+      ) : question.type === 'open_answer' ? (
         <>
           {question.correctAnswer === undefined ? (
             // Only when the answer key player didn't answer (or there isn't one).

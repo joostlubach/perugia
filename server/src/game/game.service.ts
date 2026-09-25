@@ -24,8 +24,10 @@ import { CATEGORIES } from './categories';
 import { addNpcs, answerForNpcs } from './npc';
 import { matchAnswers, matchesOpenAnswer, scoreHitList } from './open-answer';
 import {
+  AnswerDetail,
   CategoryView,
   HostGuess,
+  HostPlayerAnswer,
   HostQuestionView,
   HostRoomView,
   LeaderboardEntry,
@@ -247,6 +249,7 @@ export class GameService {
     let selection: number[] | undefined;
     let text: string | undefined;
     let point: Point | undefined;
+    let detail: AnswerDetail | undefined;
 
     if (question.type === 'podium_order') {
       if (!Array.isArray(answer) || answer.some((group) => !Array.isArray(group))) {
@@ -255,6 +258,7 @@ export class GameService {
       // Partial credit per correctly placed driver; `correct` only when all are right.
       const total = totalPlacements(question.correctOrder);
       value = countCorrectPlacements(answer as string[][], question.correctOrder);
+      detail = { order: answer as string[][] };
       correct = value === total;
       pointsAwarded =
         value > 0 ? scoreForAnswer(Math.round((question.points * value) / total), question.timeLimitSec, elapsedMs) : 0;
@@ -265,6 +269,7 @@ export class GameService {
       // Partial credit per person placed at the right stop.
       const total = totalPlacements(question.correctGroups);
       value = countCorrectGroupings(answer as string[][], question.correctGroups);
+      detail = { order: answer as string[][] };
       correct = value === total;
       pointsAwarded =
         value > 0 ? scoreForAnswer(Math.round((question.points * value) / total), question.timeLimitSec, elapsedMs) : 0;
@@ -272,6 +277,7 @@ export class GameService {
       if (!isPlacements(answer)) throw new ForbiddenException('Wrong answer shape for this question');
       // Partial credit for how close each piece is to where it really was.
       value = scoreSketch(answer, question.correctPlacements, zoomedAspectRatio(question));
+      detail = { placements: answer };
       correct = value >= SITUATION_SKETCH_CORRECT;
       pointsAwarded = value > 0 ? scoreForAnswer(Math.round((question.points * value) / 100), question.timeLimitSec, elapsedMs) : 0;
     } else if (question.type === 'ham_cut') {
@@ -280,6 +286,7 @@ export class GameService {
       }
       // Partial credit for how close to a perfect 50/50 split the cut is.
       value = scoreHamCut(answer, question.rows);
+      detail = { line: { p1: answer.p1, p2: answer.p2 } };
       correct = value >= 95;
       pointsAwarded = value > 0 ? scoreForAnswer(Math.round((question.points * value) / 100), question.timeLimitSec, elapsedMs) : 0;
     } else if (question.type === 'money_vase') {
@@ -304,6 +311,7 @@ export class GameService {
       if (!isStrokes(answer)) throw new ForbiddenException('Wrong answer shape for this question');
       // Partial credit for how closely the drawing matches the real marks.
       value = scoreTraceMarks(answer, question.marks, question.aspectRatio);
+      detail = { strokes: answer };
       correct = value >= TRACE_MARKS_CORRECT;
       pointsAwarded = value > 0 ? scoreForAnswer(Math.round((question.points * value) / 100), question.timeLimitSec, elapsedMs) : 0;
     } else if (question.type === 'open_answer') {
@@ -375,6 +383,7 @@ export class GameService {
       ...(selection ? { selection } : {}),
       ...(text !== undefined ? { text } : {}),
       ...(point ? { point } : {}),
+      ...(detail ? { detail } : {}),
     };
     player.score += pointsAwarded;
     if (Object.values(room.players).every((p) => p.npc || p.answers[question.id])) {
@@ -407,6 +416,21 @@ export class GameService {
     const since = Date.now() - REACTION_WINDOW_MS;
     const reactions = (await this.store.recentReactions()).filter((r) => r.at >= since);
     return { ...this.toHostView(room), reactions };
+  }
+
+  // Only once revealed, like everyone's guesses.
+  async getPlayerAnswer(hostToken: string, playerId: string): Promise<HostPlayerAnswer> {
+    const room = await this.requireHost(hostToken);
+    const player = room.players[playerId];
+    const question = room.questions[room.currentQuestionIndex];
+    if (!player || !question) throw new NotFoundException('No such player or question');
+    const revealed = room.status === 'reveal' || room.status === 'leaderboard' || room.status === 'ended';
+    return {
+      playerId,
+      name: player.name,
+      avatar: player.avatar,
+      answer: revealed ? player.answers[question.id] ?? null : null,
+    };
   }
 
   async getPlayerView(playerId: string, playerToken: string): Promise<PlayerRoomView> {
