@@ -31,6 +31,46 @@ body {
   min-height: 100%;
 }
 
+.player-mode {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  touch-action: manipulation;
+  overscroll-behavior: none;
+}
+
+.player-mode input,
+.player-mode textarea,
+.player-mode [contenteditable] {
+  -webkit-user-select: text;
+  user-select: text;
+  -webkit-touch-callout: default;
+}
+
+.player-mode img {
+  -webkit-user-drag: none;
+}
+
+.player-mode .page {
+  padding-top: max(24px, env(safe-area-inset-top));
+  padding-left: max(16px, env(safe-area-inset-left));
+  padding-right: max(16px, env(safe-area-inset-right));
+  padding-bottom: max(24px, env(safe-area-inset-bottom));
+}
+
+.player-mode .mute-toggle {
+  top: calc(14px + env(safe-area-inset-top));
+  right: calc(14px + env(safe-area-inset-right));
+}
+
+.player-mode .countdown.floating {
+  top: calc(10px + env(safe-area-inset-top));
+  left: calc(10px + env(safe-area-inset-left));
+}
+
 h1,
 h2,
 h3,
@@ -1825,7 +1865,7 @@ textarea.json-editor {
 }
 
 .with-reaction-bar .page {
-  padding-bottom: 88px;
+  padding-bottom: calc(88px + env(safe-area-inset-bottom));
 }
 
 .reaction-callouts {

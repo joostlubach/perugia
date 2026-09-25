@@ -45,6 +45,11 @@ export function PlayerPage() {
   const { data: view, error } = usePolling(fetchView, 1000, Boolean(session));
 
   useEffect(() => {
+    document.documentElement.classList.add('player-mode');
+    return () => document.documentElement.classList.remove('player-mode');
+  }, []);
+
+  useEffect(() => {
     keepAudioUnlocked();
     preloadDragSounds();
     audio.preloadMusic('fidatidime', 'died');
