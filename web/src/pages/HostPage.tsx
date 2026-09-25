@@ -22,7 +22,7 @@ interface Session {
 const STORAGE_KEY = 'perugia_host';
 const RESTART_KEY = 'perugia_host_restart';
 // The final-lap music announces the start of this many closing questions.
-const FINAL_LAP_QUESTIONS = 3;
+const FINAL_LAP_QUESTIONS = 1;
 // Kept well under the lobby tarantella so it stays in the background.
 const QUIZ_MUSIC_VOLUME = 0.2;
 

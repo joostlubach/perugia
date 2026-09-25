@@ -6,12 +6,30 @@
 # Line breaks show up on screen. For several lines, start the text with |- and
 # indent the lines below it (see ruben); a blank line gives a blank line.
 
-lake:
-  title: The Lake
-  host: |-
-    On Thursday we drove 1,5 hours to swim in an ice cold lake. Which famous story is inspired by the region around that lake?
-  player: |-
-    Which story is inspired by the lake?
+villa:
+  title: The villa
+  host: Let's see who's been paying any attention. What was the name of the house we stayed at?
+  player: What was the name of the house we stayed at?
+
+house:
+  title: The house
+  host: What was the surname of the family that owned the house?
+  player: What was the surname of the family that owned the house?
+
+ancestor:
+  title: Famous ancestor
+  host: What famous artist does the Di Serego family descend from?
+  player: What famous artist does the Di Serego family descend from?
+
+wherePerugia:
+  title: Where were we?
+  host: We spent a week in Perugia. But where exactly is it? Drag yourself to Perugia on the map!
+  player: Drag yourself to Perugia on the map!
+
+travel:
+  title: On the way
+  host: Drag each person to how they _arrived_ to Perugia
+  player: Drag each person to how they _arrived_ to Perugia
 
 assisi:
   title: Assisi
@@ -19,6 +37,13 @@ assisi:
     We visited the town of Assisi. Because Pietro told us the churches wouldn't close at 18:00, we never got to visit the famous saint there. But were there more? Which saint(s) do we associate with the town of Assisi?
   player: |-
     Which saint(s) do we associate with the town of Assisi? Select all that apply.
+
+lake:
+  title: The Lake
+  host: |-
+    On Thursday we drove 1,5 hours to swim in an ice cold lake. Which famous story is inspired by the region around that lake?
+  player: |-
+    Which story is inspired by the lake?
 
 singer:
   title: Turn around
@@ -37,40 +62,6 @@ poolParty:
   player: |-
     How many liters of water did the pool lose after the first pool party?
 
-wherePerugia:
-  title: Where were we?
-  host: We spent a week in Perugia. But where exactly is it? Drag yourself to Perugia on the map!
-  player: Drag yourself to Perugia on the map!
-
-travel:
-  title: On the way
-  host: Drag each person to how they _arrived_ to Perugia
-  player: Drag each person to how they _arrived_ to Perugia
-
-dogs:
-  title: Dogs
-  host: How many dogs did we have in total?
-  player: How many dogs did we have in total?
-
-karting:
-  title: Karting
-  host: |-
-    We had to go karting. Apart from a little incident – more about that later – we had a great time. There was a loser group and a winner group. But who finished where?
-  player: |-
-    Who finished where in karting? Put both groups in the right order.
-
-kartingCrash:
-  title: The incident
-  host: |-
-    Karting was not only fun, but some serious thing happened. Let's see if you were in too much shock to remember the details.
-  player: |-
-    Drag elements onto the map to create as much of an accurate situation sketch as possible.
-
-house:
-  title: The house
-  host: What was the surname of the family that owned the house?
-  player: What was the surname of the family that owned the house?
-
 bowie:
   title: Bowie's scratches
   host: |-
@@ -87,6 +78,11 @@ jumprope:
   host: |-
     While most of us were being lazy ass bitches at the pool, not Sanne! How many jumprope jumps did Sanne do in total?
   player: How many jumprope jumps did Sanne do in total?
+
+serverRoom:
+  title: Server room
+  host: What did Leonardo do to power his server room at home?
+  player: What did Leonardo do to power his server room at home?
 
 ham:
   title: Ham cutting
@@ -131,15 +127,19 @@ perugia:
   host: What people used to live in Perugia before Octavian burnt their terracotta asses?
   player: What people used to live in Perugia before Octavian burnt their terracotta asses?
 
-ancestor:
-  title: Famous ancestor
-  host: What famous artist does the Di Serego family descend from?
-  player: What famous artist does the Di Serego family descend from?
+karting:
+  title: Karting
+  host: |-
+    We had to go karting. Apart from a little incident – more about that later – we had a great time. There was a loser group and a winner group. But who finished where?
+  player: |-
+    Who finished where in karting? Put both groups in the right order.
 
-serverRoom:
-  title: Server room
-  host: What did Leonardo do to power his server room at home?
-  player: What did Leonardo do to power his server room at home?
+kartingCrash:
+  title: The incident
+  host: |-
+    Karting was not only fun, but some serious thing happened. Let's see if you were in too much shock to remember the details.
+  player: |-
+    Drag elements onto the map to create as much of an accurate situation sketch as possible.
 
 splitser:
   title: Splitser
