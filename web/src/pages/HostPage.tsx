@@ -3,6 +3,7 @@ import { api, isStaleSession } from '../api'
 import { audio } from '../audio'
 import { preloadReactionSounds } from '../reactions'
 import { MuteToggle } from '../components/MuteToggle'
+import { JoinQrCorner } from '../components/JoinQrCode'
 import { ReactionCallouts } from '../components/ReactionCallouts'
 import { usePolling } from '../hooks/usePolling'
 import { t } from '../texts'
@@ -172,6 +173,9 @@ export function HostPage() {
           {view.status === 'finale' && <HostFinale onNext={advance} />}
           {view.status === 'ended' && <HostFinal view={view} />}
           <ReactionCallouts reactions={view.reactions ?? []} />
+          {view.status !== 'lobby' && view.status !== 'finale' && view.status !== 'ended' && (
+            <JoinQrCorner joinCode={view.joinCode} />
+          )}
           {jumping && session && (
             <HostJumpBox
               totalQuestions={view.totalQuestions}
