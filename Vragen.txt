@@ -241,6 +241,23 @@ to the final results.
 === Music round ===
 
 (
+  The first night, we riffed up a song about Ismail's APK problems. Which of
+  the following lines were in there? (multiple answers possible)
+  - ’k Had ook geen onderbroek aan
+  - Er werd niet opengedaan [correct]
+  - Stond langs de autobahn [correct]
+  - Ben maar weer teruggegaan [correct]
+  - Wat heb ik daar nou weer aan
+  - ’k Heb geen APK gedaan [correct]
+  - Tralalalalalaan
+  - Ben toch maar verder gegaan
+  - Ik kwam na middernacht aan [correct]
+  - ’k Heb geen oog dichtgedaan
+
+  Scoring: 1500 pts, 45s. A share per option ticked/left unticked correctly.
+)
+
+(
   A famous singer died during our trip. Name two of her hit songs.
   [two text boxes]
 
