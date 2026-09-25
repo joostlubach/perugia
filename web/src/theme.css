@@ -2211,10 +2211,15 @@ textarea.json-editor {
   border-radius: 12px;
   background: white;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--choc-brown);
   pointer-events: none;
+}
+
+.join-qr-corner-code {
+  font-family: ui-monospace, monospace;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--choc-brown);
 }
 
 .runthrough-badge {
