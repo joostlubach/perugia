@@ -11,11 +11,8 @@ export interface Category {
   videoUrl?: string;
 }
 
-// The current question's category, with its place among all categories.
-export interface CategoryView extends Category {
-  number: number;
-  total: number;
-}
+// The current question's category.
+export type CategoryView = Category;
 
 interface QuestionBase {
   id: string;

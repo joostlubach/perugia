@@ -14,7 +14,7 @@ landing:
   hostButton: "📺 I'm the Host"
 
 host:
-  questionHeader: "Question {number} / {total} · {title}"
+  questionHeader: "Question {number} / {total} · {category} · {title}"
 
   setup:
     title: "Host Setup"
@@ -32,10 +32,10 @@ host:
     start: "🚀 Andiamo!"
 
   category:
-    header: "Category {number} / {total}"
     next: "Andiamo! ▶"
 
   intro:
+    header: "Question {number} / {total}"
     start: "Vai!"
 
   question:
@@ -128,7 +128,6 @@ player:
     subtitle: "You can answer once the question has been read out."
 
   question:
-    header: "Question {number} / {total} · {title} · {points} pts"
     answeredTitle: "Answer sent! ✅"
     answeredSubtitle: "Waiting for everyone else..."
 

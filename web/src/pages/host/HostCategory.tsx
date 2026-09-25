@@ -9,7 +9,6 @@ export function HostCategory({ view, onNext }: { view: HostRoomView; onNext: () 
 
   return (
     <div className="page">
-      <div className="hint">{t('host.category.header', { number: category.number, total: category.total })}</div>
       <div className="category-splash">
         {category.videoUrl ? (
           <SplashVideo src={category.videoUrl} />

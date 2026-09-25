@@ -20,6 +20,7 @@ export function HostQuestion({ view }: { view: HostRoomView }) {
         {t('host.questionHeader', {
           number: view.currentQuestionIndex + 1,
           total: view.totalQuestions,
+          category: view.category?.title ?? '',
           title: question.title,
         })}
       </div>

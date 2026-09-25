@@ -434,14 +434,12 @@ export interface LeaderboardEntry {
   score: number;
 }
 
-// The current question's category, with its place among all categories.
+// The current question's category.
 export interface CategoryView {
   title: string;
   emoji: string;
   imageUrl?: string;
   videoUrl?: string;
-  number: number;
-  total: number;
 }
 
 export interface HostRoomView {

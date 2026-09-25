@@ -39,16 +39,8 @@ export function PlayerQuestion({
 
   return (
     <div className="page">
-      <div className="hint">
-        {t('player.question.header', {
-          number: view.currentQuestionIndex + 1,
-          total: view.totalQuestions,
-          title: question.title,
-          points: question.points,
-        })}
-      </div>
       <Countdown startedAt={startedAt} timeLimitSec={question.timeLimitSec} floating />
-      <h1 className="question-text"><QuestionText text={question.text} /></h1>
+      <h1 className="question-text player"><QuestionText text={question.text} /></h1>
       {question.type === 'multiple_choice' && question.imageUrl && (
         <img className="question-image" src={question.imageUrl} alt="" />
       )}

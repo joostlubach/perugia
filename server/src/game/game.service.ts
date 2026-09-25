@@ -929,10 +929,7 @@ function npcsOnly(room: Room): boolean {
 
 function categoryView(room: Room): CategoryView | null {
   const key = room.questions[room.currentQuestionIndex]?.category;
-  const category = key ? CATEGORIES[key as keyof typeof CATEGORIES] : undefined;
-  if (!category) return null;
-  const keys = room.questions.map((q) => q.category).filter((k, i, all) => k !== all[i - 1]);
-  return { ...category, number: keys.indexOf(key) + 1, total: keys.length };
+  return (key && CATEGORIES[key as keyof typeof CATEGORIES]) || null;
 }
 
 function afterReveal(room: Room): 'leaderboard' | 'intro' | 'finale' {

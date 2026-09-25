@@ -473,9 +473,28 @@ input[type='text'] {
   color: var(--ink);
 }
 
+.question-text.player {
+  font-size: clamp(1.15rem, 3.4vw, 1.9rem);
+}
+
 .question-text.intro {
-  font-size: clamp(2rem, 5.5vw, 3.8rem);
+  font-size: clamp(1.6rem, 4.4vw, 3rem);
   max-width: 1200px;
+  color: var(--ink);
+}
+
+.intro-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.intro-category {
+  font-family: 'Fredoka', sans-serif;
+  font-size: clamp(1.1rem, 2.6vw, 1.6rem);
+  font-weight: 700;
+  color: var(--choc-brown);
 }
 
 .leaderboard-list {

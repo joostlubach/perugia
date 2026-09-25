@@ -10,14 +10,14 @@ export function HostIntro({ view, onStart }: { view: HostRoomView; onStart: () =
 
   return (
     <div className="page">
-      <div className="hint">
-        {t('host.questionHeader', {
-          number: view.currentQuestionIndex + 1,
-          total: view.totalQuestions,
-          title: question.title,
-        })}
+      <div className="intro-header">
+        {view.category && <div className="intro-category">{view.category.title}</div>}
+        <div className="hint">
+          {t('host.intro.header', { number: view.currentQuestionIndex + 1, total: view.totalQuestions })}
+        </div>
       </div>
-      <h1 className="question-text intro"><QuestionText text={question.text} /></h1>
+      <h1 className="title">{question.title}</h1>
+      <h2 className="question-text intro"><QuestionText text={question.text} /></h2>
       {imageUrl && <img className="question-image" src={imageUrl} alt="" />}
       <button className="btn btn-primary btn-lg" onClick={onStart}>
         {t('host.intro.start')}
