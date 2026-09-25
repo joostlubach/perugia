@@ -295,6 +295,15 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
     points: 1000,
   },
   {
+    type: 'multiple_choice',
+    ...texts('noKarting'),
+    category: 'trips',
+    options: ['Mark, Jaro, Ismail', 'Jasper, Jaro, Milan', 'Mark, Jaro, Jasper', 'Roland, Mark, Joost'],
+    correctIndex: 2,
+    timeLimitSec: 20,
+    points: 1000,
+  },
+  {
     type: 'podium_order',
     ...texts('karting'),
     category: 'trips',

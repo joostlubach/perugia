@@ -294,6 +294,16 @@ to the final results.
 )
 
 (
+  Who didn't go karting?
+  - Mark, Jaro, Ismail
+  - Jasper, Jaro, Milan
+  - Mark, Jaro, Jasper [correct]
+  - Roland, Mark, Joost
+
+  Scoring: 1000 pts, 20s. Multiple choice: all or nothing.
+)
+
+(
   Karting
 
   Winner group rankings:
