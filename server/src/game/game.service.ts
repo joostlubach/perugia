@@ -23,6 +23,7 @@ import {
 } from './room.util';
 import { sampleQuestions } from './questions.sample';
 import { CATEGORIES } from './categories';
+import { POINT_FACTORS } from './point-factors';
 import { addNpcs, answerForNpcs, planNpcAnswers } from './npc';
 import { isRealAnswer, matchAnswers, matchesOpenAnswer, scoreHitList } from './open-answer';
 import {
@@ -192,9 +193,10 @@ export class GameService {
       answer.correct = question.correctAnswer !== null && matchesOpenAnswer(answer.text ?? '', question.correctAnswer);
       answer.value = answer.correct ? 1 : 0;
       if (!sourceIds.includes(player.id)) {
-        answer.pointsAwarded = answer.correct
-          ? scoreForAnswer(question.points, question.timeLimitSec, answer.answeredAtMs)
-          : 0;
+        answer.pointsAwarded = scaledPoints(
+          player,
+          answer.correct ? scoreForAnswer(question.points, question.timeLimitSec, answer.answeredAtMs) : 0,
+        );
       }
       player.score += answer.pointsAwarded;
       entries.push({ playerId: player.id, questionId: question.id, answer });
@@ -456,6 +458,7 @@ export class GameService {
       correct = isCorrectOption(question.correctIndex, value);
       pointsAwarded = correct ? scoreForAnswer(question.points, question.timeLimitSec, elapsedMs) : 0;
     }
+    pointsAwarded = scaledPoints(player, pointsAwarded);
 
     const saved = {
       value,
@@ -1034,6 +1037,10 @@ function allAnsweredAt(room: Room): number | null {
     last = Math.max(last, answer.answeredAtMs);
   }
   return room.questionStartedAt + last;
+}
+
+function scaledPoints(player: Player, points: number): number {
+  return Math.round(points * (POINT_FACTORS[player.avatar] ?? 1));
 }
 
 function playerWithAvatar(room: Room, avatar: string | undefined): Player | undefined {
