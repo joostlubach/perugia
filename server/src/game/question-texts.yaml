@@ -40,8 +40,14 @@ problem:
 
 aircoFixed:
   title: The airco
-  host: And when was the airco fixed?
-  player: When was the airco fixed?
+  host: When was the airco fixed?
+  player: When was the airco fixed? You can select multiple.
+
+houseFloors:
+  title: Which floor?
+  host: |-
+    Lightning round! You'll see five closeups of the house, four seconds each. Which floor was it taken on?
+  player: Which floor is this?
 
 poolParty:
   title: Pool party
@@ -121,8 +127,10 @@ dogs:
 
 apkSong:
   title: The APK song
-  host: The first night, we riffed up a song about Ismail's APK problems. Which of the following lines were in there?
-  player: Which lines are in the official lyrics?
+  host: |-
+    The first night, we riffed up a song about Ismail's APK problems. Which of the following lines were in there?
+  player: |-
+    Which lines are in the official lyrics?
 
 singer:
   title: She dead
@@ -131,8 +139,10 @@ singer:
 
 pedro:
   title: Pedro
-  host: How many times does the word "Pedro" appear in Raffaella Carra's song "Pedro"?
-  player: Drag a Pedro to the box for each Pedro in the song.
+  host: |-
+    How many times does the word "Pedro" appear in Raffaella Carra's song "Pedro"?
+  player: |-
+    Drag a Pedro to the box for each Pedro in the song.
 
 assisi:
   title: Assisi

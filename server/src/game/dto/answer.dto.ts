@@ -18,7 +18,8 @@ export class AnswerDto {
       a.strokes === undefined &&
       a.text === undefined &&
       a.texts === undefined &&
-      a.pin === undefined,
+      a.pin === undefined &&
+      a.floors === undefined,
   )
   @IsInt()
   @Min(0)
@@ -65,4 +66,10 @@ export class AnswerDto {
   @IsArray()
   @IsString({ each: true })
   texts?: string[];
+
+  // Floor index picked per photo, -1 for none -- photo_floors only.
+  @IsOptional()
+  @IsArray()
+  @IsInt({ each: true })
+  floors?: number[];
 }

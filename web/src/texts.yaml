@@ -51,6 +51,7 @@ host:
     open_answer: "Type your answer on your phone!"
     multi_text: "Type your answers on your phone!"
     map_pin: "Drag yourself to the right spot on your phone!"
+    photo_floors: "⚡ Lightning round! Pick the floor on your phone, quick!"
 
   reveal:
     title: "The right answer"
@@ -84,6 +85,8 @@ host:
     # {keeper} is the player whose answer is the right one (Kyle), {name} the one shown (Ruben).
     playerAnswer: "By the way, Kyle DID tell {name}, and {name} answered"
     correctCount: "{count} of {total} got it right"
+    # Lightning round, under each photo.
+    gotItRight: "{count} got it right"
     # Questions with partial credit; "close" is what the phones call "Cosi cosa".
     spotOnCount: "{count} of {total} spot on, {close} close"
     toLeaderboard: "📊 Show Leaderboard"
@@ -193,6 +196,8 @@ boards:
     done: "🏺 Bet it"
   multiSelect:
     done: "✅ Lock in answers"
+  photoFloors:
+    progress: "⚡ Photo {number} / {total}"
   podium:
     allPlaced: "Everyone's on the podium"
     done: "🏁 Lock it in"

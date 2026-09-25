@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import { HamLine, MultiSelectAnswer, Point, QuestionInput, SketchAnswer, TextAnswer, TextsAnswer, PinAnswer, TraceAnswer } from '../../types';
+import { HamLine, MultiSelectAnswer, Point, QuestionInput, SketchAnswer, TextAnswer, TextsAnswer, PinAnswer, TraceAnswer, FloorsAnswer } from '../../types';
 import { audio } from '../../audio';
 import {
+  countCorrectFloors,
   countCorrectGroupings,
   countCorrectMenuPicks,
   countCorrectPlacements,
@@ -33,9 +34,10 @@ import { PinMap } from '../../components/PinMap';
 import { QuestionText } from '../../components/QuestionText';
 import { OpenAnswerBoard } from '../../components/OpenAnswerBoard';
 import { MultiTextBoard } from '../../components/MultiTextBoard';
+import { PhotoFloorsBoard } from '../../components/PhotoFloorsBoard';
 import { matchAnswers, scoreHitList } from '../../openAnswer';
 
-type Answer = number | string[][] | SketchAnswer | HamLine | MultiSelectAnswer | TraceAnswer | TextAnswer | TextsAnswer | PinAnswer | null;
+type Answer = number | string[][] | SketchAnswer | HamLine | MultiSelectAnswer | TraceAnswer | TextAnswer | TextsAnswer | PinAnswer | FloorsAnswer | null;
 
 export function TestQuestion({
   question,
@@ -65,7 +67,8 @@ export function TestQuestion({
     question.type === 'multi_select' ||
     question.type === 'menu_order' ||
     question.type === 'multi_text' ||
-    question.type === 'trace_marks';
+    question.type === 'trace_marks' ||
+    question.type === 'photo_floors';
   const isPercent = question.type === 'ham_cut' || question.type === 'trace_marks' || question.type === 'situation_sketch';
 
   const correctValue =
@@ -83,6 +86,8 @@ export function TestQuestion({
       ? 1
       : question.type === 'multi_text'
       ? question.boxes
+      : question.type === 'photo_floors'
+      ? question.photos.length
       : question.type === 'travel_map'
       ? totalPlacements(question.correctGroups)
       : question.type === 'money_vase'
@@ -95,6 +100,7 @@ export function TestQuestion({
     question.type === 'travel_map' ? question.correctGroups.flat().sort() : [],
   );
   const [pin, setPin] = useState<Point | null>(null);
+  const [photoUrls] = useState(() => (question.type === 'photo_floors' ? question.photos.map((p) => p.imageUrl) : []));
   const [podiumGroups] = useState(() =>
     question.type === 'podium_order' ? question.correctOrder.map((group) => [...group].sort()) : [],
   );
@@ -121,6 +127,8 @@ export function TestQuestion({
       const matched = matchAnswers(answer.texts.slice(0, question.boxes), question.correctAnswers);
       value = matched.length;
       hitShare = scoreHitList(matched, question.correctAnswers.length, question.boxes);
+    } else if (answer && !Array.isArray(answer) && typeof answer === 'object' && 'floors' in answer && question.type === 'photo_floors') {
+      value = countCorrectFloors(answer.floors, question.photos);
     } else if (answer && !Array.isArray(answer) && typeof answer === 'object' && 'placements' in answer && question.type === 'situation_sketch') {
       value = scoreSketch(
         answer.placements,
@@ -169,7 +177,13 @@ export function TestQuestion({
       value,
       elapsedMs,
       correct,
-      pointsAwarded: (correct || partialCredit || closeness !== null) && points > 0 ? scoreForAnswer(points, question.timeLimitSec, elapsedMs) : 0,
+      pointsAwarded:
+        (correct || partialCredit || closeness !== null) && points > 0
+          ? // Like the server: no speed bonus when the photos set the pace.
+            question.type === 'photo_floors'
+            ? points
+            : scoreForAnswer(points, question.timeLimitSec, elapsedMs)
+          : 0,
     };
     resultRef.current = next;
     setResult(next);
@@ -353,6 +367,17 @@ export function TestQuestion({
           startedAt={startedAt}
           timeLimitSec={question.timeLimitSec}
           onSubmit={(selected) => finish({ selected })}
+        />
+      )}
+
+      {!result && question.type === 'photo_floors' && (
+        <PhotoFloorsBoard
+          floors={question.floors}
+          photoUrls={photoUrls}
+          photoTimeSec={question.photoTimeSec}
+          startedAt={startedAt}
+          timeLimitSec={question.timeLimitSec}
+          onSubmit={(floors) => finish({ floors })}
         />
       )}
 

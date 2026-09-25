@@ -89,6 +89,17 @@ to the final results.
   Scoring: 1000 pts, 20s. A share per option ticked/left unticked correctly.
 )
 
+(
+  Lightning round: which floor is this? Five closeups of the house, 4s each.
+  - Ground floor
+  - 1st floor
+  - 2nd floor
+
+  Correct: see server/src/game/house-photos.ts.
+
+  Scoring: 1500 pts, 20s. A share per photo right; no speed bonus.
+)
+
 === Activities at the house ===
 
 (

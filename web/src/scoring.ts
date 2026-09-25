@@ -60,6 +60,11 @@ export function countCorrectMenuPicks(selected: number[], menu: MenuCourse[], co
   return count;
 }
 
+// Mirrors countCorrectFloors in server/src/game/room.util.ts.
+export function countCorrectFloors(picks: number[], photos: { floor: number }[]): number {
+  return photos.filter((photo, i) => picks[i] === photo.floor).length;
+}
+
 // Mirrors scoreCount in server/src/game/room.util.ts.
 export function scoreCount(guess: number, correct: number, nearMisses: { maxOff: number; share: number }[] = []): number {
   if (guess === correct) return 1;

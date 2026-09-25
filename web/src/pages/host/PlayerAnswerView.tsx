@@ -6,6 +6,7 @@ import { MenuCard } from '../../components/MenuCard';
 import { formatEuro, Vase } from '../../components/MoneyVase';
 import { PinMap } from '../../components/PinMap';
 import { PodiumStand } from '../../components/PodiumStand';
+import { PhotoStrip } from '../../components/PhotoStrip';
 import { SketchMap } from '../../components/SketchMap';
 import { TraceMarksView } from '../../components/TraceMarksView';
 import { TravelMap } from '../../components/TravelMap';
@@ -69,6 +70,16 @@ function AnswerBody({ question, answer, avatar }: { question: HostQuestionView; 
             );
           })}
         </ol>
+      );
+    case 'photo_floors':
+      return (
+        <PhotoStrip
+          photoUrls={question.photoUrls}
+          captions={question.photoUrls.map((_, i) => question.floors[answer.selection?.[i] ?? -1] ?? t('host.reveal.noAnswer'))}
+          marks={question.photoUrls.map((_, i) =>
+            answer.selection?.[i] === question.correctFloors?.[i] ? 'correct' : 'wrong',
+          )}
+        />
       );
     case 'menu_order':
       return <MenuCard menu={question.menu} selected={answer.selection} correctIndexes={question.correctIndexes} wide />;

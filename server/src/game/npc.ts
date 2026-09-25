@@ -1,5 +1,5 @@
 import { AVATAR_KEYS } from './avatars';
-import { isCorrectOption, newToken, scoreCount, scoreDistance, scoreEstimate, scoreForAnswer } from './room.util';
+import { countCorrectFloors, isCorrectOption, newToken, scoreCount, scoreDistance, scoreEstimate, scoreForAnswer } from './room.util';
 import { AnswerEntry } from '../storage/room-parts';
 import { Player, PlayerAnswer, Question, Room } from './types';
 
@@ -93,6 +93,19 @@ function randomAnswer(question: Question, answeredAtMs: number): PlayerAnswer {
     const count = Math.max(0, question.correctCount + Math.round((Math.random() - 0.5) * 20));
     const share = scoreCount(count, question.correctCount, question.nearMisses);
     return withShare(share, count, share === 1);
+  }
+  if (question.type === 'photo_floors') {
+    const picks = question.photos.map((photo) =>
+      Math.random() < NPC_RIGHT_CHANCE ? photo.floor : Math.floor(Math.random() * question.floors.length),
+    );
+    const count = countCorrectFloors(picks, question.photos);
+    return {
+      answeredAtMs,
+      value: count,
+      correct: count === question.photos.length,
+      pointsAwarded: Math.round((question.points * count) / question.photos.length),
+      selection: picks,
+    };
   }
   const share = Math.random() < NPC_RIGHT_CHANCE ? 0.4 + Math.random() * 0.6 : Math.random() * 0.3;
   // The percentage for the types scored that way; ignored for the rest.
