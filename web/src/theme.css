@@ -1438,7 +1438,6 @@ textarea.json-editor {
 
 .sketch-figure-face {
   position: absolute;
-  aspect-ratio: 1;
   transform: translate(-50%, -50%);
   container-type: inline-size;
   border-radius: 50%;

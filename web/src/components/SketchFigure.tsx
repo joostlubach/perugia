@@ -18,6 +18,8 @@ export function SketchFigure({ avatar, kind, rotation = 0 }: SketchPiece & { rot
             left: `${figure.face.x * 100}%`,
             top: `${figure.face.y * 100}%`,
             width: `${figure.faceSize * 100}%`,
+            // Explicit rather than aspect-ratio, which Safari ignores on absolutely positioned boxes.
+            height: `${figure.faceSize * figure.aspectRatio * 100}%`,
             transform: `translate(-50%, -50%) rotate(${-rotation}deg)`,
           }}
         >
