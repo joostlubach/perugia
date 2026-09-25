@@ -124,7 +124,8 @@ export function audioContext(): AudioContext {
     if (session) session.type = 'playback';
     context = new AudioContext();
   }
-  if (context.state === 'suspended') context.resume().catch(() => {});
+  // Not just 'suspended': iOS also has 'interrupted' (a call, Siri, locking the phone).
+  if (context.state !== 'running') context.resume().catch(() => {});
   return context;
 }
 

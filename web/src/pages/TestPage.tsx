@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { api } from '../api';
+import { keepAudioUnlocked } from '../audioSequencer';
 import { QuestionInput } from '../types';
 import { MuteToggle } from '../components/MuteToggle';
 import { TestNavigator } from './test/TestNavigator';
@@ -11,6 +12,10 @@ export function TestPage() {
   const [index, setIndex] = useState(0);
   const [attempt, setAttempt] = useState(0);
   const [results, setResults] = useState<Record<number, TestResult>>({});
+
+  useEffect(() => {
+    keepAudioUnlocked();
+  }, []);
 
   useEffect(() => {
     api.getQuestions().then(setQuestions, (err) => setError((err as Error).message));
