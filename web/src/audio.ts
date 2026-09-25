@@ -117,7 +117,13 @@ export const audio = {
 // Shared Web Audio context. Resuming only works during a user gesture, so
 // callers from gesture handlers unlock it for everyone.
 export function audioContext(): AudioContext {
-  context ??= new AudioContext();
+  if (!context) {
+    // iOS plays Web Audio like a ringtone, silenced by the mute switch, unless
+    // the page says it's media. <audio> elements play either way.
+    const session = (navigator as { audioSession?: { type: string } }).audioSession;
+    if (session) session.type = 'playback';
+    context = new AudioContext();
+  }
   if (context.state === 'suspended') context.resume().catch(() => {});
   return context;
 }

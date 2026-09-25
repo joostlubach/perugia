@@ -1,19 +1,13 @@
-import { audio } from './audio';
+import { audio, audioContext } from './audio';
 
 const bufferCache = new Map<string, Promise<AudioBuffer>>();
-let sharedContext: AudioContext | null = null;
-
-function getContext(): AudioContext {
-  if (!sharedContext) sharedContext = new AudioContext();
-  return sharedContext;
-}
 
 function loadBuffer(url: string): Promise<AudioBuffer> {
   let promise = bufferCache.get(url);
   if (!promise) {
     promise = fetch(url)
       .then((res) => res.arrayBuffer())
-      .then((data) => getContext().decodeAudioData(data));
+      .then((data) => audioContext().decodeAudioData(data));
     bufferCache.set(url, promise);
   }
   return promise;
@@ -30,9 +24,8 @@ export function preloadAudio(url: string) {
 // a drag's own touchend then also wakes it, playing the drop that was queued.
 export function keepAudioUnlocked() {
   const unlock = () => {
-    const context = getContext();
+    const context = audioContext();
     if (context.state === 'running') return;
-    context.resume().catch(() => {});
     const source = context.createBufferSource();
     source.buffer = context.createBuffer(1, 1, 22050);
     source.connect(context.destination);
@@ -57,7 +50,7 @@ export interface AudioSequencer {
 // to playNext() -- e.g. a recording of "pedro pedro pedro pedro PE" sliced
 // so each drag plays the next word in the chant.
 export function createAudioSequencer(url: string, boundaries: number[]): AudioSequencer {
-  getContext(); // start warming up the context as soon as we're constructed
+  audioContext(); // start warming up the context as soon as we're constructed
   let buffer: AudioBuffer | null = null;
   // Plays requested before the file finished loading, caught up once it has.
   let pending = 0;
@@ -82,8 +75,7 @@ export function createAudioSequencer(url: string, boundaries: number[]): AudioSe
         pending++;
         return;
       }
-      const context = getContext();
-      if (context.state === 'suspended') context.resume();
+      const context = audioContext();
 
       const offset = boundaries[index];
       const duration = boundaries[index + 1] - offset;
