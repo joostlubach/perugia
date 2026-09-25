@@ -104,12 +104,16 @@ export function HostPage() {
   };
 
   // Cmd+Shift+G opens the Go To box: a question, a new room, the finale or the results.
+  // Cmd+Shift+\ calls time on the question; whoever hasn't answered gets no points.
   const onShortcut = useRef<(e: KeyboardEvent) => void>(() => {});
   onShortcut.current = (e) => {
     if (!e.metaKey || !e.shiftKey) return;
     if (e.code === 'KeyG' && session) {
       e.preventDefault();
       setJumping(true);
+    } else if (e.code === 'Backslash' && view?.status === 'question') {
+      e.preventDefault();
+      advance();
     }
   };
   useEffect(() => {
@@ -121,12 +125,13 @@ export function HostPage() {
   const start = () => session && api.startGame(session.hostToken);
   const advance = () => session && view && api.advance(session.hostToken, view.status);
 
+  // Not during a question, so a stray press can't cut everyone off.
   const onSpace = useRef<() => void>(() => {});
   onSpace.current = () => {
     if (!view) return;
     if (view.status === 'lobby') {
       if (view.playerCount > 0 || view.runthrough) start();
-    } else if (view.status !== 'ended') {
+    } else if (view.status !== 'ended' && view.status !== 'question') {
       advance();
     }
   };
