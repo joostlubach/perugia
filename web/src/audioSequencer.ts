@@ -18,11 +18,17 @@ export function preloadAudio(url: string) {
   loadBuffer(url).catch(() => {});
 }
 
-// iOS only lets an AudioContext start inside certain gestures (touchend and
-// click, not pointerdown), and suspends it again when the phone locks or the
-// tab goes to the background. So on every such gesture, wake it if needed --
-// a drag's own touchend then also wakes it, playing the drop that was queued.
+// iOS only lets an AudioContext start inside a real tap. A drag's touchend and
+// pointerup don't count, so if the very first touch on a page is a drag (like
+// after reloading straight into the pedro question), nothing ever unlocks it --
+// until some button gets tapped. So try on every touch-ish event there is,
+// touchstart and pointerdown included: whichever this iOS version accepts wins.
+// iOS also suspends the context again when the phone locks or the tab goes to
+// the background, so keep listening rather than unlocking just once.
+let unlockInstalled = false;
 export function keepAudioUnlocked() {
+  if (unlockInstalled) return;
+  unlockInstalled = true;
   const unlock = () => {
     const context = audioContext();
     if (context.state === 'running') return;
@@ -31,8 +37,8 @@ export function keepAudioUnlocked() {
     source.connect(context.destination);
     source.start();
   };
-  for (const type of ['touchend', 'click', 'keydown']) {
-    window.addEventListener(type, unlock, { capture: true });
+  for (const type of ['touchstart', 'touchend', 'pointerdown', 'pointerup', 'mousedown', 'click', 'keydown']) {
+    window.addEventListener(type, unlock, { capture: true, passive: true });
   }
 }
 

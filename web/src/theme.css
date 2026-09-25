@@ -619,6 +619,8 @@ input[type='text'] {
   position: fixed;
   top: 14px;
   right: 14px;
+  /* Above the sticky test page header. */
+  z-index: 2;
   background: rgba(255, 255, 255, 0.85);
   border: none;
   border-radius: 50%;
