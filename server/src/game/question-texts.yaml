@@ -23,13 +23,95 @@ ancestor:
 
 wherePerugia:
   title: Where were we?
-  host: We spent a week in Perugia. But where exactly is it? Drag yourself to Perugia on the map!
+  host: But where exactly is Perugia anyway? Drag yourself to Perugia on the map!
   player: Drag yourself to Perugia on the map!
 
 travel:
   title: On the way
-  host: Drag each person to how they _arrived_ to Perugia
-  player: Drag each person to how they _arrived_ to Perugia
+  host: |-
+    Getting a gaggle of 16 gays to a house in Perugia is not an easy task. Some people wanted to drive, some people wanted to take the plane, some people decided that they didn't want to pay for toll in Switzerland, and decided to take a 500km detour through Austria.
+  player: |-
+    Drag each person to their means of transport for _arriving_ to Perugia!
+
+poolParty:
+  title: Pool Party
+  host: |-
+    We made it a bit bont the second night in the pool. Not as bont as the third night, but still. Due to jumping off of the wall, the pool lost a wee bit of water. How many liters?
+  player: |-
+    How many liters of water did the pool lose after the first pool party?
+
+bowie:
+  title: Bowie's scratches
+  host: |-
+    Everyone fell into the pool at the pool party. But not everyone without serious injury. Draw as best as you can the marks on Bowie's side from the pool party
+  player: Draw the scratches as best as you can
+
+jumprope:
+  title: Jumprope
+  host: |-
+    While most of us were being lazy ass bitches at the pool, not Sanne! How many jumprope jumps did Sanne do in total?
+  player: How many jumprope jumps did Sanne do in total?
+
+cigarettes:
+  title: Sigaretten
+  host: What is the price of 5 sloffen sigaretten in Perugia?
+  player: What is the price of 5 sloffen sigaretten in Perugia?
+
+ham:
+  title: Ham cutting
+  host: |-
+    It was a good ham, but difficult to cut. Why don't you try it yourself?
+  player: |-
+    Why don't you cut the ham exactly in half? The closer you equally bisect the ham the better.
+
+wine:
+  title: Wine
+  host: How much wine?
+  player: How much wine?
+
+kyle:
+  title: Kyle's secret ingredient
+  host: What is the secret ingredient in Kyle's Red Wine Spaghetti?
+  player: What is the secret ingredient in Kyle's Red Wine Spaghetti?
+
+ruben:
+  title: Senze glutine
+  host: |-
+    Ciao tutti! Welcome to Osteria L'Attaccabrighe!
+
+    You went with your friends to Osteria L'Attaccabrighe. The only problem: you're Ruben, so you don't eat gluten! Order an antipasto, a primo, a secondo and a dolce without shitting your pants the entire night!
+  player: |-
+    Order an antipasto, a primo, a secondo and a dolce, but stay off the gluten!
+
+perugia:
+  title: Perugia
+  host: What people used to live in Perugia before Octavian burnt their terracotta asses?
+  player: What people used to live in Perugia before Octavian burnt their terracotta asses?
+
+pool:
+  title: The swimming pool
+  host: What was the reason the swimming pool was where it was?
+  player: What was the reason the swimming pool was where it was?
+
+serverRoom:
+  title: Server room
+  host: What did Leonardo do to power his server room at home?
+  player: What did Leonardo do to power his server room at home?
+
+dogs:
+  title: Dogs
+  host: How many dogs did we have in total?
+  player: How many dogs did we have in total?
+
+singer:
+  title: Turn around
+  host: A famous singer died during our trip. Name two of her hit songs.
+  player: Name two hit songs of the singer who died during our trip.
+
+pedro:
+  title: Pedro
+  host: How many times does the word "Pedro" appear in Raffaella Carra's song "Pedro"?
+  player: Drag a Pedro to the box for each Pedro in the song.
 
 assisi:
   title: Assisi
@@ -45,87 +127,12 @@ lake:
   player: |-
     Which story is inspired by the lake?
 
-singer:
-  title: Turn around
-  host: A famous singer died during our trip. Name two of her hit songs.
-  player: Name two hit songs of the singer who died during our trip.
-
-pedro:
-  title: Pedro
-  host: How many times does the word "Pedro" appear in Raffaella Carra's song "Pedro"?
-  player: Drag a Pedro to the box for each Pedro in the song.
-
-poolParty:
-  title: Pool Party
-  host: |-
-    We made it a bit bont the second night in the pool. Not as bont as the third night, but still. Due to jumping off of the wall, the pool lost a wee bit of water. How many liters?
-  player: |-
-    How many liters of water did the pool lose after the first pool party?
-
-bowie:
-  title: Bowie's scratches
-  host: |-
-    Everyone fell into the pool at the pool party. But not everyone without serious injury. Draw as best as you can the marks on Bowie's side from the pool party
-  player: Draw the scratches as best as you can
-
-cigarettes:
-  title: Sigaretten
-  host: What is the price of 5 sloffen sigaretten in Perugia?
-  player: What is the price of 5 sloffen sigaretten in Perugia?
-
-jumprope:
-  title: Jumprope
-  host: |-
-    While most of us were being lazy ass bitches at the pool, not Sanne! How many jumprope jumps did Sanne do in total?
-  player: How many jumprope jumps did Sanne do in total?
-
-serverRoom:
-  title: Server room
-  host: What did Leonardo do to power his server room at home?
-  player: What did Leonardo do to power his server room at home?
-
-ham:
-  title: Ham cutting
-  host: |-
-    It was a good ham, but difficult to cut. Why don't you try it yourself?
-  player: |-
-    Why don't you cut the ham exactly in half? The closer you equally bisect the ham the better.
-
-wine:
-  title: Wine
-  host: How much wine?
-  player: How much wine?
-
-ruben:
-  title: Senze glutine
-  host: |-
-    Ciao tutti! Welcome to Osteria L'Attaccabrighe!
-
-    You went with your friends to Osteria L'Attaccabrighe. The only problem: you're Ruben, so you don't eat gluten! Order an antipasto, a primo, a secondo and a dolce without shitting your pants the entire night!
-  player: |-
-    Order an antipasto, a primo, a secondo and a dolce, but stay off the gluten!
-
 festival:
   title: Village festival
   host: |-
     At the village festival, we arrived when the number was at 182. We had to wait a shitload of time for our number. But what was our number?
   player: |-
     Which number did we have at the village festival?
-
-kyle:
-  title: Kyle's secret ingredient
-  host: What is the secret ingredient in Kyle's Red Wine Spaghetti?
-  player: What is the secret ingredient in Kyle's Red Wine Spaghetti?
-
-pool:
-  title: The swimming pool
-  host: What was the reason the swimming pool was where it was?
-  player: What was the reason the swimming pool was where it was?
-
-perugia:
-  title: Perugia
-  host: What people used to live in Perugia before Octavian burnt their terracotta asses?
-  player: What people used to live in Perugia before Octavian burnt their terracotta asses?
 
 karting:
   title: Karting

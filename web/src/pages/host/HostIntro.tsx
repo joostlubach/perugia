@@ -1,5 +1,4 @@
 import { HostRoomView } from '../../types';
-import { TravelMap } from '../../components/TravelMap';
 import { QuestionText } from '../../components/QuestionText';
 import { t } from '../../texts';
 
@@ -20,15 +19,6 @@ export function HostIntro({ view, onStart }: { view: HostRoomView; onStart: () =
       </div>
       <h1 className="question-text intro"><QuestionText text={question.text} /></h1>
       {imageUrl && <img className="question-image" src={imageUrl} alt="" />}
-      {question.type === 'travel_map' && (
-        <TravelMap
-          mapUrl={question.mapUrl}
-          aspectRatio={question.aspectRatio}
-          landmarks={question.landmarks}
-          stops={question.stops}
-          large
-        />
-      )}
       <button className="btn btn-primary btn-lg" onClick={onStart}>
         {t('host.intro.start')}
       </button>

@@ -2092,3 +2092,47 @@ textarea.json-editor {
   gap: 8px 20px;
   font-weight: 600;
 }
+
+.category-splash {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  animation: category-splash-in 600ms cubic-bezier(0.2, 1.4, 0.4, 1);
+}
+
+.category-splash-image {
+  width: min(80vw, 560px);
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 24px;
+  border: 6px solid white;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+  transform: rotate(-2deg);
+}
+
+.category-splash-image.video {
+  width: auto;
+  height: min(62vh, 720px);
+  aspect-ratio: 9 / 16;
+}
+
+.category-splash-image.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: min(24vw, 160px);
+  background: linear-gradient(135deg, var(--italy-green), var(--italy-white) 50%, var(--italy-red));
+}
+
+.category-splash-title {
+  font-size: clamp(2.4rem, 8vw, 4.4rem);
+  text-align: center;
+}
+
+@keyframes category-splash-in {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}

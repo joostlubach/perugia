@@ -28,6 +28,10 @@ host:
     playersJoined_one: "{count} player joined"
     start: "🚀 Andiamo!"
 
+  category:
+    header: "Category {number} / {total}"
+    next: "Andiamo! ▶"
+
   intro:
     start: "Vai!"
 

@@ -5,6 +5,7 @@ import { MuteToggle } from '../components/MuteToggle'
 import { ReactionCallouts } from '../components/ReactionCallouts'
 import { usePolling } from '../hooks/usePolling'
 import { t } from '../texts'
+import { HostCategory } from './host/HostCategory'
 import { HostFinal } from './host/HostFinal'
 import { HostFinale } from './host/HostFinale'
 import { HostIntro } from './host/HostIntro'
@@ -51,16 +52,21 @@ export function HostPage() {
 
   useEffect(() => {
     if (!view || view.status === lastStatus.current) return;
+    const previousStatus = lastStatus.current;
     lastStatus.current = view.status;
     if (view.status === 'lobby') audio.loop('background', 1);
     else audio.stop('background');
-    if (view.status !== 'lobby' && view.status !== 'ended') {
+    const videoSplash = view.status === 'category' && Boolean(view.category?.videoUrl);
+    if (view.status !== 'lobby' && view.status !== 'ended' && !videoSplash) {
       audio.loop('quizMusic', QUIZ_MUSIC_VOLUME);
     }
     else audio.stop('quizMusic');
     if (view.status === 'ended') audio.play('standings');
     else audio.stop('standings');
-    if (view.status === 'intro' && view.currentQuestionIndex === view.totalQuestions - FINAL_LAP_QUESTIONS) {
+    // On the category splash if the question has one, else on its intro.
+    const startsQuestion =
+      view.status === 'category' || (view.status === 'intro' && previousStatus !== 'category');
+    if (startsQuestion && view.currentQuestionIndex === view.totalQuestions - FINAL_LAP_QUESTIONS) {
       audio.play('finalLap');
     }
   }, [view]);
@@ -139,6 +145,7 @@ export function HostPage() {
       ) : (
         <>
           {view.status === 'lobby' && <HostLobby view={view} onStart={start} />}
+          {view.status === 'category' && <HostCategory view={view} onNext={advance} />}
           {view.status === 'intro' && <HostIntro view={view} onStart={advance} />}
           {view.status === 'question' && <HostQuestion view={view} />}
           {view.status === 'reveal' && (

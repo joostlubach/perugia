@@ -11,6 +11,8 @@ Answering closes when time is up or 2 seconds after everyone has answered.
 Rankings are shown after every 5th question; the last question goes straight
 to the final results.
 
+=== Our stay ===
+
 (
   Let's see who's been paying any attention. What was the name of the house we stayed at?
   - Villa Octaviani
@@ -64,58 +66,7 @@ to the final results.
   Scoring: 2000 pts, 120s. A share per person at the right stop.
 )
 
-(
-  Which saint do we associate with the town of Assisi (multiple answers possible):
-  - St. Francis [correct]
-  - St. Anthony
-  - St. Carlo [correct]
-  - St. Clare [correct]
-  - St. Catherine
-  - St. Nicholas
-  - St. Peter
-
-  Scoring: 1500 pts, 30s. A share per option ticked/left unticked correctly.
-)
-
-(
-  Which story is based on the area around the ice cold swimming lake?
-  - Pinocchio
-  - Narnia [correct]
-  - Alice in Wonderland
-  - The Wizard of Oz
-
-  Scoring: 1000 pts, 20s. Multiple choice: all or nothing.
-)
-
-(
-  A famous singer died during our trip. Name two of her hit songs.
-  [two text boxes]
-
-  Correct answers: any two of Bonnie Tyler's hits, biggest first:
-   1. Total Eclipse of the Heart
-   2. Holding Out for a Hero
-   3. It's a Heartache
-   4. A Rockin' Good Way
-   5. Lost in France
-   6. More Than a Lover
-   7. Faster Than the Speed of Night
-   8. Have You Ever Seen the Rain
-   9. If You Were a Woman (And I Was a Man)
-  10. Bitterblue
-  11. Believe in Me
-
-  Scoring: 1500 pts, 90s. Each box is worth up to half the points: the full
-  half for #1 and #2, then sliding down to a quarter for #11. Typos,
-  missing words and capitals are forgiven ("total eclips" counts).
-)
-
-(
-  Pedro
-
-  Correct answer: 48 pedro's
-
-  Scoring: 1500 pts, 45s. Exact count: full points. 40-56: 50%. 32-64: 25%.
-)
+=== Activities at the house ===
 
 (
   How many liters of water did the pool lose after the first pool party?
@@ -137,16 +88,6 @@ to the final results.
 )
 
 (
-  What is the price of 5 sloffen sigaretten in Perugia?
-  - €420
-  - €535
-  - Tientje
-  - €315 [correct]
-
-  Scoring: 1000 pts, 20s. Multiple choice: all or nothing.
-)
-
-(
   How many jumprope jumps did Sanne do in total?
   - 300
   - 400 [correct]
@@ -156,12 +97,14 @@ to the final results.
   Scoring: 1000 pts, 20s. Multiple choice: all or nothing.
 )
 
+=== Food & drink ===
+
 (
-  What did Leonardo do to power his server room at home?
-  - He tapped off a street lantern near his house
-  - He hacked his way into the electricity company so they wouldn't charge for his usage
-  - He stole batteries from city share scooters [correct]
-  - He ran an extension cord through the wall into his neighbour's apartment
+  What is the price of 5 sloffen sigaretten in Perugia?
+  - €420
+  - €535
+  - Tientje
+  - €315 [correct]
 
   Scoring: 1000 pts, 20s. Multiple choice: all or nothing.
 )
@@ -182,6 +125,21 @@ to the final results.
 
   Scoring: 1000 pts, 20s. Every answer is correct, so everyone who answers scores
   (faster is more).
+)
+
+(
+  What is the secret ingredient in Kyle's Red Wine Spaghetti?
+
+  Open question: everyone types an answer, Kyle too. Whatever Kyle typed is the
+  right answer; it's shown on the big screen at the reveal ("Kyle says it's..."),
+  with Ruben's answer and how many got it right. Other answers stay private.
+  Everyone, Ruben included, is scored against Kyle's answer.
+  If Kyle didn't answer, the host types in the answer instead.
+
+  Scoring: 1500 pts, 45s. Full points when the answer matches Kyle's, allowing for
+  case, accents, punctuation, plurals, small typos, filler words ("the", "some", ...)
+  and extra words around it ("I think it's cinnamon"). No partial points.
+  Kyle himself gets no points for this one.
 )
 
 (
@@ -213,30 +171,16 @@ to the final results.
   Scoring: 1000 pts, 60s. A quarter per course where the gluten-free dish was ordered.
 )
 
+=== General trivia ===
+
 (
-  At the village festival, we arrived when the number was at 182. Which number did we have?
-  (with photo: images/festival.jpg)
-  - 190
-  - 256
-  - 360 [correct]
-  - 472
+  What people used to live in Perugia before Octavian burnt their terracotta asses?
+  - Peruvians
+  - Umbrians
+  - Etruscans [correct]
+  - Sabines
 
   Scoring: 1000 pts, 20s. Multiple choice: all or nothing.
-)
-
-(
-  What is the secret ingredient in Kyle's Red Wine Spaghetti?
-
-  Open question: everyone types an answer, Kyle too. Whatever Kyle typed is the
-  right answer; it's shown on the big screen at the reveal ("Kyle says it's..."),
-  with Ruben's answer and how many got it right. Other answers stay private.
-  Everyone, Ruben included, is scored against Kyle's answer.
-  If Kyle didn't answer, the host types in the answer instead.
-
-  Scoring: 1500 pts, 45s. Full points when the answer matches Kyle's, allowing for
-  case, accents, punctuation, plurals, small typos, filler words ("the", "some", ...)
-  and extra words around it ("I think it's cinnamon"). No partial points.
-  Kyle himself gets no points for this one.
 )
 
 (
@@ -250,11 +194,89 @@ to the final results.
 )
 
 (
-  What people used to live in Perugia before Octavian burnt their terracotta asses?
-  - Peruvians
-  - Umbrians
-  - Etruscans [correct]
-  - Sabines
+  What did Leonardo do to power his server room at home?
+  - He tapped off a street lantern near his house
+  - He hacked his way into the electricity company so they wouldn't charge for his usage
+  - He stole batteries from city share scooters [correct]
+  - He ran an extension cord through the wall into his neighbour's apartment
+
+  Scoring: 1000 pts, 20s. Multiple choice: all or nothing.
+)
+
+(
+  How many dogs did we have in total?
+  - 2.5
+  - 3.5
+  - 4.5 [correct]
+  - 5.5
+
+  Scoring: 1000 pts, 20s. Multiple choice: all or nothing.
+)
+
+=== Music round ===
+
+(
+  A famous singer died during our trip. Name two of her hit songs.
+  [two text boxes]
+
+  Correct answers: any two of Bonnie Tyler's hits, biggest first:
+   1. Total Eclipse of the Heart
+   2. Holding Out for a Hero
+   3. It's a Heartache
+   4. A Rockin' Good Way
+   5. Lost in France
+   6. More Than a Lover
+   7. Faster Than the Speed of Night
+   8. Have You Ever Seen the Rain
+   9. If You Were a Woman (And I Was a Man)
+  10. Bitterblue
+  11. Believe in Me
+
+  Scoring: 1500 pts, 90s. Each box is worth up to half the points: the full
+  half for #1 and #2, then sliding down to a quarter for #11. Typos,
+  missing words and capitals are forgiven ("total eclips" counts).
+)
+
+(
+  Pedro
+
+  Correct answer: 48 pedro's
+
+  Scoring: 1500 pts, 45s. Exact count: full points. 40-56: 50%. 32-64: 25%.
+)
+
+=== Day trips & activities ===
+
+(
+  Which saint do we associate with the town of Assisi (multiple answers possible):
+  - St. Francis [correct]
+  - St. Anthony
+  - St. Carlo [correct]
+  - St. Clare [correct]
+  - St. Catherine
+  - St. Nicholas
+  - St. Peter
+
+  Scoring: 1500 pts, 30s. A share per option ticked/left unticked correctly.
+)
+
+(
+  Which story is based on the area around the ice cold swimming lake?
+  - Pinocchio
+  - Narnia [correct]
+  - Alice in Wonderland
+  - The Wizard of Oz
+
+  Scoring: 1000 pts, 20s. Multiple choice: all or nothing.
+)
+
+(
+  At the village festival, we arrived when the number was at 182. Which number did we have?
+  (with photo: images/festival.jpg)
+  - 190
+  - 256
+  - 360 [correct]
+  - 472
 
   Scoring: 1000 pts, 20s. Multiple choice: all or nothing.
 )
@@ -302,6 +324,8 @@ to the final results.
   Scoring: 2000 pts, 90s. % per piece for how close it is to where it really was; how it's
   turned doesn't matter. 80%+ counts as "correct".
 )
+
+=== Finances ===
 
 (
   Splitser -- estimation: drag €1000, €500, €100, €20, €10 and €5 bills and coins into a terracotta vase (no taking it out)

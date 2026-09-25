@@ -98,7 +98,7 @@ export function PlayerPage() {
       ) : (
         <div className="with-reaction-bar">
           {view.status === 'lobby' && <PlayerLobby view={view} />}
-          {view.status === 'intro' && <PlayerIntro view={view} />}
+          {(view.status === 'category' || view.status === 'intro') && <PlayerIntro view={view} />}
           {view.status === 'question' && <PlayerQuestion view={view} onAnswer={answer} />}
           {view.status === 'reveal' && <PlayerReveal view={view} />}
           {view.status === 'leaderboard' && <PlayerLeaderboard view={view} />}

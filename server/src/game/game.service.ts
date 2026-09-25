@@ -20,8 +20,10 @@ import {
   totalPlacements,
 } from './room.util';
 import { sampleQuestions } from './questions.sample';
+import { CATEGORIES } from './categories';
 import { matchAnswers, matchesOpenAnswer, scoreHitList } from './open-answer';
 import {
+  CategoryView,
   HostGuess,
   HostQuestionView,
   HostRoomView,
@@ -102,7 +104,9 @@ export class GameService {
     const room = await this.requireHost(hostToken);
     if (from && room.status !== from) return;
 
-    if (room.status === 'intro') {
+    if (room.status === 'category') {
+      room.status = 'intro';
+    } else if (room.status === 'intro') {
       room.status = 'question';
       room.questionStartedAt = Date.now();
       room.allAnsweredAt = null;
@@ -175,8 +179,10 @@ export class GameService {
     await this.store.set(room);
   }
 
+  // Opens with the category's splash screen when it's the first of its category.
   private goToQuestion(room: Room, index: number) {
-    room.status = 'intro';
+    const category = room.questions[index].category;
+    room.status = category && category !== room.questions[index - 1]?.category ? 'category' : 'intro';
     room.currentQuestionIndex = index;
     room.questionStartedAt = null;
     room.allAnsweredAt = null;
@@ -626,6 +632,7 @@ export class GameService {
       totalQuestions: room.questions.length,
       questionStartedAt: room.questionStartedAt,
       question: hostQuestion,
+      category: categoryView(room),
       answeredCount,
       optionCounts,
       guesses,
@@ -870,6 +877,14 @@ export class GameService {
 
 function sortLeaderboard(entries: LeaderboardEntry[]): LeaderboardEntry[] {
   return entries.sort((a, b) => b.score - a.score || a.name.localeCompare(b.name));
+}
+
+function categoryView(room: Room): CategoryView | null {
+  const key = room.questions[room.currentQuestionIndex]?.category;
+  const category = key ? CATEGORIES[key as keyof typeof CATEGORIES] : undefined;
+  if (!category) return null;
+  const keys = room.questions.map((q) => q.category).filter((k, i, all) => k !== all[i - 1]);
+  return { ...category, number: keys.indexOf(key) + 1, total: keys.length };
 }
 
 function afterReveal(room: Room): 'leaderboard' | 'intro' | 'finale' {

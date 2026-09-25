@@ -1,9 +1,26 @@
+// `category` is a splash screen before the first question of each category.
 // `intro` shows the question on the big screen while the host reads it out;
 // answering only opens in `question`. `finale` is a pause before the final results.
-export type RoomStatus = 'lobby' | 'intro' | 'question' | 'reveal' | 'leaderboard' | 'finale' | 'ended';
+export type RoomStatus = 'lobby' | 'category' | 'intro' | 'question' | 'reveal' | 'leaderboard' | 'finale' | 'ended';
+
+export interface Category {
+  title: string;
+  emoji: string;
+  imageUrl?: string;
+  // Played with sound instead of the image; the quiz music pauses for it.
+  videoUrl?: string;
+}
+
+// The current question's category, with its place among all categories.
+export interface CategoryView extends Category {
+  number: number;
+  total: number;
+}
 
 interface QuestionBase {
   id: string;
+  // Key into CATEGORIES (see categories.ts).
+  category: string;
   title: string;
   text: string;
   // Shown on players' phones instead of `text` when set; the host always shows `text`.
@@ -288,7 +305,8 @@ export interface Room {
   createdAt: number;
 }
 
-export type HostQuestionView =
+// The category shows on its own splash screen instead.
+export type HostQuestionView = DistributiveOmit<
   | (Omit<MultipleChoiceQuestion, 'correctIndex'> & { correctIndex?: number | number[] })
   | (Omit<DragCountQuestion, 'correctCount'> & { correctCount?: number })
   | (Omit<PodiumOrderQuestion, 'correctOrder'> & { groups: string[][]; correctOrder?: string[][] })
@@ -301,7 +319,9 @@ export type HostQuestionView =
   | (Omit<TraceMarksQuestion, 'marks' | 'revealImageUrl'> & { revealImageUrl?: string })
   | (Omit<TravelMapQuestion, 'correctGroups'> & { people: string[]; correctGroups?: string[][] })
   | (Omit<MoneyVaseQuestion, 'correctCents'> & { correctCents?: number })
-  | (Omit<MapPinQuestion, 'answer'> & { answer?: Point });
+  | (Omit<MapPinQuestion, 'answer'> & { answer?: Point }),
+  'category'
+>;
 
 export interface HostGuess {
   playerId: string;
@@ -323,6 +343,7 @@ export interface HostRoomView {
   totalQuestions: number;
   questionStartedAt: number | null;
   question: HostQuestionView | null;
+  category: CategoryView | null;
   answeredCount: number;
   // Only populated for multiple_choice and menu_order questions.
   optionCounts: number[];
@@ -339,7 +360,8 @@ export interface HostRoomView {
   reactions: Reaction[];
 }
 
-export type PlayerQuestionView =
+// The category shows on its own splash screen instead.
+export type PlayerQuestionView = DistributiveOmit<
   | Omit<MultipleChoiceQuestion, 'correctIndex'>
   | Omit<DragCountQuestion, 'correctCount'>
   // Groups are sorted alphabetically so they don't leak the answer.
@@ -354,7 +376,9 @@ export type PlayerQuestionView =
   // People are sorted alphabetically so they don't leak the answer.
   | (Omit<TravelMapQuestion, 'correctGroups'> & { people: string[] })
   | Omit<MoneyVaseQuestion, 'correctCents'>
-  | Omit<MapPinQuestion, 'answer'>;
+  | Omit<MapPinQuestion, 'answer'>,
+  'category'
+>;
 
 export interface PlayerRoomView {
   status: RoomStatus;

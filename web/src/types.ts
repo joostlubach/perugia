@@ -1,4 +1,4 @@
-export type RoomStatus = 'lobby' | 'intro' | 'question' | 'reveal' | 'leaderboard' | 'finale' | 'ended';
+export type RoomStatus = 'lobby' | 'category' | 'intro' | 'question' | 'reveal' | 'leaderboard' | 'finale' | 'ended';
 
 export interface MultipleChoiceInput {
   type: 'multiple_choice';
@@ -434,6 +434,16 @@ export interface LeaderboardEntry {
   score: number;
 }
 
+// The current question's category, with its place among all categories.
+export interface CategoryView {
+  title: string;
+  emoji: string;
+  imageUrl?: string;
+  videoUrl?: string;
+  number: number;
+  total: number;
+}
+
 export interface HostRoomView {
   status: RoomStatus;
   joinCode: string;
@@ -441,6 +451,7 @@ export interface HostRoomView {
   totalQuestions: number;
   questionStartedAt: number | null;
   question: HostQuestionView | null;
+  category: CategoryView | null;
   answeredCount: number;
   optionCounts: number[];
   guesses: HostGuess[];
