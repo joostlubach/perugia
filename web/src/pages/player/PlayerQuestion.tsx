@@ -1,4 +1,4 @@
-import { HamLine, MultiSelectAnswer, PlayerRoomView, SketchAnswer, TextAnswer, TextsAnswer, PinAnswer, TraceAnswer } from '../../types';
+import { HamLine, MultiSelectAnswer, PlayerRoomView, SketchAnswer, TextAnswer, TextsAnswer, PinAnswer, TraceAnswer, FloorsAnswer } from '../../types';
 import { Countdown } from '../../components/Countdown';
 import { Shape } from '../../components/Shape';
 import { MenuOrderBoard } from '../../components/MenuOrderBoard';
@@ -14,6 +14,7 @@ import { MapPinBoard } from '../../components/MapPinBoard';
 import { QuestionText } from '../../components/QuestionText';
 import { OpenAnswerBoard } from '../../components/OpenAnswerBoard';
 import { MultiTextBoard } from '../../components/MultiTextBoard';
+import { PhotoFloorsBoard } from '../../components/PhotoFloorsBoard';
 import { t } from '../../texts';
 
 export function PlayerQuestion({
@@ -21,7 +22,7 @@ export function PlayerQuestion({
   onAnswer,
 }: {
   view: PlayerRoomView;
-  onAnswer: (value: number | string[][] | SketchAnswer | HamLine | MultiSelectAnswer | TraceAnswer | TextAnswer | TextsAnswer | PinAnswer) => void;
+  onAnswer: (value: number | string[][] | SketchAnswer | HamLine | MultiSelectAnswer | TraceAnswer | TextAnswer | TextsAnswer | PinAnswer | FloorsAnswer) => void;
 }) {
   if (view.hasAnswered) {
     return (
@@ -162,6 +163,17 @@ export function PlayerQuestion({
           startedAt={startedAt}
           timeLimitSec={question.timeLimitSec}
           onSubmit={(selected) => onAnswer({ selected })}
+        />
+      )}
+
+      {question.type === 'photo_floors' && (
+        <PhotoFloorsBoard
+          floors={question.floors}
+          photoUrls={question.photoUrls}
+          photoTimeSec={question.photoTimeSec}
+          startedAt={startedAt}
+          timeLimitSec={question.timeLimitSec}
+          onSubmit={(floors) => onAnswer({ floors })}
         />
       )}
 

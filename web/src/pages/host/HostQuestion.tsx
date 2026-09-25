@@ -7,6 +7,8 @@ import { SketchMap } from '../../components/SketchMap';
 import { Vase } from '../../components/MoneyVase';
 import { PinMap } from '../../components/PinMap';
 import { QuestionText } from '../../components/QuestionText';
+import { PhotoStrip } from '../../components/PhotoStrip';
+import { usePhotoIndex } from '../../hooks/usePhotoIndex';
 import { t } from '../../texts';
 
 // Answering is open; the server moves on to the reveal once time is up or everyone has answered.
@@ -87,9 +89,32 @@ export function HostQuestion({ view }: { view: HostRoomView }) {
         <p className="subtitle">{t('host.question.multi_select')}</p>
       ) : question.type === 'multi_text' ? (
         <p className="subtitle">{t('host.question.multi_text')}</p>
+      ) : question.type === 'photo_floors' ? (
+        <>
+          <p className="subtitle">{t('host.question.photo_floors')}</p>
+          <LightningPhotos
+            photoUrls={question.photoUrls}
+            photoTimeSec={question.photoTimeSec}
+            startedAt={view.questionStartedAt}
+          />
+        </>
       ) : (
         <p className="subtitle">{t('host.question.drag_count', { label: question.dragLabel })}</p>
       )}
     </div>
   );
+}
+
+// The photos appear next to each other, one at a time, in step with the phones.
+function LightningPhotos({
+  photoUrls,
+  photoTimeSec,
+  startedAt,
+}: {
+  photoUrls: string[];
+  photoTimeSec: number;
+  startedAt: number | null;
+}) {
+  const index = usePhotoIndex(startedAt, photoTimeSec, photoUrls.length);
+  return <PhotoStrip photoUrls={photoUrls} shown={index + 1} current={index} />;
 }

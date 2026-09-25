@@ -155,6 +155,20 @@ export interface TraceMarksInput {
   points: number;
 }
 
+// Lightning round: photos shown `photoTimeSec` each; pick a floor for each.
+export interface PhotoFloorsInput {
+  type: 'photo_floors';
+  title: string;
+  text: string;
+  playerText?: string;
+  floors: string[];
+  // `floor` indexes `floors`.
+  photos: { imageUrl: string; floor: number }[];
+  photoTimeSec: number;
+  timeLimitSec: number;
+  points: number;
+}
+
 // A spot on a map image, in fractions of its width/height from the top left.
 export interface MapPin {
   label: string;
@@ -220,7 +234,8 @@ export type QuestionInput =
   | MenuOrderInput
   | OpenAnswerInput
   | MultiTextInput
-  | TraceMarksInput;
+  | TraceMarksInput
+  | PhotoFloorsInput;
 
 export interface SketchAnswer {
   placements: SketchPlacement[];
@@ -249,6 +264,11 @@ export interface TextsAnswer {
 
 export interface PinAnswer {
   pin: Point;
+}
+
+// Floor index per photo, -1 for none.
+export interface FloorsAnswer {
+  floors: number[];
 }
 
 export type HostQuestionView = (
@@ -363,6 +383,18 @@ export type HostQuestionView = (
       timeLimitSec: number;
       points: number;
       revealImageUrl?: string;
+    }
+  | {
+      id: string;
+      type: 'photo_floors';
+      title: string;
+      text: string;
+      floors: string[];
+      photoUrls: string[];
+      photoTimeSec: number;
+      timeLimitSec: number;
+      points: number;
+      correctFloors?: number[];
     }
   | {
       id: string;
@@ -571,6 +603,17 @@ export type PlayerQuestionView =
     }
   | {
       id: string;
+      type: 'photo_floors';
+      title: string;
+      text: string;
+      floors: string[];
+      photoUrls: string[];
+      photoTimeSec: number;
+      timeLimitSec: number;
+      points: number;
+    }
+  | {
+      id: string;
       type: 'travel_map';
       title: string;
       text: string;
@@ -617,7 +660,7 @@ export interface HostAnswer {
   value: number;
   correct: boolean;
   pointsAwarded: number;
-  // Dish indexes -- menu_order; options ticked -- multi_select.
+  // Dish indexes -- menu_order; options ticked -- multi_select; floor per photo -- photo_floors.
   selection?: number[];
   // What was typed -- open_answer and multi_text.
   text?: string;

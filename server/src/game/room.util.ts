@@ -1,5 +1,5 @@
 import { customAlphabet } from 'nanoid';
-import { MenuCourse, NearMiss, Point, SketchPlacement } from './types';
+import { FloorPhoto, MenuCourse, NearMiss, Point, SketchPlacement } from './types';
 
 const TOKEN_ALPHABET = '23456789abcdefghjkmnpqrstuvwxyz';
 const generateToken = customAlphabet(TOKEN_ALPHABET, 24);
@@ -72,6 +72,10 @@ export function countCorrectMenuPicks(selected: number[], menu: MenuCourse[], co
     start = end;
   }
   return count;
+}
+
+export function countCorrectFloors(picks: number[], photos: FloorPhoto[]): number {
+  return photos.filter((photo, i) => picks[i] === photo.floor).length;
 }
 
 // Share (0-1) of the points a counted guess earns: all of it when exact,

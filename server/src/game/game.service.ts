@@ -2,6 +2,7 @@ import { BadRequestException, ForbiddenException, Inject, Injectable, NotFoundEx
 import { ROOM_STORE, RoomStore } from '../storage/store.interface';
 import { AnswerEntry } from '../storage/room-parts';
 import {
+  countCorrectFloors,
   countCorrectGroupings,
   countCorrectMenuPicks,
   countCorrectPlacements,
@@ -417,6 +418,16 @@ export class GameService {
       correct = value === total;
       pointsAwarded =
         value > 0 ? scoreForAnswer(Math.round((question.points * value) / total), question.timeLimitSec, elapsedMs) : 0;
+    } else if (question.type === 'photo_floors') {
+      if (!Array.isArray(answer) || answer.some((v) => typeof v !== 'number')) {
+        throw new ForbiddenException('Wrong answer shape for this question');
+      }
+      // Partial credit per photo. No speed bonus: the photos set the pace.
+      selection = (answer as number[]).slice(0, question.photos.length);
+      const total = question.photos.length;
+      value = countCorrectFloors(selection, question.photos);
+      correct = value === total;
+      pointsAwarded = Math.round((question.points * value) / total);
     } else if (question.type === 'multi_select') {
       if (!Array.isArray(answer) || answer.some((v) => typeof v !== 'number')) {
         throw new ForbiddenException('Wrong answer shape for this question');
@@ -534,6 +545,11 @@ export class GameService {
         ? question.options.map(
             (_, i) =>
               Object.values(room.players).filter((p) => p.answers[question.id]?.selection?.includes(i)).length,
+          )
+        : question.type === 'photo_floors'
+        ? question.photos.map(
+            (photo, i) =>
+              Object.values(room.players).filter((p) => p.answers[question.id]?.selection?.[i] === photo.floor).length,
           )
         : question.type === 'menu_order'
         ? question.menu
@@ -696,6 +712,19 @@ export class GameService {
           timeLimitSec: question.timeLimitSec,
           points: question.points,
           ...(revealed ? { answer: question.answer } : {}),
+        };
+      } else if (question.type === 'photo_floors') {
+        hostQuestion = {
+          id: question.id,
+          type: 'photo_floors',
+          title: question.title,
+          text: question.text,
+          floors: question.floors,
+          photoUrls: question.photos.map((photo) => photo.imageUrl),
+          photoTimeSec: question.photoTimeSec,
+          timeLimitSec: question.timeLimitSec,
+          points: question.points,
+          ...(revealed ? { correctFloors: question.photos.map((photo) => photo.floor) } : {}),
         };
       } else if (question.type === 'multi_select') {
         hostQuestion = {
@@ -877,6 +906,18 @@ export class GameService {
           timeLimitSec: question.timeLimitSec,
           points: question.points,
         };
+      } else if (question.type === 'photo_floors') {
+        playerQuestion = {
+          id: question.id,
+          type: 'photo_floors',
+          title: question.title,
+          text: question.playerText ?? question.text,
+          floors: question.floors,
+          photoUrls: question.photos.map((photo) => photo.imageUrl),
+          photoTimeSec: question.photoTimeSec,
+          timeLimitSec: question.timeLimitSec,
+          points: question.points,
+        };
       } else if (question.type === 'multi_select') {
         playerQuestion = {
           id: question.id,
@@ -914,6 +955,7 @@ export class GameService {
         correctValue = 100;
       }
       else if (question.type === 'multi_select') correctValue = question.options.length;
+      else if (question.type === 'photo_floors') correctValue = question.photos.length;
       else if (question.type === 'menu_order') correctValue = question.menu.length;
       else if (question.type === 'multi_text') correctValue = question.boxes;
       else correctValue = 1;

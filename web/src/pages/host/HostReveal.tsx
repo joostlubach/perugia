@@ -9,6 +9,7 @@ import { PodiumStand } from '../../components/PodiumStand';
 import { SketchMap } from '../../components/SketchMap';
 import { TallyList } from '../../components/TallyList';
 import { QuestionText } from '../../components/QuestionText';
+import { PhotoStrip } from '../../components/PhotoStrip';
 import { isCorrectOption } from '../../scoring';
 import { HostGradeBox } from './HostGradeBox';
 import { OpenAnswerSummary } from './OpenAnswerSummary';
@@ -191,6 +192,19 @@ export function HostReveal({
       ) : question.type === 'multi_text' ? (
         <>
           <TallyList items={question.correctAnswers ?? []} counts={view.optionCounts} />
+          {correctTally}
+        </>
+      ) : question.type === 'photo_floors' ? (
+        <>
+          <PhotoStrip
+            photoUrls={question.photoUrls}
+            captions={question.photoUrls.map((_, i) => (
+              <>
+                <strong>{question.floors[question.correctFloors?.[i] ?? -1]}</strong>
+                <span className="hint">{t('host.reveal.gotItRight', { count: view.optionCounts[i] ?? 0 })}</span>
+              </>
+            ))}
+          />
           {correctTally}
         </>
       ) : question.type === 'multi_select' ? (

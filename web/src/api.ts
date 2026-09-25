@@ -4,6 +4,7 @@ import {
   HostRoomView,
   MultiSelectAnswer,
   PinAnswer,
+  FloorsAnswer,
   TextsAnswer,
   PlayerRoomView,
   QuestionInput,
@@ -133,7 +134,7 @@ export const api = {
   submitAnswer(
     playerId: string,
     playerToken: string,
-    answer: number | string[][] | SketchAnswer | HamLine | MultiSelectAnswer | TraceAnswer | TextAnswer | TextsAnswer | PinAnswer,
+    answer: number | string[][] | SketchAnswer | HamLine | MultiSelectAnswer | TraceAnswer | TextAnswer | TextsAnswer | PinAnswer | FloorsAnswer,
   ) {
     let payload: object;
     if (Array.isArray(answer)) payload = { order: answer };
@@ -144,6 +145,7 @@ export const api = {
     else if ('text' in answer) payload = { text: answer.text };
     else if ('texts' in answer) payload = { texts: answer.texts };
     else if ('pin' in answer) payload = { pin: answer.pin };
+    else if ('floors' in answer) payload = { floors: answer.floors };
     else payload = { placements: answer.placements };
     return request<void>('/room/answer', {
       method: 'POST',

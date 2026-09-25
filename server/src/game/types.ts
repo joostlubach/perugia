@@ -164,6 +164,22 @@ export interface MultiSelectQuestion extends QuestionBase {
   revealOrder?: number[];
 }
 
+// Lightning round: the photos show one after another, `photoTimeSec` each,
+// and the player picks a floor for each while it shows. Only revealed at the
+// end, all at once. Scored per photo.
+export interface PhotoFloorsQuestion extends QuestionBase {
+  type: 'photo_floors';
+  floors: string[];
+  photos: FloorPhoto[];
+  photoTimeSec: number;
+}
+
+export interface FloorPhoto {
+  imageUrl: string;
+  // Index into `floors`.
+  floor: number;
+}
+
 export interface Point {
   x: number;
   y: number;
@@ -249,7 +265,8 @@ export type Question =
   | MenuOrderQuestion
   | OpenAnswerQuestion
   | MultiTextQuestion
-  | TraceMarksQuestion;
+  | TraceMarksQuestion
+  | PhotoFloorsQuestion;
 
 // Plain `Omit<Question, K>` doesn't distribute over the union and collapses
 // to the shared shape, losing the type-specific fields -- this does.
@@ -266,7 +283,8 @@ export interface PlayerAnswer {
   // Where the avatar was dropped -- map_pin.
   point?: Point;
   // The dish indexes ordered -- menu_order; options ticked -- multi_select;
-  // indexes of the correct answers typed -- multi_text.
+  // indexes of the correct answers typed -- multi_text; floor picked per
+  // photo (-1 for none) -- photo_floors.
   selection?: number[];
   // What was typed -- open_answer; every box joined by " / " -- multi_text.
   text?: string;
@@ -354,6 +372,7 @@ export type HostQuestionView = DistributiveOmit<
   | OpenAnswerQuestion
   | (Omit<MultiTextQuestion, 'correctAnswers'> & { correctAnswers?: string[] })
   | (Omit<TraceMarksQuestion, 'marks' | 'revealImageUrl'> & { revealImageUrl?: string })
+  | (Omit<PhotoFloorsQuestion, 'photos'> & { photoUrls: string[]; correctFloors?: number[] })
   | (Omit<TravelMapQuestion, 'correctGroups'> & { people: string[]; correctGroups?: string[][] })
   | (Omit<MoneyVaseQuestion, 'correctCents'> & { correctCents?: number })
   | (Omit<MapPinQuestion, 'answer'> & { answer?: Point }),
@@ -383,7 +402,8 @@ export interface HostRoomView {
   category: CategoryView | null;
   runthrough: boolean;
   answeredCount: number;
-  // Only populated for multiple_choice and menu_order questions.
+  // Only populated for multiple_choice and menu_order questions; for
+  // photo_floors, how many got each photo right.
   optionCounts: number[];
   // Only populated for drag_count and podium_order questions once revealed.
   guesses: HostGuess[];
@@ -412,6 +432,7 @@ export type PlayerQuestionView = DistributiveOmit<
   | Omit<OpenAnswerQuestion, 'correctAnswer'>
   | Omit<MultiTextQuestion, 'correctAnswers'>
   | Omit<TraceMarksQuestion, 'marks' | 'revealImageUrl'>
+  | (Omit<PhotoFloorsQuestion, 'photos'> & { photoUrls: string[] })
   // People are sorted alphabetically so they don't leak the answer.
   | (Omit<TravelMapQuestion, 'correctGroups'> & { people: string[] })
   | Omit<MoneyVaseQuestion, 'correctCents'>

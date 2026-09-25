@@ -1,5 +1,6 @@
 import { BOWIE_ASPECT_RATIO, BOWIE_MARKS } from './bowie'
 import { HAM_ROWS } from './ham'
+import { HOUSE_FLOORS, HOUSE_PHOTO_SEC, HOUSE_PHOTOS } from './house-photos'
 import { ITALY_MAP_ASPECT_RATIO, ITALY_MAP_URL, ITALY_MAP_WIDTH_KM, PERUGIA } from './italy'
 import { KARTING_LOSER_GROUP, KARTING_WINNER_GROUP } from './karting'
 import {
@@ -98,6 +99,16 @@ export const sampleQuestions: DistributiveOmit<Question, 'id'>[] = [
     correctIndexes: [],
     timeLimitSec: 20,
     points: 1000,
+  },
+  {
+    type: 'photo_floors',
+    ...texts('houseFloors'),
+    category: 'stay',
+    floors: HOUSE_FLOORS,
+    photos: HOUSE_PHOTOS,
+    photoTimeSec: HOUSE_PHOTO_SEC,
+    timeLimitSec: HOUSE_PHOTOS.length * HOUSE_PHOTO_SEC,
+    points: 1500,
   },
   {
     type: 'multiple_choice',

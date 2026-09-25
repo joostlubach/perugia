@@ -4,7 +4,7 @@ import { api, isStaleSession } from '../api';
 import { isLocalHost } from '../localHost';
 import { keepAudioUnlocked } from '../audioSequencer';
 import { preloadDragSounds } from '../components/DragCanvas';
-import { HamLine, MultiSelectAnswer, SketchAnswer, TextAnswer, TextsAnswer, PinAnswer, TraceAnswer } from '../types';
+import { HamLine, MultiSelectAnswer, SketchAnswer, TextAnswer, TextsAnswer, PinAnswer, TraceAnswer, FloorsAnswer } from '../types';
 import { usePolling } from '../hooks/usePolling';
 import { audio } from '../audio';
 import { MuteToggle } from '../components/MuteToggle';
@@ -83,7 +83,7 @@ export function PlayerPage() {
     setSession({ playerId, playerToken });
   };
 
-  const answer = (value: number | string[][] | SketchAnswer | HamLine | MultiSelectAnswer | TraceAnswer | TextAnswer | TextsAnswer | PinAnswer) => {
+  const answer = (value: number | string[][] | SketchAnswer | HamLine | MultiSelectAnswer | TraceAnswer | TextAnswer | TextsAnswer | PinAnswer | FloorsAnswer) => {
     if (!session) return;
     api.submitAnswer(session.playerId, session.playerToken, value).catch(() => {});
   };

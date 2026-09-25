@@ -2345,6 +2345,120 @@ textarea.json-editor {
   width: 100%;
 }
 
+.photo-strip {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  width: 100%;
+  max-width: 1400px;
+}
+
+.photo-strip-item {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.3s;
+}
+
+.photo-strip-item.current {
+  transform: scale(1.06);
+}
+
+.photo-strip-frame {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.08);
+  border: 3px dashed rgba(0, 0, 0, 0.15);
+}
+
+.photo-strip-frame:has(img) {
+  border: none;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.photo-strip-item.current .photo-strip-frame {
+  outline: 5px solid var(--gold);
+}
+
+.photo-strip-item.correct .photo-strip-frame {
+  outline: 5px solid var(--italy-green);
+}
+
+.photo-strip-item.wrong .photo-strip-frame {
+  outline: 5px solid var(--italy-red);
+}
+
+.photo-strip-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  animation: menu-pop 0.35s ease-out;
+}
+
+.photo-strip-caption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  font-size: clamp(0.9rem, 1.6vw, 1.3rem);
+}
+
+.photo-floors-board {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  max-width: 420px;
+}
+
+.photo-floors-photo {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.photo-floors-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photo-floors-timer {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 8px;
+  width: 100%;
+  background: var(--gold);
+  transform-origin: left;
+  animation: photo-timer linear forwards;
+}
+
+@keyframes photo-timer {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+
+.photo-floors-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
 .jump-box-actions {
   display: flex;
   flex-direction: column;
