@@ -76,6 +76,19 @@ to the final results.
   Scoring: 1000 pts, 20s. Multiple choice: all or nothing.
 )
 
+(
+  When was the airco fixed? (select all that apply)
+  - Monday
+  - Tuesday
+  - Wednesday
+  - Thursday
+  - Friday
+
+  Correct: none of them -- it was never fixed.
+
+  Scoring: 1000 pts, 20s. A share per option ticked/left unticked correctly.
+)
+
 === Activities at the house ===
 
 (

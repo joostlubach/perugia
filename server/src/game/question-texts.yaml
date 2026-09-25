@@ -38,6 +38,11 @@ problem:
   host: What was the problem?
   player: What was the problem?
 
+aircoFixed:
+  title: The airco
+  host: And when was the airco fixed?
+  player: When was the airco fixed?
+
 poolParty:
   title: Pool party
   host: |-
