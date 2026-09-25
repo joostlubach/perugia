@@ -23,8 +23,9 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
     const body = await res.json().catch(() => ({}));
     throw new ApiError(res.status, body.message || `Request failed: ${res.status}`);
   }
-  if (res.status === 204) return undefined as T;
-  return res.json();
+  // POSTs that return nothing still come back 201, with an empty body.
+  const text = await res.text();
+  return (text ? JSON.parse(text) : undefined) as T;
 }
 
 export class ApiError extends Error {
@@ -102,8 +103,16 @@ export const api = {
     });
   },
 
-  finish(token: string) {
-    return request<void>(`/room/finish?token=${encodeURIComponent(token)}`, { method: 'POST' });
+  // Back to the first question nobody has answered yet.
+  resume(token: string) {
+    return request<void>(`/room/resume?token=${encodeURIComponent(token)}`, { method: 'POST' });
+  },
+
+  // To the finale, or with `results` past it to the final results.
+  finish(token: string, results = false) {
+    return request<void>(`/room/finish?token=${encodeURIComponent(token)}${results ? '&results=1' : ''}`, {
+      method: 'POST',
+    });
   },
 
   react(playerId: string, playerToken: string, kind: ReactionKind) {

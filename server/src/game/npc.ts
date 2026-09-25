@@ -69,7 +69,8 @@ function randomAnswer(question: Question): PlayerAnswer {
     return withShare(share, count, share === 1);
   }
   const share = Math.random() < NPC_RIGHT_CHANCE ? 0.4 + Math.random() * 0.6 : Math.random() * 0.3;
-  return withShare(share, 0, share > 0.9);
+  // The percentage for the types scored that way; ignored for the rest.
+  return withShare(share, Math.round(share * 100), share > 0.9);
 }
 
 function clamp(fraction: number): number {

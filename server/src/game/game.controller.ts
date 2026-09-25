@@ -67,9 +67,14 @@ export class GameController {
     return this.game.grade(token, dto.correctAnswer);
   }
 
+  @Post('resume')
+  resume(@Query('token') token: string) {
+    return this.game.resume(token);
+  }
+
   @Post('finish')
-  finish(@Query('token') token: string) {
-    return this.game.finish(token);
+  finish(@Query('token') token: string, @Query('results') results?: string) {
+    return this.game.finish(token, results === '1');
   }
 
   @Post('react')

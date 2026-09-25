@@ -19,7 +19,6 @@ host:
   setup:
     title: "Host Setup"
     createRoom: "🎉 Create Room"
-    createRunthrough: "🧪 Create runthrough"
 
   # Badge on every screen of a runthrough, where everyone missing is played by an NPC.
   runthrough: "🧪 Runthrough"
@@ -98,6 +97,13 @@ host:
   jump:
     label: "Go to question (1–{total})"
     go: "Go"
+    # Hold Alt to turn "New room" into "New runthrough".
+    resume: "▶️ Resume"
+    newRoom: "🆕 New room"
+    newRunthrough: "🧪 New runthrough"
+    confirmNewRoom: "A game is in progress. Start over in a new room? Everyone will have to join again."
+    finale: "🏁 Pre-finale"
+    results: "🏆 Results"
 
 player:
   scan:

@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
 import { api, isStaleSession } from '../api'
 import { audio } from '../audio'
 import { MuteToggle } from '../components/MuteToggle'
@@ -23,14 +22,13 @@ interface Session {
 
 const STORAGE_KEY = 'perugia_host';
 const RESTART_KEY = 'perugia_host_restart';
+const RUNTHROUGH = 'runthrough';
 // The final-lap music announces the start of this many closing questions.
 const FINAL_LAP_QUESTIONS = 1;
 // Kept well under the lobby tarantella so it stays in the background.
 const QUIZ_MUSIC_VOLUME = 0.2;
 
 export function HostPage() {
-  // Only matters when creating a room (here or with Cmd+Shift+1).
-  const runthrough = useSearchParams()[0].get('runthrough') === '1';
   const [restarting, setRestarting] = useState(() => sessionStorage.getItem(RESTART_KEY) !== null);
   const [session, setSession] = useState<Session | null>(() => {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -82,32 +80,30 @@ export function HostPage() {
   useEffect(() => {
     // Checks the flag itself rather than `restarting`, so StrictMode's double
     // effect run doesn't create two rooms.
-    if (sessionStorage.getItem(RESTART_KEY) === null) return;
+    const restart = sessionStorage.getItem(RESTART_KEY);
+    if (restart === null) return;
     sessionStorage.removeItem(RESTART_KEY);
-    api.createRoom(runthrough).then(
+    api.createRoom(restart === RUNTHROUGH).then(
       ({ hostToken }) => handleCreated(hostToken),
       () => {},
     ).finally(() => setRestarting(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Cmd+Shift+1 reloads into a fresh room (the flag tells the reloaded page
-  // to create it), Cmd+Shift+2 asks for a question number to jump to, and
-  // Cmd+Shift+9 goes straight to the finale (macOS keeps 3-5 for screenshots).
+  // Reloads into a fresh room; the flag tells the reloaded page to create it.
+  const newRoom = (runthrough: boolean) => {
+    sessionStorage.setItem(RESTART_KEY, runthrough ? RUNTHROUGH : '1');
+    localStorage.removeItem(STORAGE_KEY);
+    window.location.reload();
+  };
+
+  // Cmd+Shift+G opens the Go To box: a question, a new room, the finale or the results.
   const onShortcut = useRef<(e: KeyboardEvent) => void>(() => {});
   onShortcut.current = (e) => {
     if (!e.metaKey || !e.shiftKey) return;
-    if (e.code === 'Digit1') {
-      e.preventDefault();
-      sessionStorage.setItem(RESTART_KEY, '1');
-      localStorage.removeItem(STORAGE_KEY);
-      window.location.reload();
-    } else if (e.code === 'Digit2' && session) {
+    if (e.code === 'KeyG' && session) {
       e.preventDefault();
       setJumping(true);
-    } else if (e.code === 'Digit9' && session) {
-      e.preventDefault();
-      api.finish(session.hostToken);
     }
   };
   useEffect(() => {
@@ -144,7 +140,7 @@ export function HostPage() {
       {restarting || (session && !view) ? (
         <div className="page">{t('common.loading')}</div>
       ) : !session || !view ? (
-        <HostSetup runthrough={runthrough} onCreated={handleCreated} />
+        <HostSetup onCreated={handleCreated} />
       ) : (
         <>
           {view.runthrough && <div className="runthrough-badge">{t('host.runthrough')}</div>}
@@ -168,6 +164,11 @@ export function HostPage() {
             <HostJumpBox
               totalQuestions={view.totalQuestions}
               onJump={(index) => api.goTo(session.hostToken, index)}
+              inProgress={view.status !== 'lobby' && view.status !== 'ended'}
+              onNewRoom={newRoom}
+              onResume={() => api.resume(session.hostToken)}
+              onFinale={() => api.finish(session.hostToken)}
+              onResults={() => api.finish(session.hostToken, true)}
               onClose={() => setJumping(false)}
             />
           )}

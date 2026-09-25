@@ -179,10 +179,21 @@ export class GameService {
     await this.store.set(room);
   }
 
-  // Host shortcut: straight to the finale, from wherever the game is.
-  async finish(hostToken: string): Promise<void> {
+  // Host shortcut: back to the first question nobody has answered yet, or the
+  // finale if they all have. Unlike goTo, no answers are wiped.
+  async resume(hostToken: string): Promise<void> {
     const room = await this.requireHost(hostToken);
-    room.status = 'finale';
+    const players = Object.values(room.players);
+    const index = room.questions.findIndex((q) => !players.some((p) => p.answers[q.id]));
+    if (index === -1) room.status = 'finale';
+    else this.goToQuestion(room, index);
+    await this.store.set(room);
+  }
+
+  // Host shortcut: straight to the finale, or past it to the results, from wherever the game is.
+  async finish(hostToken: string, results = false): Promise<void> {
+    const room = await this.requireHost(hostToken);
+    room.status = results ? 'ended' : 'finale';
     await this.store.set(room);
   }
 

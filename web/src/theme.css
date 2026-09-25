@@ -2217,3 +2217,11 @@ textarea.json-editor {
   gap: 16px;
   width: 100%;
 }
+
+.jump-box-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 2px dashed rgba(74, 44, 29, 0.25);
+}
