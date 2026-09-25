@@ -145,6 +145,11 @@ festival:
   player: |-
     Which number did we have at the village festival?
 
+noKarting:
+  title: No karting
+  host: Who didn't go karting?
+  player: Who didn't go karting?
+
 karting:
   title: Karting
   host: |-
