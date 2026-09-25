@@ -57,7 +57,17 @@ export const audio = {
     }
   },
 
-  // Fetches and decodes a sound ahead of time, so its first play isn't late.
+  // Starts downloading sounds that go through play() or loop(), so they start
+  // right away when their moment comes.
+  preloadMusic(...keys: SoundKey[]) {
+    for (const key of keys) {
+      const el = getElement(key);
+      el.preload = 'auto';
+      el.load();
+    }
+  },
+
+  // Fetches and decodes a sound for playOverlapping ahead of time, so its first play isn't late.
   preload(key: SoundKey) {
     try {
       loadBuffer(key).catch(() => {});

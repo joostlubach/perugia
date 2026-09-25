@@ -47,6 +47,8 @@ export function PlayerPage() {
   useEffect(() => {
     keepAudioUnlocked();
     preloadDragSounds();
+    audio.preloadMusic('fidatidime', 'died');
+    audio.preload('coin');
   }, []);
 
   // Keeps checking, so it picks up a room created (or restarted) after this page opened.

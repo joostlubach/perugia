@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { api, isStaleSession } from '../api'
 import { audio } from '../audio'
+import { preloadReactionSounds } from '../reactions'
 import { MuteToggle } from '../components/MuteToggle'
 import { ReactionCallouts } from '../components/ReactionCallouts'
 import { usePolling } from '../hooks/usePolling'
@@ -36,6 +37,11 @@ export function HostPage() {
   });
   const lastStatus = useRef<string | null>(null);
   const [jumping, setJumping] = useState(false);
+
+  useEffect(() => {
+    audio.preloadMusic('background', 'quizMusic', 'finalLap', 'standings');
+    preloadReactionSounds();
+  }, []);
 
   const fetchView = useCallback(() => {
     if (!session) return Promise.reject(new Error('no session'));

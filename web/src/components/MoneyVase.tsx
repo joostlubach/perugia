@@ -34,7 +34,6 @@ export function MoneyVaseBoard({
     onSubmit(totalRef.current);
   };
   useCountdown(startedAt, timeLimitSec, submit);
-  useEffect(() => audio.preload('coin'), []);
 
   const drop = (cents: number, clientX: number, clientY: number) => {
     const vase = vaseRef.current;
