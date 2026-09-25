@@ -316,12 +316,13 @@ export interface Room {
   questions: Question[];
   currentQuestionIndex: number;
   questionStartedAt: number | null;
-  // When the last player answered the current question.
-  allAnsweredAt: number | null;
   players: Record<string, Player>;
   createdAt: number;
   // A rehearsal: starting fills every free avatar with an NPC.
   runthrough?: boolean;
+  // Each NPC's answer to the current question by player id, handed in once
+  // its `answeredAtMs` has passed.
+  npcAnswers?: Record<string, PlayerAnswer>;
 }
 
 // The category shows on its own splash screen instead.
@@ -364,8 +365,6 @@ export interface HostRoomView {
   question: HostQuestionView | null;
   category: CategoryView | null;
   runthrough: boolean;
-  // A runthrough nobody joined: questions reveal themselves, without a countdown.
-  npcsOnly: boolean;
   answeredCount: number;
   // Only populated for multiple_choice and menu_order questions.
   optionCounts: number[];

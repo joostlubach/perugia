@@ -1,5 +1,6 @@
 import { BadRequestException, ForbiddenException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { ROOM_STORE, RoomStore } from '../storage/store.interface';
+import { AnswerEntry } from '../storage/room-parts';
 import {
   countCorrectGroupings,
   countCorrectMenuPicks,
@@ -21,7 +22,7 @@ import {
 } from './room.util';
 import { sampleQuestions } from './questions.sample';
 import { CATEGORIES } from './categories';
-import { addNpcs, answerForNpcs } from './npc';
+import { addNpcs, answerForNpcs, planNpcAnswers } from './npc';
 import { matchAnswers, matchesOpenAnswer, scoreHitList } from './open-answer';
 import {
   AnswerDetail,
@@ -58,11 +59,11 @@ export class GameService {
       questions,
       currentQuestionIndex: -1,
       questionStartedAt: null,
-      allAnsweredAt: null,
       players: {},
       createdAt: Date.now(),
       runthrough,
     };
+    await this.store.delete();
     await this.store.set(room);
     return { hostToken: room.hostToken };
   }
@@ -77,9 +78,6 @@ export class GameService {
     if (joinCode !== room.joinCode) {
       throw new ForbiddenException('Scan the QR code on the big screen to join');
     }
-    if (Object.values(room.players).some((p) => p.avatar === avatar)) {
-      throw new ForbiddenException('That avatar has already been picked');
-    }
     const id = newToken();
     const player: Player = {
       id,
@@ -90,15 +88,16 @@ export class GameService {
       joinedAt: Date.now(),
       answers: {},
     };
-    room.players[id] = player;
-    await this.store.set(room);
+    if (!(await this.store.addPlayer(player))) {
+      throw new ForbiddenException('That avatar has already been picked');
+    }
     return { playerId: id, playerToken: player.token };
   }
 
   async startGame(hostToken: string): Promise<void> {
     const room = await this.requireHost(hostToken);
     if (room.status !== 'lobby') return;
-    if (room.runthrough) addNpcs(room);
+    if (room.runthrough) await Promise.all(addNpcs(room).map((npc) => this.store.addPlayer(npc)));
     this.goToQuestion(room, 0);
     await this.store.set(room);
   }
@@ -114,10 +113,9 @@ export class GameService {
     } else if (room.status === 'intro') {
       room.status = 'question';
       room.questionStartedAt = Date.now();
-      // With only NPCs there's nobody to wait for: reveal after the usual short pause.
-      room.allAnsweredAt = npcsOnly(room) ? Date.now() : null;
+      room.npcAnswers = planNpcAnswers(room, room.questions[room.currentQuestionIndex]);
     } else if (room.status === 'question') {
-      this.reveal(room);
+      await this.reveal(room);
     } else if (room.status === 'reveal') {
       const next = afterReveal(room);
       if (next === 'intro') this.goToQuestion(room, room.currentQuestionIndex + 1);
@@ -138,14 +136,21 @@ export class GameService {
     const question = room.questions[room.currentQuestionIndex];
     if (!question || question.type !== 'open_answer') throw new BadRequestException('Not an open question');
     if (room.status !== 'reveal') throw new BadRequestException('Answers can only be checked at the reveal');
-    this.gradeOpenAnswers(room, question, correctAnswer, null);
+    await this.store.setAnswers(this.gradeOpenAnswers(room, question, correctAnswer, null));
     await this.store.set(room);
   }
 
   // (Re)scores every typed answer against `correctAnswer`. The player who
   // supplied the answer (if any) gets no points for it -- they knew it.
-  private gradeOpenAnswers(room: Room, question: OpenAnswerQuestion, correctAnswer: string, keeperId: string | null) {
+  // Returns the rescored answers, to be saved.
+  private gradeOpenAnswers(
+    room: Room,
+    question: OpenAnswerQuestion,
+    correctAnswer: string,
+    keeperId: string | null,
+  ): AnswerEntry[] {
     question.correctAnswer = correctAnswer.trim();
+    const entries: AnswerEntry[] = [];
     for (const player of Object.values(room.players)) {
       const answer = player.answers[question.id];
       // NPCs' made-up scores stand; they never typed anything to check.
@@ -158,7 +163,9 @@ export class GameService {
           ? scoreForAnswer(question.points, question.timeLimitSec, answer.answeredAtMs)
           : 0;
       player.score += answer.pointsAwarded;
+      entries.push({ playerId: player.id, questionId: question.id, answer });
     }
+    return entries;
   }
 
   // Host shortcut: straight to a question (zero-based), shown as its intro.
@@ -169,12 +176,8 @@ export class GameService {
     const question = room.questions[index];
     const questionId = question.id;
     if (question.type === 'open_answer') question.correctAnswer = undefined;
-    for (const player of Object.values(room.players)) {
-      const answer = player.answers[questionId];
-      if (!answer) continue;
-      player.score -= answer.pointsAwarded;
-      delete player.answers[questionId];
-    }
+    const answered = Object.values(room.players).filter((p) => p.answers[questionId]);
+    await this.store.deleteAnswers(questionId, answered.map((p) => p.id));
     this.goToQuestion(room, index);
     await this.store.set(room);
   }
@@ -203,36 +206,40 @@ export class GameService {
     room.status = category && category !== room.questions[index - 1]?.category ? 'category' : 'intro';
     room.currentQuestionIndex = index;
     room.questionStartedAt = null;
-    room.allAnsweredAt = null;
+    delete room.npcAnswers;
   }
 
-  // Closes answering once time is up or everyone has answered. Runs lazily
-  // whenever anyone polls, so there's no timer to keep on the server.
+  // Hands in the NPC answers that are due, and closes answering once time is
+  // up or everyone has answered. Runs lazily whenever anyone polls, so
+  // there's no timer to keep on the server.
   private async settle(room: Room): Promise<void> {
     if (room.status !== 'question' || !room.questionStartedAt) return;
     const question = room.questions[room.currentQuestionIndex];
     const now = Date.now();
+    const due = answerForNpcs(room, question, now - room.questionStartedAt);
+    await Promise.all(due.map((entry) => this.store.addAnswer(entry)));
     const timeUp = now >= room.questionStartedAt + question.timeLimitSec * 1000 + LATE_ANSWER_GRACE_MS;
-    const allDone = room.allAnsweredAt !== null && now >= room.allAnsweredAt + ALL_ANSWERED_DELAY_MS;
+    const lastAnswerAt = allAnsweredAt(room);
+    const allDone = lastAnswerAt !== null && now >= lastAnswerAt + ALL_ANSWERED_DELAY_MS;
     if (!timeUp && !allDone) return;
-    this.reveal(room);
+    await this.reveal(room);
     await this.store.set(room);
   }
 
-  private reveal(room: Room) {
+  private async reveal(room: Room) {
     room.status = 'reveal';
     const question = room.questions[room.currentQuestionIndex];
-    if (question.type === 'open_answer') this.gradeByAnswerKey(room, question);
-    answerForNpcs(room, question);
+    if (question.type === 'open_answer') await this.store.setAnswers(this.gradeByAnswerKey(room, question));
+    await Promise.all(answerForNpcs(room, question).map((entry) => this.store.addAnswer(entry)));
   }
 
   // An open question with `answerFrom` is scored against that player's own
   // answer. If they didn't answer, the host types the answer in instead.
-  private gradeByAnswerKey(room: Room, question: OpenAnswerQuestion) {
-    if (!question.answerFrom) return;
+  private gradeByAnswerKey(room: Room, question: OpenAnswerQuestion): AnswerEntry[] {
+    if (!question.answerFrom) return [];
     const keeper = Object.values(room.players).find((p) => p.avatar === question.answerFrom);
     const text = keeper?.answers[question.id]?.text;
-    if (keeper && text) this.gradeOpenAnswers(room, question, text, keeper.id);
+    return keeper && text ? this.gradeOpenAnswers(room, question, text, keeper.id) : [];
   }
 
   async submitAnswer(
@@ -386,7 +393,7 @@ export class GameService {
       pointsAwarded = correct ? scoreForAnswer(question.points, question.timeLimitSec, elapsedMs) : 0;
     }
 
-    player.answers[question.id] = {
+    const saved = {
       value,
       answeredAtMs: elapsedMs,
       correct,
@@ -396,11 +403,8 @@ export class GameService {
       ...(point ? { point } : {}),
       ...(detail ? { detail } : {}),
     };
-    player.score += pointsAwarded;
-    if (Object.values(room.players).every((p) => p.npc || p.answers[question.id])) {
-      room.allAnsweredAt = Date.now();
-    }
-    await this.store.set(room);
+    // Only the answer itself is written, so answers arriving at the same time can't overwrite each other.
+    await this.store.addAnswer({ playerId, questionId: question.id, answer: saved });
   }
 
   async react(playerId: string, playerToken: string, kind: ReactionKind): Promise<void> {
@@ -675,7 +679,6 @@ export class GameService {
       question: hostQuestion,
       category: categoryView(room),
       runthrough: Boolean(room.runthrough),
-      npcsOnly: npcsOnly(room),
       answeredCount,
       optionCounts,
       guesses,
@@ -922,9 +925,18 @@ function sortLeaderboard(entries: LeaderboardEntry[]): LeaderboardEntry[] {
   return entries.sort((a, b) => b.score - a.score || a.name.localeCompare(b.name));
 }
 
-function npcsOnly(room: Room): boolean {
+// When the last player answered the current question, or null while some still haven't.
+function allAnsweredAt(room: Room): number | null {
+  const question = room.questions[room.currentQuestionIndex];
   const players = Object.values(room.players);
-  return players.length > 0 && players.every((p) => p.npc);
+  if (!question || !room.questionStartedAt || players.length === 0) return null;
+  let last = 0;
+  for (const player of players) {
+    const answer = player.answers[question.id];
+    if (!answer) return null;
+    last = Math.max(last, answer.answeredAtMs);
+  }
+  return room.questionStartedAt + last;
 }
 
 function categoryView(room: Room): CategoryView | null {

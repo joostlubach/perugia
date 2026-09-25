@@ -452,8 +452,6 @@ export interface HostRoomView {
   category: CategoryView | null;
   // Starting fills every free avatar with a randomly scoring NPC.
   runthrough: boolean;
-  // A runthrough nobody joined: questions reveal themselves, without a countdown.
-  npcsOnly: boolean;
   answeredCount: number;
   optionCounts: number[];
   guesses: HostGuess[];
